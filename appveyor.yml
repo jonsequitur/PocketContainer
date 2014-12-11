@@ -8,7 +8,7 @@ build:
   project: PocketContainer.sln
 
 after_build:
-	nuget pack PocketContainer.nuspec -p "Configuration=Release;Platform=AnyCPU" 
+	- nuget pack PocketContainer.nuspec -p "Configuration=Release;Platform=AnyCPU" 
 
 test:
   assemblies:
