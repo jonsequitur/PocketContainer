@@ -6,8 +6,13 @@ configuration:
 
 build:
   project: PocketContainer.sln
-  publish_nuget: true
+
+after_build:
+	nuget pack PocketContainer.nuspec -p "Configuration=Release;Platform=AnyCPU" 
 
 test:
   assemblies:
     - '**\*Tests.dll'
+
+artifacts:
+	*.nupkg
