@@ -15,4 +15,4 @@ test:
     - '**\*Tests.dll'
 
 artifacts:
-	*.nupkg
+	- *.nupkg
