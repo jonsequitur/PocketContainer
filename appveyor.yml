@@ -5,7 +5,7 @@ configuration:
   - Release
 
 after_build:
-	- nuget pack PocketContainer.nuspec -p "Configuration=Release;Platform=AnyCPU" 
+    - nuget pack PocketContainer.nuspec -p "Configuration=Release;Platform=AnyCPU" 
 
 build:
   project: PocketContainer.sln
@@ -15,4 +15,4 @@ test:
     - '**\*Tests.dll'
 
 artifacts:
-	- path: *.nupkg
+    - path: '*.nupkg'
