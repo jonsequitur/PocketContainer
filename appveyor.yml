@@ -4,11 +4,11 @@ install:
 configuration:
   - Release
 
-build:
-  project: PocketContainer.sln
-
 after_build:
 	- nuget pack PocketContainer.nuspec -p "Configuration=Release;Platform=AnyCPU" 
+
+build:
+  project: PocketContainer.sln
 
 test:
   assemblies:
