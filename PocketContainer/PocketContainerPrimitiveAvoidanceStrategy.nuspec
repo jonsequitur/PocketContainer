@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>PocketContainer.PrimitiveAvoidanceStrategy</id>
+    <title>PocketContainer Primitive Avoidance Strategy</title>
+    <version>1.0.0</version>
+    <authors>jonsequitur</authors>
+    <owners>jonsequitur</owners>
+    <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A convention that tells PocketContainer to choose the longest constructor that contains no primitive types (including strings, dates, and numeric types) when resolving instances of an unregistered type. Constructors containing primitives tend to be inappropriate for dependency injection.</description>
+    <tags>PocketContainer IoC DI container convention strategy</tags>
+    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <dependencies>
+      <dependency id="PocketContainer" version="[1.1.1,2)" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="PocketContainerPrimitiveAvoidanceStrategy.cs" 
+          target="content\(Pocket)\PocketContainerPrimitiveAvoidanceStrategy.cs" />
+  </files>
+</package>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>PocketContainerWebApiDependencyResolver</id>
+    <title>PocketContainer DependencyResolver for Web Api</title>
+    <version>1.0.1</version>
+    <authors>jonsequitur</authors>
+    <owners>jonsequitur</owners>
+    <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Use PocketContainer to resolve dependencies for ASP.NET Web API.</description>
+    <tags>PocketContainer WebApi DependencyResolver IoC DI</tags>
+    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <dependencies>
+      <dependency id="PocketContainer" version="[1.0.1,2)" />
+      <dependency id="Microsoft.AspNet.WebApi.Core" version="[4.0.20710.0,)" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="HttpConfigurationExtensions.PocketContainer.cs" 
+          target="content\(Pocket)\System.Web.Http\HttpConfigurationExtensions.PocketContainer.cs" />
+    <file src="PocketContainerDependencyResolver.cs" 
+          target="content\(Pocket)\System.Web.Http.Dependencies\PocketContainerDependencyResolver.cs" />
+  </files>
+</package>

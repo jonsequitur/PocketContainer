@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Pocket.TypeDiscovery</id>
+    <title>Pocket.TypeDiscovery</title>
+    <version>0.2.0</version>
+    <authors>jonsequitur</authors>
+    <owners></owners>
+    <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Utility methods for finding types at runtime.</description>
+    <tags>type discovery reflection</tags>
+    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+  </metadata>
+  <files>
+    <file src="TypeDiscovery.cs" 
+          target="content\(Pocket)\TypeDiscovery.cs" />
+  </files>
+</package>
