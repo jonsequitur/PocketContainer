@@ -56,7 +56,9 @@
     <Compile Include="PocketContainerOpenGenericStrategy.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="PocketContainer.CreateOverrideContainer.cs" />
+    <Compile Include="PocketContainer.CreateOverrideContainer.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="PocketContainer.Clone.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
