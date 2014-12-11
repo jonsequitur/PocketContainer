@@ -1,0 +1,13 @@
+install:
+  - nuget restore
+
+configuration:
+  - Release
+
+build:
+  project: PocketContainer.sln
+  publish_nuget: true
+
+test:
+  assemblies:
+    - '**\*Tests.dll'
