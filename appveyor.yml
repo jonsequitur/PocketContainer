@@ -6,6 +6,7 @@ configuration:
 
 after_build:
     - nuget pack PocketContainer\PocketContainer.nuspec -p "Configuration=Release;Platform=AnyCPU" 
+    - nuget pack PocketContainerOpenGenericStrategy\PocketContainerOpenGenericStrategy.nuspec -p "Configuration=Release;Platform=AnyCPU" 
 
 build:
   project: PocketContainer.sln

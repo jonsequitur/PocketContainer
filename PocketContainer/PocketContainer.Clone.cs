@@ -1,4 +1,7 @@
-﻿// THIS FILE IS NOT INTENDED TO BE EDITED.
+﻿// Copyright (c) Microsoft. All rights reserved. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+// THIS FILE IS NOT INTENDED TO BE EDITED.
 // 
 // It has been imported using NuGet from the PocketContainer project (https://github.com/jonsequitur/PocketContainer). 
 // 
