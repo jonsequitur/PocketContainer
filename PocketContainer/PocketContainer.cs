@@ -20,7 +20,7 @@ namespace Pocket
     /// An embedded dependency injection container, for when you want to use a container without adding an assembly dependency.
     /// </summary>
     /// <remarks>The default resolution strategy follows Unity's conventions. A concrete type can be resolved without explicit registration. It will choose the longest constructor and resolve the types to satisfy its arguments. This continues recursively until the graph is built or it fails to build a dependency.</remarks>
-#if !RecipesProject
+#if !SourceProject
     [System.Diagnostics.DebuggerStepThrough]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif

@@ -13,7 +13,7 @@ using Pocket;
 
 namespace Microsoft.Its.Configuration
 {
-#if !RecipesProject
+#if !SourceProject
     [System.Diagnostics.DebuggerStepThrough]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif

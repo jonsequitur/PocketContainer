@@ -12,7 +12,7 @@ using Moq;
 
 namespace Pocket
 {
-#if !RecipesProject
+#if !SourceProject
     [System.Diagnostics.DebuggerStepThrough]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif

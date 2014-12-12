@@ -17,7 +17,7 @@ namespace System.Web.Http.Dependencies
     /// <summary>
     /// A Web API dependency resolver that uses PocketContainer to resolve dependencies.
     /// </summary>
-#if !RecipesProject
+#if !SourceProject
     [System.Diagnostics.DebuggerStepThrough]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
