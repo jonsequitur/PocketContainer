@@ -7,6 +7,9 @@ configuration:
 after_build:
     - nuget pack PocketContainer\PocketContainer.nuspec -p "Configuration=Release;Platform=AnyCPU" 
     - nuget pack PocketContainer\PocketContainerOpenGenericStrategy.nuspec -p "Configuration=Release;Platform=AnyCPU" 
+    - nuget pack PocketContainer\PocketContainerPrimitiveAvoidanceStrategy.nuspec -p "Configuration=Release;Platform=AnyCPU" 
+    - nuget pack PocketContainer\PocketContainer.Clone.nuspec -p "Configuration=Release;Platform=AnyCPU" 
+    - nuget pack PocketContainer\PocketContainerDependencyResolver.nuspec -p "Configuration=Release;Platform=AnyCPU" 
 
 build:
   project: PocketContainer.sln

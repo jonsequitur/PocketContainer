@@ -11,10 +11,10 @@
 
 using System;
 using System.Linq;
+using System.Web.Http;
 using System.Web.Http.Dependencies;
-using Pocket;
 
-namespace System.Web.Http
+namespace Pocket
 {
     /// <summary>
     ///     Provides methods for configuring Web Api.

@@ -50,6 +50,7 @@ namespace Pocket
             return (Func<PocketContainer, object>) func;
         }
 
+        // ReSharper disable once UnusedMember.Local
         private static Func<PocketContainer, T> UsingLongestConstructorHavingNoPrimitives<T>()
         {
             var ctors = typeof (T).GetConstructors()

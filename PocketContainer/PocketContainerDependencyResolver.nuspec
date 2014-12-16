@@ -17,8 +17,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="HttpConfigurationExtensions.PocketContainer.cs" 
-          target="content\(Pocket)\System.Web.Http\HttpConfigurationExtensions.PocketContainer.cs" />
+    <file src="HttpConfigurationExtensions.cs" 
+          target="content\(Pocket)\System.Web.Http\HttpConfigurationExtensions.cs" />
     <file src="PocketContainerDependencyResolver.cs" 
           target="content\(Pocket)\System.Web.Http.Dependencies\PocketContainerDependencyResolver.cs" />
   </files>

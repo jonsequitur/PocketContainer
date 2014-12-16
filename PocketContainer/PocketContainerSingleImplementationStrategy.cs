@@ -33,8 +33,7 @@ namespace Pocket
 
                     if (implementations.Count() == 1)
                     {
-                        var implementation = implementations.Single();
-                        return c => c.Resolve(implementation);
+                        return c => c.Resolve(implementations.Single());
                     }
                 }
                 return null;
