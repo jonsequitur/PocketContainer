@@ -84,7 +84,7 @@
     <Compile Include="PocketContainerDependencyResolverStrategy.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="HttpConfigurationExtensions.PocketContainer.cs">
+    <Compile Include="HttpConfigurationExtensions.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
