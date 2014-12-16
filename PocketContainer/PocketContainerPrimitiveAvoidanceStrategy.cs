@@ -20,6 +20,9 @@ namespace Pocket
     [System.Diagnostics.DebuggerStepThrough]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
+    /// <summary>
+    /// Provides a strategy for choosing constructors that do not contain primitive types.
+    /// </summary>
     internal static class PocketContainerPrimitiveAvoidanceStrategy
     {
         private static readonly MethodInfo pocketContainerResolveMethod = typeof (PocketContainer).GetMethod("Resolve", new Type[0]);
@@ -34,6 +37,11 @@ namespace Pocket
             typeof (DateTimeOffset)
         };
 
+        /// <summary>
+        /// Configures a <see cref="PocketContainer" /> to prefer constructors that do not contain primitive types. 
+        /// </summary>
+        /// <remarks>Primitive types include any type for which <see cref="Type.IsPrimitive" /> is true, as well as <see cref="String" />, <see cref="DateTime" />, and <see cref="DateTimeOffset" />.</remarks>
+        /// <param name="container">The same container instance.</param>
         public static PocketContainer AvoidConstructorsWithPrimitiveTypes(
             this PocketContainer container)
         {
@@ -81,6 +89,11 @@ namespace Pocket
             return factoryExpr.Compile();
         }
 
+        /// <summary>
+        /// Determines whether the specified type is primitive.
+        /// </summary>
+        /// <remarks>This method defines primitive more broadly than the <see cref="Type.IsPrimitive" /> property. <see cref="String" />, for example, is considered primitive because as a type it carries no semantic information specific to a responsibility, so resolving it by convention will almost never be appropriate.</remarks>
+        /// <param name="type">The type.</param>
         public static bool IsPrimitive(this Type type)
         {
             return type.IsPrimitive ||

@@ -82,5 +82,19 @@ namespace Pocket.Tests
             obj.Should().NotBeNull();
             obj.Value.Should().NotBeNull();
         }
+
+        [Test]
+        public void A_constructor_with_a_primitive_is_chosen_if_no_other_is_available()
+        {
+            var container = new PocketContainer()
+                .AvoidConstructorsWithPrimitiveTypes()
+                .Register(c => "howdy");
+
+            var obj = container
+                .Resolve<HasTwoParamCtor<string, HasDefaultCtor>>();
+
+            obj.Should().NotBeNull();
+            obj.Value1.Should().Be("howdy");
+        }
     }
 }

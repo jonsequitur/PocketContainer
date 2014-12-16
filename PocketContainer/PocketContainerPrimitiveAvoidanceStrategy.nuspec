@@ -8,11 +8,11 @@
     <owners>jonsequitur</owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A convention that tells PocketContainer to choose the longest constructor that contains no primitive types (including strings, dates, and numeric types) when resolving instances of an unregistered type. Constructors containing primitives tend to be inappropriate for dependency injection.</description>
+    <description>A convention that tells PocketContainer to choose the longest constructor that contains no primitive types (including strings, dates, and numeric types) when resolving instances of an unregistered type.</description>
     <tags>PocketContainer IoC DI container convention strategy</tags>
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
     <dependencies>
-      <dependency id="PocketContainer" version="[1.1.1,2)" />
+      <dependency id="PocketContainer" version="[1.1.2,2)" />
     </dependencies>
   </metadata>
   <files>
