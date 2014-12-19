@@ -273,7 +273,7 @@ namespace Pocket.Tests
         }
 
         [Test]
-        public void When_default_construction_strategy_is_overridden_but_returns_null_then_it_falls_back_to_the_default()
+        public void When_an_added_strategy_returns_null_then_it_falls_back_to_the_default()
         {
             var container = new PocketContainer()
                 .Register(c => "still here");
@@ -296,6 +296,17 @@ namespace Pocket.Tests
 
             obj.Should().NotBeNull();
             obj.Value1.Should().Be("still here");
+        }
+
+        [Test]
+        public void A_strategy_can_be_used_to_make_PocketContainer_return_null_rather_than_throw()
+        {
+            var container = new PocketContainer()
+                .AddStrategy(t => c => null);
+
+            container.Resolve<IList<string>>()
+                     .Should()
+                     .BeNull();
         }
 
         [Test]
@@ -419,6 +430,19 @@ namespace Pocket.Tests
             container.RegisterSingle<IAmAnInterface>(c => new HasOneParamCtor<string>("second registration"));
 
             container.Resolve<IAmAnInterface>().Should().BeOfType<HasOneParamCtor<string>>();
+        }
+
+        [Test]
+        public void PocketContainer_can_throw_a_customized_exception_on_resolve_failure()
+        {
+            var container = new PocketContainer
+                            {
+                                OnFailedResolve = (type, ex) => new DataMisalignedException("Your data is completely out of alignment.", ex)
+                            };
+
+            Action resolve = () => container.Resolve<IEnumerable<string>>();
+
+            resolve.ShouldThrow<DataMisalignedException>();
         }
     }
 
