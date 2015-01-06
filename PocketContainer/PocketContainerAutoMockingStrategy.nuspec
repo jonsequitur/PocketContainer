@@ -3,7 +3,7 @@
   <metadata>
     <id>PocketContainer.MoqAutoMockingStrategy</id>
     <title>PocketContainer Auto-Mocking Strategy for Moq</title>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <authors>jonsequitur</authors>
     <owners>jonsequitur</owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
@@ -11,10 +11,11 @@
     <description>A PocketContainer strategy that will resolve a Moq mock object when a requested interface or abstract type has not been explicitly registered.</description>
     <tags>PocketContainer IoC DI container convention strategy</tags>
     <dependencies>
-      <dependency id="PocketContainer" version="[1.1.0,2)" />
+      <dependency id="PocketContainer" version="[1.2.2,2)" />
       <dependency id="Moq" version="[4.0.10827,5)" />
     </dependencies>
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
     <file src="PocketContainerMoqAutoMockingStrategy.cs" 

@@ -12,8 +12,9 @@
     <tags>PocketContainer IoC DI container convention strategy</tags>
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
     <dependencies>
-      <dependency id="PocketContainer" version="[1.1.2,2)" />
+      <dependency id="PocketContainer" version="[1.2.2,2)" />
     </dependencies>
+    <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
     <file src="PocketContainerPrimitiveAvoidanceStrategy.cs" 

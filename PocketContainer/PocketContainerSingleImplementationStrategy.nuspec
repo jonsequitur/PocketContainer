@@ -12,9 +12,10 @@
     <tags>PocketContainer IoC DI container convention strategy</tags>
     <dependencies>
       <dependency id="Pocket.TypeDiscovery" version="[0.2.0,1)" />
-      <dependency id="PocketContainer" version="[1.1.1,2)" />
+      <dependency id="PocketContainer" version="[1.2.2,2)" />
     </dependencies>
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
     <file src="PocketContainerSingleImplementationStrategy.cs" 

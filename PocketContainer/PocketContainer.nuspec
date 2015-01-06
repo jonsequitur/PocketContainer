@@ -3,7 +3,7 @@
   <metadata>
     <id>PocketContainer</id>
     <title>PocketContainer</title>
-    <version>1.2.0-beta</version>
+    <version>1.2.2</version>
     <authors>jonsequitur</authors>
     <owners>jonsequitur</owners>
     <projectUrl>https://github.com/jonsequitur/pocketcontainer</projectUrl>
@@ -11,6 +11,7 @@
     <description>An embeddable IoC container in a single C# file, with support for extensibility and conventions.</description>
     <tags>IoC DI container PocketContainer</tags>
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
     <file src="PocketContainer.cs" 
