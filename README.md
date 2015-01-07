@@ -29,7 +29,7 @@ The `Register` methods all take delegates. Many of the constructs that most cont
 
 The `Resolve` methods will try to recursively satisfy all arguments to the longest constructor on a type. Concrete types don't require explicit registration. This is the default strategy for PocketContainer, but others can be added. This extensibility mechanism allows you to specify how to handle unregistered types the first time someone tries to resolve them.
 
-Here's an example that resolves a concrete type if only one is found:
+Here's an example that resolves a concrete type when only one is found for a given interface or abstract class:
 
 ```csharp
     container.AddStrategy(type =>
@@ -53,10 +53,10 @@ If a strategy returns a delegate, `PocketContainer` registers it and uses it to 
 
 #### Extensibility via partial classes
 
-[The Clone extension](https://github.com/jonsequitur/PocketContainer/blob/master/PocketContainer/PocketContainer.Clone.cs) is an example of a partial class being used to extend `PocketContainer`. Because this extensibility relies on modifying private fields, these fields are considered to be part of the backwards compatibility contract of `PocketContainer`, and a change to one of them constitutes a breaking change and will incur a major version bump. 
+[The Clone extension](https://github.com/jonsequitur/PocketContainer/blob/master/PocketContainer/PocketContainer.Clone.cs) is an example of a partial class being used to extend `PocketContainer`. Because this extensibility mechanism relies on access to `PocketContainer`'s private fields, these fields are considered to be part of the backwards compatibility contract of `PocketContainer`, and a change to one of them constitutes a breaking change and will incur a major version bump. 
 
 #### Lazy<T> and Func<T>
 
-`PocketContainer` can return `Lazy<T>` and `Func<T>` instances that, when resolved or invoked, result in `Resolve` calls into the container. They do not need to be explicitly registered.
+`PocketContainer` can return `Lazy<T>` and `Func<T>` instances that, when resolved or invoked, result in `Resolve` calls into the container. `Lazy<T>` and `Func<T>` do not need to be explicitly registered, but this behavior can be overridden by registering them.
 
 Support for other similar types can be added trivially using `AddStrategy`.
