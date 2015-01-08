@@ -3,7 +3,7 @@
   <metadata>
     <id>PocketContainerWebApiDependencyResolver</id>
     <title>PocketContainer DependencyResolver for Web Api</title>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <authors>jonsequitur</authors>
     <owners>jonsequitur</owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
@@ -12,10 +12,9 @@
     <tags>PocketContainer WebApi DependencyResolver IoC DI</tags>
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
     <dependencies>
-      <dependency id="PocketContainer" version="[1.1.2,2)" />
+      <dependency id="PocketContainer" version="[1.2.3,2)" />
       <dependency id="Microsoft.AspNet.WebApi.Core" version="[4.0.20710.0,)" />
     </dependencies>
-    <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
     <file src="HttpConfigurationExtensions.cs" 

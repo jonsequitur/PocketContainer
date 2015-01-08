@@ -3,7 +3,7 @@
   <metadata>
     <id>PocketContainer.PrimitiveAvoidanceStrategy</id>
     <title>PocketContainer Primitive Avoidance Strategy</title>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <authors>jonsequitur</authors>
     <owners>jonsequitur</owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
@@ -12,9 +12,8 @@
     <tags>PocketContainer IoC DI container convention strategy</tags>
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
     <dependencies>
-      <dependency id="PocketContainer" version="[1.2.2,2)" />
+      <dependency id="PocketContainer" version="[1.2.3,2)" />
     </dependencies>
-    <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
     <file src="PocketContainerPrimitiveAvoidanceStrategy.cs" 
