@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package>
   <metadata>
-    <id>PocketContainerWebApiDependencyResolver</id>
+    <id>PocketContainer.WebApiDependencyResolver</id>
     <title>PocketContainer DependencyResolver for Web Api</title>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <authors>jonsequitur</authors>
     <owners>jonsequitur</owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>

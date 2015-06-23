@@ -23,3 +23,4 @@ _NCrunch_*/
 *.ReSharper
 Artifacts
 *.psess
+*.xml
