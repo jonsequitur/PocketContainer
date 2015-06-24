@@ -105,6 +105,35 @@ namespace Pocket.Tests
             container.Resolve<string>().Should().Be(s);
         }
 
+        public delegate void SomeDelegateType();
+
+        [Test]
+        public void Cannot_resolve_an_unregistered_delegate_type()
+        {
+            var container = new PocketContainer();
+
+            Action resolve = () => container.Resolve<SomeDelegateType>();
+
+            resolve.ShouldThrow<ArgumentException>()
+                   .And
+                   .Message
+                   .Should()
+                   .Contain("SomeDelegateType");
+        }
+        
+        [Test]
+        public void Can_resolve_a_registered_delegate_type()
+        {
+            var container = new PocketContainer();
+
+            var f = new SomeDelegateType(Can_resolve_a_registered_delegate_type);
+
+            container.Register(c => f);
+
+            container.Resolve<SomeDelegateType>().Should().Be(f);
+
+        }
+
         [Test]
         public void When_the_same_type_is_registered_multiple_times_then_the_last_register_wins()
         {
