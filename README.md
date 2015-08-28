@@ -1,7 +1,8 @@
 PocketContainer
 ===============
 
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/jonsequitur/PocketContainer?svg=true&branch=master)](https://ci.appveyor.com/project/jonsequitur/pocketcontainer)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/jonsequitur/PocketContainer?svg=true&branch=master)](https://ci.appveyor.com/project/jonsequitur/pocketcontainer) [![NuGet Status](http://img.shields.io/nuget/v/PocketContainer.svg?style=flat)](https://www.nuget.org/packages/PocketContainer/)
+
 
 ### An embeddable IoC container in a single C# file, with support for extensibility and conventions.
 
