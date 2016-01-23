@@ -13,7 +13,7 @@
     <developmentDependency>true</developmentDependency>
     <dependencies>
       <dependency id="Pocket.TypeDiscovery" version="[0.2.0,1)" />
-      <dependency id="PocketContainer" version="[1.2.3,2)" />
+      <dependency id="PocketContainer" version="[1.2.5,2)" />
     </dependencies>
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
   </metadata>

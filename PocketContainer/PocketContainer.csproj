@@ -75,7 +75,7 @@
     <Compile Include="PocketContainer.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="TypeDiscovery.cs">
+    <Compile Include="Discover.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="PocketContainerDependencyResolver.cs">

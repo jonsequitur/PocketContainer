@@ -20,6 +20,11 @@ namespace Pocket
 #endif
     internal static class PocketContainerSingleImplementationStrategy
     {
+        /// <summary>
+        /// Adds a strategy to PocketContainer whereby interfaces having only a single implementation do not need explicit registration in order to be resolvable.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <returns>The same container instance.</returns>
         public static PocketContainer IfOnlyOneImplementationUseIt(
             this PocketContainer container)
         {
@@ -31,7 +36,7 @@ namespace Pocket
                                                   .DerivedFrom(type)
                                                   .ToArray();
 
-                    if (implementations.Count() == 1)
+                    if (implementations.Length == 1)
                     {
                         return c => c.Resolve(implementations.Single());
                     }
