@@ -435,6 +435,20 @@ namespace Pocket.Tests
         }
 
         [Test]
+        public void RegisterSingle_returns_only_single_instances_when_dependent_and_dependency_are_both_registered_as_single()
+        {
+            var container = new PocketContainer()
+                .RegisterSingle(c => new HasDefaultCtor())
+                .RegisterSingle(c => new HasOneParamCtor<HasDefaultCtor>(c.Resolve<HasDefaultCtor>()));
+
+            var one = container.Resolve<HasOneParamCtor<HasDefaultCtor>>();
+            var two = container.Resolve<HasOneParamCtor<HasDefaultCtor>>();
+
+            one.Should().BeSameAs(two);
+            one.Value1.Should().BeSameAs(two.Value1);
+        }
+
+        [Test]
         public void RegisterSingle_non_generic_can_be_used_to_register_the_same_instance_for_the_lifetime_of_the_container()
         {
             var container = new PocketContainer()
@@ -462,7 +476,7 @@ namespace Pocket.Tests
         }
 
         [Test]
-        public void PocketContainer_can_throw_a_customized_exception_on_resolve_failure()
+        public void PocketContainer_can_throw_a_customized_exception_on_resolve_failure_via_generic_Resolve()
         {
             var container = new PocketContainer
                             {
@@ -470,6 +484,19 @@ namespace Pocket.Tests
                             };
 
             Action resolve = () => container.Resolve<IEnumerable<string>>();
+
+            resolve.ShouldThrow<DataMisalignedException>();
+        }
+
+        [Test]
+        public void PocketContainer_can_throw_a_customized_exception_on_recursive_resolve_failure_via_non_generic_Resolve()
+        {
+            var container = new PocketContainer
+                            {
+                                OnFailedResolve = (type, ex) => new DataMisalignedException("Your data is completely out of alignment.", ex)
+                            };
+
+            Action resolve = () => container.Resolve(typeof(IEnumerable<string>));
 
             resolve.ShouldThrow<DataMisalignedException>();
         }
