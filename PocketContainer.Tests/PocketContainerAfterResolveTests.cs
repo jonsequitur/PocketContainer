@@ -93,6 +93,7 @@ namespace Pocket.Tests
             set.Should().BeEquivalentTo(new object[] { "initial", "one", "two" });
         }
 
+        [Ignore("Not implemented")]
         [Test]
         public void When_used_with_RegisterSingle_then_AfterResolve_is_only_called_once_per_instantiation()
         {
@@ -112,7 +113,8 @@ namespace Pocket.Tests
 
             resolved.Value.Should().Be(1);
         }
-        
+
+        [Ignore("Not implemented")]
         [Test]
         public void When_used_with_Register_then_AfterResolve_is_only_called_once_per_resolve()
         {
