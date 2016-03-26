@@ -7,7 +7,6 @@ using NUnit.Framework;
 
 namespace Pocket.Tests
 {
-    [Ignore("Scenario is still under development")]
     [TestFixture]
     public class PocketContainerAfterResolveTests
     {
