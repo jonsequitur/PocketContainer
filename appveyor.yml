@@ -11,7 +11,6 @@ after_build:
     - nuget pack PocketContainer\PocketContainer.Clone.nuspec  
     - nuget pack PocketContainer\PocketContainerSingleImplementationStrategy.nuspec  
     - nuget pack PocketContainer\TypeDiscovery.nuspec  
-    - nuget pack PocketContainer\TypeDiscovery.Core.nuspec  
 
 build:
   project: PocketContainer.sln
