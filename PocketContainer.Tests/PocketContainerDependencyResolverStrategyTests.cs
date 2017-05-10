@@ -12,7 +12,7 @@ namespace Pocket.Tests
     [TestFixture]
     public class PocketContainerDependencyResolverStrategyTests
     {
-        [Test]
+        [Fact]
         public void Top_level_types_resolved_from_the_dependency_resolver()
         {
             var resolver = new FakeDependencyResolver(t => "hola!");
@@ -21,7 +21,7 @@ namespace Pocket.Tests
             container.Resolve<string>().Should().Be("hola!");
         }
 
-        [Test]
+        [Fact]
         public void Second_level_dependencies_are_resolved_from_the_dependency_resolver()
         {
             var innerContainer = new PocketContainer()

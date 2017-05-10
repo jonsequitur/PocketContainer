@@ -10,15 +10,14 @@
 // PM> Get-Package -Updates
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace Pocket
 {
+#if (NET451 || NET452 || NET461 || NET462)
+
 #if !SourceProject
-    [System.Diagnostics.DebuggerStepThrough]
+    [DebuggerStepThrough]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
     /// <summary>
@@ -62,4 +61,5 @@ namespace Pocket
                             .Where(t => !t.IsGenericTypeDefinition);
         }
     }
+#endif
 }

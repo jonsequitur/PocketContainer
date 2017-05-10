@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Pocket.TypeDiscovery.Core</id>
+    <title>Pocket.TypeDiscovery.Core</title>
+    <version>0.3.0</version>
+    <authors>jonsequitur</authors>
+    <owners></owners>
+    <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Utility methods for finding types at runtime.</description>
+    <tags>type discovery reflection</tags>
+    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <developmentDependency>true</developmentDependency>
+    <dependencies>
+        <dependency id="Microsoft.Extensions.DependencyModel" version="1.0.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Discover.cs" 
+          target="content\(Pocket)\Discover.cs" />
+  </files>
+</package>

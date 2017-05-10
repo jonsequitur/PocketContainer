@@ -3,7 +3,7 @@
   <metadata>
     <id>PocketContainer.SingleImplementationStrategy</id>
     <title>PocketContainer Single Implementation Strategy</title>
-    <version>1.0.4</version>
+    <version>2.0.0</version>
     <authors>jonsequitur</authors>
     <owners>jonsequitur</owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
@@ -11,10 +11,23 @@
     <description>A convention that will resolve a type when it is the only implementation for a requested interface or abstract type that has not been explicitly registered.</description>
     <tags>PocketContainer IoC DI container convention strategy</tags>
     <developmentDependency>true</developmentDependency>
+    
     <dependencies>
-      <dependency id="Pocket.TypeDiscovery" version="[0.2.0,1)" />
-      <dependency id="PocketContainer" version="[1.2.5,2)" />
+
+      <group>
+        <dependency id="PocketContainer" version="[1.2.5,2)" />
+      </group>
+
+      <group targetFramework="net45">
+        <dependency id="Pocket.TypeDiscovery" version="[0.2.0,1)" />
+      </group>
+      
+      <group targetFramework="netstandard1.6">
+        <dependency id="Pocket.TypeDiscovery.Core" version="[0.2.0,1)" />
+      </group>
+      
     </dependencies>
+   
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
   </metadata>
   <files>

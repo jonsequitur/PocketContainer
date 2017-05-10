@@ -4,14 +4,22 @@
 using System;
 using System.Collections;
 using FluentAssertions;
-using NUnit.Framework;
+using System.Linq;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Pocket.Tests
 {
-    [TestFixture]
     public class PocketContainerSingleImplementationStrategyTests
     {
-        [Test]
+        private readonly ITestOutputHelper output;
+
+        public PocketContainerSingleImplementationStrategyTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
+        [Fact]
         public void When_a_single_concrete_type_implementing_an_interface_is_found_then_it_is_Resolved()
         {
             var container = new PocketContainer()
@@ -22,7 +30,7 @@ namespace Pocket.Tests
                      .NotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void When_a_single_concrete_type_implementing_an_abstract_type_is_found_then_it_is_Resolved()
         {
             var container = new PocketContainer()
@@ -33,7 +41,7 @@ namespace Pocket.Tests
                      .NotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void When_a_concrete_type_is_requested_then_it_is_Resolved()
         {
             var container = new PocketContainer()
@@ -44,7 +52,7 @@ namespace Pocket.Tests
                      .NotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void When_multiple_implementations_are_found_then_an_error_is_thrown_on_Resolve()
         {
             var container = new PocketContainer()

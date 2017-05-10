@@ -1,130 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9498CAA1-ACD9-4610-9339-D4692490FA40}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Pocket</RootNamespace>
-    <AssemblyName>Pocket</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SourceProject = true</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <AssemblyName>PocketContainer</AssemblyName>
+    <RootNamespace>PocketContainer</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Its.Configuration">
-      <HintPath>..\packages\Its.Configuration.0.10.1\lib\net40\Its.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="Moq">
-      <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
+    <Compile Remove="HttpConfigurationExtensions.cs" />
+    <Compile Remove="PocketContainerAutoMockingStrategy.cs" />
+    <Compile Remove="PocketContainerDependencyResolver.cs" />
+    <Compile Remove="PocketContainerDependencyResolverStrategy.cs" />
+    <Compile Remove="PocketContainerItsConfigurationSettingsStrategy.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PocketContainerPrimitiveAvoidanceStrategy.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="PocketContainerOpenGenericStrategy.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="PocketContainer.CreateOverrideContainer.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="PocketContainer.Clone.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="PocketContainer.AfterResolve.cs" />
-    <Compile Include="PocketContainerItsConfigurationSettingsStrategy.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="PocketContainerAutoMockingStrategy.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="PocketContainerSingleImplementationStrategy.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="PocketContainer.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="Discover.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="PocketContainerDependencyResolver.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="PocketContainerDependencyResolverStrategy.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="HttpConfigurationExtensions.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <None Include="PocketContainer.Clone.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="PocketContainerOpenGenericStrategy.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="PocketContainerPrimitiveAvoidanceStrategy.nuspec" />
-    <None Include="PocketContainerItsConfigurationSettingsStrategy.nuspec" />
-    <None Include="PocketContainerDependencyResolverStrategy.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="PocketContainerDependencyResolver.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="PocketContainerAutoMockingStrategy.nuspec" />
-    <None Include="PocketContainerSingleImplementationStrategy.nuspec" />
-    <None Include="PocketContainer.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="TypeDiscovery.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Remove="PocketContainer.v3.ncrunchproject" />
+    <None Remove="PocketContainerAutoMockingStrategy.nuspec" />
+    <None Remove="PocketContainerDependencyResolver.nuspec" />
+    <None Remove="PocketContainerDependencyResolverStrategy.nuspec" />
+    <None Remove="PocketContainerItsConfigurationSettingsStrategy.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.0.0" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
 </Project>
