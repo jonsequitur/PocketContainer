@@ -15,9 +15,8 @@ after_build:
 build:
   project: PocketContainer.sln
 
-test:
-  assemblies:
-    - '**\*Tests.dll'
+test_script:
+  - cmd: dotnet test .\PocketContainer.Tests\PocketContainer.Tests.csproj -l:trx
 
 artifacts:
     - path: '*.nupkg'
