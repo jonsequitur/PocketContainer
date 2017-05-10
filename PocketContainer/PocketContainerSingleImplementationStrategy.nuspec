@@ -13,25 +13,14 @@
     <developmentDependency>true</developmentDependency>
     
     <dependencies>
-
-      <group>
-        <dependency id="PocketContainer" version="[1.2.5,2)" />
-      </group>
-
-      <group targetFramework="net45">
-        <dependency id="Pocket.TypeDiscovery" version="[0.2.0,1)" />
-      </group>
-      
-      <group targetFramework="netstandard1.6">
-        <dependency id="Pocket.TypeDiscovery.Core" version="[0.2.0,1)" />
-      </group>
-      
+      <dependency id="PocketContainer" version="[1.3.0,2)" />
+      <dependency id="Pocket.TypeDiscovery" version="[0.3.0,1)" />
     </dependencies>
    
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
   </metadata>
   <files>
     <file src="PocketContainerSingleImplementationStrategy.cs" 
-          target="content\(Pocket)\PocketContainerSingleImplementationStrategy.cs" />
+          target="contentFiles\cs\(Pocket)\PocketContainerSingleImplementationStrategy.cs" />
   </files>
 </package>

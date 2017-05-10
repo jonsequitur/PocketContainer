@@ -3,7 +3,7 @@
   <metadata>
     <id>Pocket.TypeDiscovery</id>
     <title>Pocket.TypeDiscovery</title>
-    <version>0.3.0</version>
+    <version>0.3.3</version>
     <authors>jonsequitur</authors>
     <owners></owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
@@ -12,9 +12,19 @@
     <tags>type discovery reflection</tags>
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
     <developmentDependency>true</developmentDependency>
+    <dependencies>
+      <group targetFramework="net45">
+      </group>
+      <group targetFramework="netstandard1.0">
+        <dependency id="Microsoft.Extensions.DependencyModel" version="1.0.0" />
+      </group>
+    </dependencies>
+     <contentFiles>
+      <files include="contentFiles/cs/net45/Discover.cs"          
+             buildAction="Compile" />
+      <files include="contentFiles/cs/netstandard1.0/Discover.cs" 
+             buildAction="Compile" />
+    </contentFiles>
   </metadata>
-  <files>
-    <file src="Discover.cs" 
-          target="content\desktop\(Pocket)\Discover.cs" />
-  </files>
+
 </package>
