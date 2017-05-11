@@ -17,7 +17,6 @@ namespace Pocket
 {
 #if !SourceProject
     [System.Diagnostics.DebuggerStepThrough]
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
     internal static class PocketContainerAutoMockingStrategy
     {

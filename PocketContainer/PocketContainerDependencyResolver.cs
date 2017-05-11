@@ -23,7 +23,6 @@ namespace Pocket
     /// </summary>
 #if !SourceProject
     [System.Diagnostics.DebuggerStepThrough]
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
     internal class PocketContainerDependencyResolver : IDependencyResolver
     {

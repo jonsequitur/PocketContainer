@@ -21,7 +21,6 @@ namespace Pocket
     /// </summary>
 #if !SourceProject
     [System.Diagnostics.DebuggerStepThrough]
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
     internal static class PocketContainerPrimitiveAvoidanceStrategy
     {
@@ -96,8 +95,8 @@ namespace Pocket
         /// <param name="type">The type.</param>
         public static bool IsPrimitive(this Type type)
         {
-            return type.IsPrimitive ||
-                   primitiveTypes.Contains(type);
+            return type.GetTypeInfo().IsPrimitive ||
+                   primitiveTypes.Select(t => t.GetTypeInfo()).Contains(type.GetTypeInfo());
         }
     }
 }

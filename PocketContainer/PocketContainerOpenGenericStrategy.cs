@@ -10,6 +10,7 @@
 // PM> Get-Package -Updates
 
 using System;
+using System.Reflection;
 
 namespace Pocket
 {
@@ -18,7 +19,6 @@ namespace Pocket
     /// </summary>
 #if !SourceProject
     [System.Diagnostics.DebuggerStepThrough]
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
     internal static class PocketContainerOpenGenericStrategy
     {
@@ -36,21 +36,21 @@ namespace Pocket
         /// </exception>
         public static PocketContainer RegisterGeneric(this PocketContainer container, Type variantsOf, Type to)
         {
-            if (!variantsOf.IsGenericTypeDefinition)
+            if (!variantsOf.GetTypeInfo().IsGenericTypeDefinition)
             {
                 throw new ArgumentException("Parameter 'variantsOf' is not an open generic type, e.g. typeof(IService<>)");
             }
 
-            if (!to.IsGenericTypeDefinition)
+            if (!to.GetTypeInfo().IsGenericTypeDefinition)
             {
                 throw new ArgumentException("Parameter 'to' is not an open generic type, e.g. typeof(Service<>)");
             }
 
             return container.AddStrategy(t =>
             {
-                if (t.IsGenericType && t.GetGenericTypeDefinition() == variantsOf)
+                if (t.GetTypeInfo().IsGenericType && t.GetGenericTypeDefinition() == variantsOf)
                 {
-                    var closedGenericType = to.MakeGenericType(t.GetGenericArguments());
+                    var closedGenericType = to.MakeGenericType(t.GetTypeInfo().GenericTypeArguments);
 
                     return c => c.Resolve(closedGenericType);
                 }

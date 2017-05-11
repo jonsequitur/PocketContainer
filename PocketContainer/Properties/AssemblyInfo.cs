@@ -6,11 +6,6 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("PocketContainer")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("PocketContainer")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -24,4 +19,4 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("1a1b7c1a-f941-4e71-8679-97aadbc50f23")]
 
-[assembly: InternalsVisibleTo("Pocket.Tests")]
+[assembly: InternalsVisibleTo("PocketContainer.Tests")]

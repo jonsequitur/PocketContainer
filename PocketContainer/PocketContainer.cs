@@ -27,7 +27,6 @@ namespace Pocket
     /// <remarks>The default resolution strategy follows Unity's conventions. A concrete type can be resolved without explicit registration. It will choose the longest constructor and resolve the types to satisfy its arguments. This continues recursively until the graph is built or it fails to build a dependency.</remarks>
 #if !SourceProject
     [System.Diagnostics.DebuggerStepThrough]
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
     internal partial class PocketContainer : IEnumerable<KeyValuePair<Type, Func<PocketContainer, object>>>
     {
@@ -56,7 +55,7 @@ namespace Pocket
             AddStrategy(type =>
             {
                 // add a default strategy for Func<T> to resolve by convention to return a Func that does a resolve when invoked
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Func<>))
+                if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof (Func<>))
                 {
                     var funcReturnType = type.GetGenericArguments().Single();
 
@@ -202,7 +201,7 @@ namespace Pocket
             }
 
             // ReSharper disable PossiblyMistakenUseOfParamsMethod
-            var call = Expression.Call(constantExpression, func.Method, containerParam);
+            var call = Expression.Call(constantExpression, func.GetMethodInfo(), containerParam);
             // ReSharper restore PossiblyMistakenUseOfParamsMethod
             var delegateType = typeof (Func<,>).MakeGenericType(typeof (PocketContainer), resultType);
             var body = Expression.Convert(call, resultType);

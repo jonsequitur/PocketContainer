@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocketContainer", "PocketContainer\PocketContainer.csproj", "{9498CAA1-ACD9-4610-9339-D4692490FA40}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PocketContainer", "PocketContainer\PocketContainer.csproj", "{4AE6628C-CD5B-4504-BD30-659FFC41903D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocketContainer.Tests", "PocketContainer.Tests\PocketContainer.Tests.csproj", "{83E4C52D-C0F1-4D80-9CF1-3DA74261AD33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PocketContainer.Tests", "PocketContainer.Tests\PocketContainer.Tests.csproj", "{0AE687B5-9EFA-4A51-A0AA-82A5D9C97075}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B173AA1D-C437-41EE-92AE-AF787162E096}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{D9E6C817-885D-430D-AB60-895C4757570B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,19 +17,20 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9498CAA1-ACD9-4610-9339-D4692490FA40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9498CAA1-ACD9-4610-9339-D4692490FA40}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9498CAA1-ACD9-4610-9339-D4692490FA40}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9498CAA1-ACD9-4610-9339-D4692490FA40}.Release|Any CPU.Build.0 = Release|Any CPU
-		{83E4C52D-C0F1-4D80-9CF1-3DA74261AD33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{83E4C52D-C0F1-4D80-9CF1-3DA74261AD33}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{83E4C52D-C0F1-4D80-9CF1-3DA74261AD33}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{83E4C52D-C0F1-4D80-9CF1-3DA74261AD33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AE6628C-CD5B-4504-BD30-659FFC41903D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AE6628C-CD5B-4504-BD30-659FFC41903D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AE6628C-CD5B-4504-BD30-659FFC41903D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AE6628C-CD5B-4504-BD30-659FFC41903D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AE687B5-9EFA-4A51-A0AA-82A5D9C97075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AE687B5-9EFA-4A51-A0AA-82A5D9C97075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AE687B5-9EFA-4A51-A0AA-82A5D9C97075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AE687B5-9EFA-4A51-A0AA-82A5D9C97075}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35
+	GlobalSection(NestedProjects) = preSolution
+		{4AE6628C-CD5B-4504-BD30-659FFC41903D} = {D9E6C817-885D-430D-AB60-895C4757570B}
+		{0AE687B5-9EFA-4A51-A0AA-82A5D9C97075} = {B173AA1D-C437-41EE-92AE-AF787162E096}
 	EndGlobalSection
 EndGlobal

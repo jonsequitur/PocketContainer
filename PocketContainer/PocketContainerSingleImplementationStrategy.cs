@@ -11,12 +11,12 @@
 
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace Pocket
 {
 #if !SourceProject
     [System.Diagnostics.DebuggerStepThrough]
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 #endif
     internal static class PocketContainerSingleImplementationStrategy
     {
@@ -30,7 +30,7 @@ namespace Pocket
         {
             return container.AddStrategy(type =>
             {
-                if (type.IsInterface || type.IsAbstract)
+                if (type.GetTypeInfo().IsInterface || type.GetTypeInfo().IsAbstract)
                 {
                     var implementations = Discover.ConcreteTypes()
                                                   .DerivedFrom(type)
