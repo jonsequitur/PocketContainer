@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PocketContainer", "PocketContainer\PocketContainer.csproj", "{4AE6628C-CD5B-4504-BD30-659FFC41903D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.Container", "Pocket.Container\Pocket.Container.csproj", "{4AE6628C-CD5B-4504-BD30-659FFC41903D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PocketContainer.Tests", "PocketContainer.Tests\PocketContainer.Tests.csproj", "{0AE687B5-9EFA-4A51-A0AA-82A5D9C97075}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.Container.Tests", "Pocket.Container.Tests\Pocket.Container.Tests.csproj", "{0AE687B5-9EFA-4A51-A0AA-82A5D9C97075}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B173AA1D-C437-41EE-92AE-AF787162E096}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocketContainer.Microsoft.Extensions.DependencyInjection", "Pocket.Container.Behaviors.Microsoft.Extensions.DependencyInjection\PocketContainer.Microsoft.Extensions.DependencyInjection.csproj", "{F3A05E35-729D-4D4E-B059-E57430541757}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{D9E6C817-885D-430D-AB60-895C4757570B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.Container.Behaviors.CumulativeRegistration", "Pocket.Container.Behaviors.CumulativeRegistration\Pocket.Container.Behaviors.CumulativeRegistration.csproj", "{628C9A03-D083-4B04-85CD-51726BB191B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.Container.Extensions.TryRegister", "Pocket.Container.Extensions.TryRegister\Pocket.Container.Extensions.TryRegister.csproj", "{961C4699-8CB5-4B3F-80EA-59D1B640701A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,12 +27,20 @@ Global
 		{0AE687B5-9EFA-4A51-A0AA-82A5D9C97075}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AE687B5-9EFA-4A51-A0AA-82A5D9C97075}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AE687B5-9EFA-4A51-A0AA-82A5D9C97075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3A05E35-729D-4D4E-B059-E57430541757}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3A05E35-729D-4D4E-B059-E57430541757}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3A05E35-729D-4D4E-B059-E57430541757}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3A05E35-729D-4D4E-B059-E57430541757}.Release|Any CPU.Build.0 = Release|Any CPU
+		{628C9A03-D083-4B04-85CD-51726BB191B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{628C9A03-D083-4B04-85CD-51726BB191B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{628C9A03-D083-4B04-85CD-51726BB191B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{628C9A03-D083-4B04-85CD-51726BB191B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{961C4699-8CB5-4B3F-80EA-59D1B640701A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{961C4699-8CB5-4B3F-80EA-59D1B640701A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{961C4699-8CB5-4B3F-80EA-59D1B640701A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{961C4699-8CB5-4B3F-80EA-59D1B640701A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{4AE6628C-CD5B-4504-BD30-659FFC41903D} = {D9E6C817-885D-430D-AB60-895C4757570B}
-		{0AE687B5-9EFA-4A51-A0AA-82A5D9C97075} = {B173AA1D-C437-41EE-92AE-AF787162E096}
 	EndGlobalSection
 EndGlobal

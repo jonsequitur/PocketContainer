@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <AssemblyName>PocketContainer</AssemblyName>
+    <RootNamespace>PocketContainer</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_6; SourceProject</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="HttpConfigurationExtensions.cs" />
+    <Compile Remove="PocketContainerAutoMockingStrategy.cs" />
+    <Compile Remove="PocketContainerDependencyResolver.cs" />
+    <Compile Remove="PocketContainerDependencyResolverStrategy.cs" />
+    <Compile Remove="PocketContainerItsConfigurationSettingsStrategy.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="PocketContainer.v3.ncrunchproject" />
+    <None Remove="PocketContainerAutoMockingStrategy.nuspec" />
+    <None Remove="PocketContainerDependencyResolver.nuspec" />
+    <None Remove="PocketContainerDependencyResolverStrategy.nuspec" />
+    <None Remove="PocketContainerItsConfigurationSettingsStrategy.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="desktop\Discover.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="PocketContainerMicrosoftDependencyInjection.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="PocketContainer.AfterResolve.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="PocketContainer.Clone.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="PocketContainer.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="PocketContainerOpenGenericStrategy.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="PocketContainerPrimitiveAvoidanceStrategy.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="PocketContainerSingleImplementationStrategy.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Update="Properties\AssemblyInfo.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+</Project>

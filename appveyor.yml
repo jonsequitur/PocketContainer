@@ -5,18 +5,18 @@ configuration:
   - Release
 
 after_build:
-    - nuget pack PocketContainer\PocketContainer.nuspec  
-    - nuget pack PocketContainer\PocketContainerOpenGenericStrategy.nuspec  
-    - nuget pack PocketContainer\PocketContainerPrimitiveAvoidanceStrategy.nuspec  
-    - nuget pack PocketContainer\PocketContainer.Clone.nuspec  
-    - nuget pack PocketContainer\PocketContainerSingleImplementationStrategy.nuspec  
-    - nuget pack PocketContainer\TypeDiscovery.nuspec  
+    - nuget pack Pocket.Container\PocketContainer.nuspec  
+    - nuget pack Pocket.Container\PocketContainerOpenGenericStrategy.nuspec  
+    - nuget pack Pocket.Container\PocketContainerPrimitiveAvoidanceStrategy.nuspec  
+    - nuget pack Pocket.Container\PocketContainer.Clone.nuspec  
+    - nuget pack Pocket.Container\PocketContainerSingleImplementationStrategy.nuspec  
+    - nuget pack Pocket.Container\TypeDiscovery.nuspec  
 
 build:
   project: PocketContainer.sln
 
 test_script:
-  - cmd: dotnet test .\PocketContainer.Tests\PocketContainer.Tests.csproj -l:trx
+  - cmd: dotnet test .\Pocket.Container.Tests\Pocket.Container.Tests.csproj -l:trx
 
 artifacts:
     - path: '*.nupkg'
