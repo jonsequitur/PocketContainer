@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>PocketContainer.OpenGenericStrategy</id>
+    <title>PocketContainer Open Generic Strategy</title>
+    <version>1.0.4</version>
+    <authors>jonsequitur</authors>
+    <owners>jonsequitur</owners>
+    <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Enables PocketContainer to resolve open generic types.</description>
+    <tags>PocketContainer IoC DI container convention strategy</tags>
+    <developmentDependency>true</developmentDependency>
+    <dependencies>
+      <dependency id="PocketContainer" version="[1.2.3,2)" />
+    </dependencies>
+    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+  </metadata>
+  <files>
+    <file src="PocketContainerOpenGenericStrategy.cs" 
+          target="content\(Pocket)\PocketContainerOpenGenericStrategy.cs" />
+  </files>
+</package>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>PocketContainer.DependencyResolverFallback</id>
+    <title>Web API DependencyResolver Fallback for PocketContainer</title>
+    <version>1.0.3</version>
+    <authors>jonsequitur</authors>
+    <owners></owners>
+    <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Enables PocketContainer to fall back to a Web API IDependencyResolver to resolve unknown types.</description>
+    <tags>PocketContainer WebApi DependencyResolver IoC DI strategy</tags>
+    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <developmentDependency>true</developmentDependency>
+    <dependencies>
+      <dependency id="PocketContainer" version="[1.2.3,2)" />
+      <dependency id="Microsoft.AspNet.WebApi.Core" version="[4.0.20710.0,)" />
+    </dependencies>
+  </metadata>
+  <files>
+ <file src="PocketContainerDependencyResolverStrategy.cs" 
+       target="content\(Pocket)\PocketContainerDependencyResolverStrategy.cs" />
+  </files>
+</package>

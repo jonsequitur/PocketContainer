@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>PocketContainer.ItsConfigurationSettingsStrategy</id>
+    <title>PocketContainer Its.Configuration Settings Strategy</title>
+    <version>1.0.3</version>
+    <authors>jonsequitur</authors>
+    <owners>jonsequitur</owners>
+    <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A convention that will resolve classes with names ending in "Settings" using Its.Configuration.</description>
+    <tags>PocketContainer ItsConfiguration configuration IoC DI container convention strategy</tags>
+    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <developmentDependency>true</developmentDependency>
+    <dependencies>
+      <dependency id="PocketContainer" version="[1.2.3,2)" />
+      <dependency id="Its.Configuration" version="[0.10.0,)" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="PocketContainerItsConfigurationSettingsStrategy.cs" 
+          target="content\(Pocket)\PocketContainerItsConfigurationSettingsStrategy.cs" />
+  </files>
+</package>
