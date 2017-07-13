@@ -68,20 +68,12 @@ namespace Pocket
 
         private static readonly Lazy<List<Assembly>> Assemblies = new Lazy<List<Assembly>>(() =>
         {
-            var dependencyContext =
-                //  DependencyContext.Load(typeof(Discover).GetTypeInfo().Assembly) ??
-                DependencyContext.Default;
+            var dependencyContext = DependencyContext.Default;
 
             var assemblyNames = dependencyContext
                 .GetDefaultAssemblyNames();
 
             var assemblies = new List<Assembly>();
-//            assemblies.Add(Assembly.GetEntryAssembly());
-//            assemblies.Add(typeof(Discover).GetTypeInfo().Assembly);
-
-            var defaultRuntimeLibraries = dependencyContext
-                .RuntimeLibraries
-                .Where(ReferencesCurrentAssembly);
 
             foreach (var library in assemblyNames)
             {
@@ -98,26 +90,5 @@ namespace Pocket
 
             return assemblies;
         });
-
-        private static readonly string currentAssemblyName = typeof(Discover).GetTypeInfo().Assembly.GetName().Name;
-
-        private static bool ReferencesCurrentAssembly(
-            RuntimeLibrary compilationLibrary)
-        {
-            if (compilationLibrary.Name.Equals(currentAssemblyName, StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            if (compilationLibrary
-                .Dependencies
-                .Any(d => d.Name.StartsWith(currentAssemblyName, StringComparison.OrdinalIgnoreCase)))
-            {
-                return true;
-            }
-
-            return false;
-        }
     }
 }
-
