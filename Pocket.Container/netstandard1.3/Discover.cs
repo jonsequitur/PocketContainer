@@ -31,15 +31,24 @@ namespace Pocket
             Type type) =>
             types.Where(t => type.GetTypeInfo().IsAssignableFrom(t.GetTypeInfo()));
 
-        public static IEnumerable<Type> ConcreteTypes()
-        {
-            var types = Assemblies
+        public static IEnumerable<Type> ConcreteTypes() =>
+            Types().Where(t =>
+            {
+                var typeInfo = t.GetTypeInfo();
+
+                return !typeInfo.IsAbstract &&
+                       !typeInfo.IsInterface &&
+                       !typeInfo.IsGenericTypeDefinition;
+            });
+
+        public static IEnumerable<Type> Types() =>
+            Assemblies
                 .Value
                 .SelectMany(a =>
                 {
                     try
                     {
-                        return a.GetExportedTypes();
+                        return a.DefinedTypes.Select(t => t.UnderlyingSystemType);
                     }
                     catch (TypeLoadException)
                     {
@@ -54,19 +63,9 @@ namespace Pocket
                     {
                     }
                     return Enumerable.Empty<Type>();
-                })
-                .Where(t =>
-                {
-                    var typeInfo = t.GetTypeInfo();
-                    return !typeInfo.IsAbstract &&
-                           !typeInfo.IsInterface &&
-                           !typeInfo.IsGenericTypeDefinition;
                 });
 
-            return types;
-        }
-
-        private static readonly Lazy<List<Assembly>> Assemblies = new Lazy<List<Assembly>>(() =>
+        internal static readonly Lazy<List<Assembly>> Assemblies = new Lazy<List<Assembly>>(() =>
         {
             var dependencyContext = DependencyContext.Default;
 

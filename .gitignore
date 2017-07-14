@@ -9,6 +9,7 @@ bin/
 csx/
 Bin/
 obj/
+.vscode/
 *.Tests/lib/
 packages/
 instrumented/
