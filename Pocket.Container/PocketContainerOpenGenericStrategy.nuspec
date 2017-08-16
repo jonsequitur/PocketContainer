@@ -12,12 +12,12 @@
     <tags>PocketContainer IoC DI container convention strategy</tags>
     <developmentDependency>true</developmentDependency>
     <dependencies>
-      <dependency id="PocketContainer" version="[1.2.3,2)" />
+      <dependency id="PocketContainer" version="[1.2.3,2)" include="all" />
     </dependencies>
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
   </metadata>
   <files>
     <file src="PocketContainerOpenGenericStrategy.cs" 
-          target="content\(Pocket)\PocketContainerOpenGenericStrategy.cs" />
+          target="contentFiles/cs/any/(Pocket)/Container/PocketContainerOpenGenericStrategy.cs" />
   </files>
 </package>

@@ -13,11 +13,11 @@
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
     <developmentDependency>true</developmentDependency>
     <dependencies>
-      <dependency id="PocketContainer" version="[1.2.3,2)" />
+      <dependency id="PocketContainer" version="[1.2.3,2)" include="all" />
     </dependencies>
   </metadata>
   <files>
     <file src="PocketContainer.Clone.cs" 
-          target="content\(Pocket)\PocketContainer.Clone.cs" />
+          target="contentFiles/cs/any/(Pocket)/Container/PocketContainer.Clone.cs" />
   </files>
 </package>

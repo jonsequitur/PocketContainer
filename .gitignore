@@ -28,3 +28,4 @@ Artifacts
 *.xml
 *.log
 *.nupkg
+\.vs/
