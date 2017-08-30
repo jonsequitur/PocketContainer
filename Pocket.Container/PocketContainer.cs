@@ -24,24 +24,27 @@ namespace Pocket
     /// <summary>
     /// An embedded dependency injection container, for when you want to use a container without adding an assembly dependency.
     /// </summary>
-    /// <remarks>The default resolution strategy follows Unity's conventions. A concrete type can be resolved without explicit registration. It will choose the longest constructor and resolve the types to satisfy its arguments. This continues recursively until the graph is built or it fails to build a dependency.</remarks>
+    /// <remarks>The default resolution strategy the following conventions: 
+    /// * A concrete type can be resolved without explicit registration. 
+    /// * PocketContainer will choose the longest constructor and resolve the types to satisfy its arguments. This continues recursively until the graph is built.
+    /// * If it fails to build a dependency somewhere in the graph, an ArgumentException is thrown.</remarks>
 #if !SourceProject
     [System.Diagnostics.DebuggerStepThrough]
 #endif
     internal partial class PocketContainer : IEnumerable<KeyValuePair<Type, Func<PocketContainer, object>>>
     {
         private static readonly MethodInfo resolveMethod =
-            typeof (PocketContainer).GetMethod("Resolve", Type.EmptyTypes);
+            typeof (PocketContainer).GetMethod(nameof(Resolve), Type.EmptyTypes);
 
         private static readonly MethodInfo registerMethod =
-            typeof (PocketContainer).GetMethods().Single(m => m.Name == "Register" && m.IsGenericMethod);
+            typeof (PocketContainer).GetMethods().Single(m => m.Name == nameof(Register) && m.IsGenericMethod);
 
         private static readonly MethodInfo registerSingleMethod =
-            typeof (PocketContainer).GetMethods().Single(m => m.Name == "RegisterSingle" && m.IsGenericMethod);
+            typeof (PocketContainer).GetMethods().Single(m => m.Name == nameof(RegisterSingle) && m.IsGenericMethod);
 
         private ConcurrentDictionary<Type, Func<PocketContainer, object>> resolvers = new ConcurrentDictionary<Type, Func<PocketContainer, object>>();
 
-        private readonly ConcurrentDictionary<Type, object> singletons = new ConcurrentDictionary<Type, object>();
+        private ConcurrentDictionary<Type, object> singletons = new ConcurrentDictionary<Type, object>();
 
         private Func<Type, Func<PocketContainer, object>> strategyChain = type => null;
 
@@ -50,36 +53,32 @@ namespace Pocket
         /// </summary>
         public PocketContainer()
         {
-            Register(c => this);
+            RegisterSingle(c => this);
 
             AddStrategy(type =>
             {
                 // add a default strategy for Func<T> to resolve by convention to return a Func that does a resolve when invoked
-                if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof (Func<>))
+                if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Func<>))
                 {
-                    var funcReturnType = type.GetGenericArguments().Single();
-
-                    var func = (Func<PocketContainer, object>)
-                               GetType()
-                                   .GetMethod("MakeResolverFunc", BindingFlags.Instance | BindingFlags.NonPublic)
-                                   .MakeGenericMethod(funcReturnType)
-                                   .Invoke(this, null);
-
-                    return func;
+                    return (Func<PocketContainer, object>)
+                        GetType()
+                            .GetMethod(nameof(MakeResolverFunc), BindingFlags.Instance | BindingFlags.NonPublic)
+                            .MakeGenericMethod(type.GetGenericArguments().Single())
+                            .Invoke(this, null);
                 }
 
                 return null;
             });
 
-            AfterConstructor();   
+            AfterConstructor();
         }
 
         /// <summary>
         /// Resolves an instance of the specified type.
         /// </summary>
-        public virtual T Resolve<T>()
+        public T Resolve<T>()
         {
-            return (T) resolvers.GetOrAdd(typeof (T), t =>
+            var resolved = (T) resolvers.GetOrAdd(typeof (T), t =>
             {
                 var customFactory = strategyChain(t);
                 if (customFactory != null)
@@ -106,6 +105,10 @@ namespace Pocket
 
                 return c => defaultFactory(c);
             })(this);
+
+            AfterResolve(typeof(T), resolved);
+
+            return resolved;
         }
 
         /// <summary>
@@ -130,14 +133,19 @@ namespace Pocket
                 }
                 catch (TargetInvocationException ex)
                 {
-                    if (ex.InnerException != null   )
+                    if (ex.InnerException != null)
                     {
                         throw ex.InnerException;
                     }
                     throw;
                 }
             }
-            return func(this);
+
+            var resolved = func(this);
+
+            AfterResolve(type, resolved);
+
+            return resolved;
         }
 
         /// <remarks>When an unregistered type is resolved for the first time, the strategies are checked until one returns a delegate. This delegate will be used in the future to resolve the specified type.</remarks>
@@ -160,6 +168,8 @@ namespace Pocket
         partial void AfterConstructor();
 
         partial void BeforeRegister<T>(Func<PocketContainer, T> factory);
+
+        partial void AfterResolve(Type type, object resolved);
 
         /// <summary>
         /// Registers a delegate to retrieve instances of the specified type.

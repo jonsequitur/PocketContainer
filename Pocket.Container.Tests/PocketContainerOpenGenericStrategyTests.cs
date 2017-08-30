@@ -16,10 +16,33 @@ namespace Pocket.Container.Tests
             var container = new PocketContainer();
 
             container
-                .Register<List<string>>(c => new List<string>())
-                .RegisterGeneric(variantsOf: typeof (IEnumerable<>), to: typeof (List<>));
+                .RegisterGeneric(
+                    variantsOf: typeof(IAmAGenericInterface<>),
+                    to: typeof(IAmAGenericImplementation<>));
 
-            container.Resolve<IEnumerable<string>>().Should().BeOfType<List<string>>();
+            container.Resolve<IAmAGenericInterface<string>>()
+                     .Should()
+                     .BeOfType<IAmAGenericImplementation<string>>();
+        }
+
+        [Fact]
+        public void Open_generic_registrations_can_be_singletons()
+        {
+            var container = new PocketContainer();
+
+            container
+                .RegisterGeneric(
+                    variantsOf: typeof(IAmAGenericInterface<>),
+                    to: typeof(IAmAGenericImplementation<>),
+                    singletons: true);
+
+            container.Resolve<IAmAGenericInterface<string>>()
+                     .Should()
+                     .BeOfType<IAmAGenericImplementation<string>>();
+
+            container.Resolve<IAmAGenericInterface<int>>()
+                     .Should()
+                     .BeSameAs(container.Resolve<IAmAGenericInterface<int>>());
         }
 
         [Fact]
@@ -28,9 +51,13 @@ namespace Pocket.Container.Tests
             var container = new PocketContainer();
 
             Action registerWrongType = () =>
-                container.RegisterGeneric(typeof (string), typeof (List<>));
+                container.RegisterGeneric(typeof(string), typeof(List<>));
 
-            registerWrongType.ShouldThrow<ArgumentException>().And.Message.Should().Contain("'variantsOf'");
+            registerWrongType.ShouldThrow<ArgumentException>()
+                             .And
+                             .Message
+                             .Should()
+                             .Contain("'variantsOf'");
         }
 
         [Fact]
@@ -39,9 +66,13 @@ namespace Pocket.Container.Tests
             var container = new PocketContainer();
 
             Action registerWrongType = () =>
-                container.RegisterGeneric(typeof (IEnumerable<>), typeof (string));
+                container.RegisterGeneric(typeof(IEnumerable<>), typeof(string));
 
-            registerWrongType.ShouldThrow<ArgumentException>().And.Message.Should().Contain("'to'");
+            registerWrongType.ShouldThrow<ArgumentException>()
+                             .And
+                             .Message
+                             .Should()
+                             .Contain("'to'");
         }
     }
 }
