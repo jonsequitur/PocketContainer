@@ -72,6 +72,14 @@ namespace Pocket.Container.Tests
     {
     }
 
+    public interface IAmAGenericInterface<T>
+    {
+    }
+
+    public class IAmAGenericImplementation<T> : IAmAGenericInterface<T>
+    {
+    }
+
     public class HasDefaultCtor : IAmAnInterface
     {
     }
