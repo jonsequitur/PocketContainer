@@ -10,8 +10,10 @@
 
   <ItemGroup>
     <Compile Include="..\Pocket.Container.Behaviors.CumulativeRegistration\PocketContainerCumulativeRegistration.cs" Link="PocketContainerCumulativeRegistration.cs" />
+    <Compile Include="..\Pocket.Container\PocketContainer.Clone.cs" Link="PocketContainer.Clone.cs" />
     <Compile Include="..\Pocket.Container\PocketContainer.cs" Link="PocketContainer.cs" />
     <Compile Include="..\Pocket.Container.Extensions.TryRegister\PocketContainer.TryRegister.cs" Link="PocketContainer.TryRegister.cs" />
+    <Compile Include="..\Pocket.Container\PocketContainerOpenGenericStrategy.cs" Link="PocketContainerOpenGenericStrategy.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +33,10 @@
     <Compile Update="PocketContainerMicrosoftDependencyInjection.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="%28Pocket%29\" />
   </ItemGroup>
 
 </Project>
