@@ -417,6 +417,18 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
+        public void Recursive_resolve_does_not_stack_overflow()
+        {
+            var container = new PocketContainer()
+                .RegisterSingle(c => c.Resolve<IAmAGenericImplementation<string>>());
+
+            var first = container.Resolve<IAmAGenericImplementation<string>>();
+            var second = container.Resolve<IAmAGenericImplementation<string>>();
+
+            first.Should().BeSameAs(second).And.NotBeNull();
+        }
+
+        [Fact]
         public void PocketContainer_can_throw_a_customized_exception_on_resolve_failure_via_generic_Resolve()
         {
             var container = new PocketContainer

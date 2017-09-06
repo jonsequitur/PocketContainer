@@ -36,13 +36,34 @@ namespace Pocket.Container.Tests
                     to: typeof(IAmAGenericImplementation<>),
                     singletons: true);
 
-            container.Resolve<IAmAGenericInterface<string>>()
-                     .Should()
-                     .BeOfType<IAmAGenericImplementation<string>>();
+            var resolvedOnce = container.Resolve<IAmAGenericInterface<int>>();
+            var resolvedTwice = container.Resolve<IAmAGenericInterface<int>>();
 
-            container.Resolve<IAmAGenericInterface<int>>()
-                     .Should()
-                     .BeSameAs(container.Resolve<IAmAGenericInterface<int>>());
+            resolvedOnce
+                .Should()
+                .BeSameAs(resolvedTwice);
+        }
+
+        [Fact]
+        public void Several_singleton_open_generic_registrations_resolving_to_a_common_type_share_an_instance()
+        {
+            var container = new PocketContainer();
+
+            container
+                .RegisterGeneric(
+                    variantsOf: typeof(IEnumerable<>),
+                    to: typeof(List<>),
+                    singletons: true)
+                .RegisterGeneric(
+                    variantsOf: typeof(IList<>),
+                    to: typeof(List<>),
+                    singletons: true);
+
+            var enumerable = container.Resolve<IEnumerable<string>>();
+            var list = container.Resolve<IList<string>>();
+
+            list.Should()
+                .BeSameAs(enumerable);
         }
 
         [Fact]

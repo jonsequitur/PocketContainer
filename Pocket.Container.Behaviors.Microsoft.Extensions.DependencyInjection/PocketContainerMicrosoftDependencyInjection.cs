@@ -10,6 +10,7 @@
 // PM> Get-Package -Updates
 
 using System;
+using System.Reflection;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -38,7 +39,14 @@ namespace Pocket
         /// Throws an exception if the <see cref="T:System.IServiceProvider" /> cannot create the object.</returns>
         public object GetRequiredService(Type serviceType) =>
             Resolve(serviceType) ??
-            throw new ArgumentNullException($"Service of type {serviceType} is not registerd.");
+            throw new ArgumentNullException($"Service of type {serviceType} is not registered.");
+
+        public event Action<(Type serviceType, object resolved)> OnResolved;
+
+        partial void AfterResolve(Type type, object resolved) =>
+            OnResolved?.Invoke((type, resolved));
+
+        public bool HasSingletonOfType(Type type) => singletons.ContainsKey(type);
     }
 
     internal static class MicrosoftDependencyInjectionExtensions
@@ -52,6 +60,9 @@ namespace Pocket
                 Register(container, service);
             }
 
+            container.RegisterSingle<IServiceProvider>(c => container)
+                     .RegisterSingle<IServiceScopeFactory>(c => new ServiceScopeFactory(c));
+
             container.OnFailedResolve = (type, exception) => null;
 
             return container;
@@ -63,23 +74,126 @@ namespace Pocket
         {
             if (descriptor.ImplementationInstance != null)
             {
-                container.Register(
+                container.RegisterSingle(
                     descriptor.ServiceType,
                     c => descriptor.ImplementationInstance);
-            }
-
-            if (descriptor.ImplementationType != null)
-            {
-                container.Register(
-                    descriptor.ServiceType,
-                    c => c.Resolve(descriptor.ImplementationType));
+                return;
             }
 
             if (descriptor.ImplementationFactory != null)
             {
-                container.Register(
-                    descriptor.ServiceType,
-                    c => descriptor.ImplementationFactory(c));
+                if (descriptor.Lifetime != ServiceLifetime.Singleton)
+                {
+                    container.Register(
+                        descriptor.ServiceType,
+                        c => descriptor.ImplementationFactory(c));
+                }
+                else
+                {
+                    container.RegisterSingle(
+                        descriptor.ServiceType,
+                        c => descriptor.ImplementationFactory(c));
+                }
+                return;
+            }
+
+            if (descriptor.ImplementationType != null)
+            {
+                if (descriptor.IsOpenGeneric())
+                {
+                    container.RegisterGeneric(
+                        variantsOf: descriptor.ServiceType,
+                        to: descriptor.ImplementationType);
+                }
+                else if (descriptor.ServiceType == descriptor.ImplementationType)
+                {
+                    // no need to register it
+                }
+                else
+                {
+                    if (descriptor.Lifetime != ServiceLifetime.Singleton)
+                    {
+                        container.Register(
+                            descriptor.ServiceType,
+                            c => c.Resolve(descriptor.ImplementationType));
+                    }
+                    else
+                    {
+                        container.RegisterSingle(
+                            descriptor.ServiceType,
+                            c => c.Resolve(descriptor.ImplementationType));
+                    }
+                }
+            }
+        }
+
+        public static bool IsOpenGeneric(this ServiceDescriptor descriptor) =>
+            descriptor.ServiceType.GetTypeInfo().IsGenericTypeDefinition;
+    }
+
+    internal class ServiceScopeFactory : IServiceScopeFactory
+    {
+        private readonly PocketContainer container;
+
+        public ServiceScopeFactory(PocketContainer container)
+        {
+            this.container = container ??
+                             throw new ArgumentNullException(nameof(container));
+        }
+
+        public IServiceScope CreateScope() => new ServiceScope(container);
+    }
+
+    internal class ServiceScope : IServiceScope
+    {
+        private readonly PocketContainer container;
+
+        private readonly CompositeDisposable disposables;
+
+        private bool isDisposed;
+
+        public ServiceScope(PocketContainer container)
+        {
+            this.container = container?.Clone() ??
+                             throw new ArgumentNullException(nameof(container));
+
+            this.container.OnResolved += OnResolved;
+
+            disposables = new CompositeDisposable
+            {
+                Disposable.Create(() =>
+                                      this.container.OnResolved -= OnResolved),
+                Disposable.Create(() => isDisposed = true)
+            };
+        }
+
+        private void OnResolved(
+            (Type serviceType,
+                object resolved) service)
+        {
+            if (service.resolved is IDisposable disposable)
+            {
+                disposables.Add(Disposable.Create(() =>
+                {
+                    if (!container.HasSingletonOfType(service.serviceType))
+                    {
+                        disposable.Dispose();
+                    }
+                }));
+            }
+        }
+
+        public void Dispose() => disposables.Dispose();
+
+        public IServiceProvider ServiceProvider
+        {
+            get
+            {
+                if (isDisposed)
+                {
+                    throw new ObjectDisposedException("The ServiceScope has been disposed.");
+                }
+                return container;
             }
         }
     }

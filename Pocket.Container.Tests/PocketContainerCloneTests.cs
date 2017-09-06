@@ -127,5 +127,51 @@ namespace Pocket.Container.Tests
 
             resolveFromOriginal.ShouldThrow<ArgumentException>();
         }
+
+        [Fact]
+        public void When_a_singleton_registered_in_the_original_is_resolved_first_from_the_original_and_then_from_the_clone_it_is_the_same_instance()
+        {
+            var original = new PocketContainer();
+
+            original.RegisterSingle(c => new object());
+
+            var clone = original.Clone();
+
+            var resolvedFromOriginal = original.Resolve<object>();
+            var resolvedFromClone = clone.Resolve<object>();
+
+            resolvedFromClone.Should().BeSameAs(resolvedFromOriginal);
+        }
+
+        [Fact]
+        public void When_a_singleton_registered_in_the_original_is_resolved_first_from_the_clone_and_then_from_the_original_it_is_the_same_instance()
+        {
+            var original = new PocketContainer();
+
+            original.RegisterSingle(c => new object());
+
+            var clone = original.Clone();
+
+            var resolvedFromClone = clone.Resolve<object>();
+            var resolvedFromOriginal = original.Resolve<object>();
+
+            resolvedFromOriginal.Should().BeSameAs(resolvedFromClone);
+        }
+
+        [Fact(Skip="Issue #16")]
+        public void When_RegisterSingle_is_called_on_the_clone_it_does_not_register_the_singleton_in_the_original()
+        {
+            var original = new PocketContainer();
+            original.RegisterSingle(c => new object());
+
+            var clone = original.Clone();
+            clone.RegisterSingle(c => new object());
+
+            var resolvedFromClone = clone.Resolve<object>();
+            var resolvedFromOriginal = original.Resolve<object>();
+
+            resolvedFromOriginal.Should()
+                                .NotBeSameAs(resolvedFromClone);
+        }
     }
 }

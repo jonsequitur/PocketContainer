@@ -55,7 +55,9 @@ namespace Pocket
 
                     if (singletons)
                     {
-                        container.RegisterSingle(t, cc => cc.Resolve(closedGenericType));
+                        container.TryRegisterSingle(
+                            t,
+                            cc => cc.Resolve(closedGenericType));
                     }
 
                     return c => c.Resolve(closedGenericType);

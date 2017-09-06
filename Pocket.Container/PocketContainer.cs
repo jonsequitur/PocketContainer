@@ -198,7 +198,7 @@ namespace Pocket
         /// </summary>
         public PocketContainer RegisterSingle<T>(Func<PocketContainer, T> factory)
         {
-            Register(c => (T) singletons.GetOrAdd(typeof (T), t => factory(c)));
+            Register(c => (T) singletons.GetOrAdd(typeof(T), t => factory(c)));
             singletons.TryRemove(typeof(T), out object _);
             return this;
         }
