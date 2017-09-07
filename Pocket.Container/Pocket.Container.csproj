@@ -5,7 +5,7 @@
     <RootNamespace>PocketContainer</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_6; SourceProject</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD2_0; SourceProject</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="netstandard2.0\**" />

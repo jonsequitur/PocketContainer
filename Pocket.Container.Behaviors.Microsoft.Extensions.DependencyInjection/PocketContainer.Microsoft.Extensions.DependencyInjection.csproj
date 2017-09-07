@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETCOREAPP1_1;SourceProject</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP2_0;SourceProject</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
