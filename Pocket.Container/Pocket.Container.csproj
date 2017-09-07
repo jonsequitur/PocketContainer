@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>PocketContainer</AssemblyName>
     <RootNamespace>PocketContainer</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_6; SourceProject</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP2_0;SourceProject</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="HttpConfigurationExtensions.cs" />
@@ -20,11 +20,6 @@
     <None Remove="PocketContainerDependencyResolver.nuspec" />
     <None Remove="PocketContainerDependencyResolverStrategy.nuspec" />
     <None Remove="PocketContainerItsConfigurationSettingsStrategy.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
-    <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
