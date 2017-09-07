@@ -1,5 +1,5 @@
 install:
-  - nuget --version
+  - nuget 
   - dotnet restore
 
 configuration:
