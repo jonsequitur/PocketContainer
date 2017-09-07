@@ -8,6 +8,11 @@
     <DefineConstants>TRACE;DEBUG;NETSTANDARD1_6; SourceProject</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="netstandard2.0\**" />
+    <EmbeddedResource Remove="netstandard2.0\**" />
+    <None Remove="netstandard2.0\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Remove="HttpConfigurationExtensions.cs" />
     <Compile Remove="PocketContainerAutoMockingStrategy.cs" />
     <Compile Remove="PocketContainerDependencyResolver.cs" />

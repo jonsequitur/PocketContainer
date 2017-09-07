@@ -3,7 +3,7 @@
   <metadata>
     <id>Pocket.TypeDiscovery</id>
     <title>Pocket.TypeDiscovery</title>
-    <version>0.3.11</version>
+    <version>0.3.12</version>
     <authors>jonsequitur</authors>
     <owners></owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
@@ -18,6 +18,8 @@
       <group targetFramework="netstandard1.3">
         <dependency id="Microsoft.Extensions.DependencyModel" version="1.0.0" />
       </group>
+       <group targetFramework="netstandard2.0">
+      </group>
     </dependencies>
   </metadata>
   <files>
@@ -25,5 +27,7 @@
           target="contentFiles/cs/net45/(Pocket)/Discover.cs" />
     <file src="netstandard1.3/Discover.cs" 
           target="contentFiles/cs/netstandard1.3/(Pocket)/Discover.cs" />
+    <file src="netstandard2.0/Discover.cs" 
+          target="contentFiles/cs/netstandard2.0/(Pocket)/Discover.cs" />
   </files>
 </package>
