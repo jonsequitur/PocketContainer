@@ -1,4 +1,5 @@
 install:
+  - dotnet --info
   - dotnet restore
 
 configuration:
