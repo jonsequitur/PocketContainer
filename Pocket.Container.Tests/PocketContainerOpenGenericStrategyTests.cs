@@ -45,28 +45,6 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void Several_singleton_open_generic_registrations_resolving_to_a_common_type_share_an_instance()
-        {
-            var container = new PocketContainer();
-
-            container
-                .RegisterGeneric(
-                    variantsOf: typeof(IEnumerable<>),
-                    to: typeof(List<>),
-                    singletons: true)
-                .RegisterGeneric(
-                    variantsOf: typeof(IList<>),
-                    to: typeof(List<>),
-                    singletons: true);
-
-            var enumerable = container.Resolve<IEnumerable<string>>();
-            var list = container.Resolve<IList<string>>();
-
-            list.Should()
-                .BeSameAs(enumerable);
-        }
-
-        [Fact]
         public void When_a_non_open_generic_type_is_registered_as_the_variantsOf_argument_then_it_throws()
         {
             var container = new PocketContainer();
