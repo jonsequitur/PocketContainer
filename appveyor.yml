@@ -21,6 +21,7 @@ after_build:
   - nuget pack Pocket.Container\PocketContainer.nuspec  
   - nuget pack Pocket.Container\PocketContainerOpenGenericStrategy.nuspec  
   - nuget pack Pocket.Container\PocketContainerPrimitiveAvoidanceStrategy.nuspec  
+  - nuget pack Pocket.Container\PocketContainer.AfterCreating.nuspec  
   - nuget pack Pocket.Container\PocketContainer.Clone.nuspec  
   - nuget pack Pocket.Container\PocketContainerSingleImplementationStrategy.nuspec  
   - nuget pack Pocket.Container\TypeDiscovery.nuspec  
