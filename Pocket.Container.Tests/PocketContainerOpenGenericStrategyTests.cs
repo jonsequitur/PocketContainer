@@ -36,13 +36,12 @@ namespace Pocket.Container.Tests
                     to: typeof(IAmAGenericImplementation<>),
                     singletons: true);
 
-            container.Resolve<IAmAGenericInterface<string>>()
-                     .Should()
-                     .BeOfType<IAmAGenericImplementation<string>>();
+            var resolvedOnce = container.Resolve<IAmAGenericInterface<int>>();
+            var resolvedTwice = container.Resolve<IAmAGenericInterface<int>>();
 
-            container.Resolve<IAmAGenericInterface<int>>()
-                     .Should()
-                     .BeSameAs(container.Resolve<IAmAGenericInterface<int>>());
+            resolvedOnce
+                .Should()
+                .BeSameAs(resolvedTwice);
         }
 
         [Fact]

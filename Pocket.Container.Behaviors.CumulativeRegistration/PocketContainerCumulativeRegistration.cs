@@ -5,32 +5,48 @@ using System.Threading;
 
 namespace Pocket
 {
-    internal partial class PocketContainer
+    internal static class PocketContainerCumulativeRegistration
     {
-        private static readonly ThreadLocal<int> recursionCounter = new ThreadLocal<int>(() => 0);
+        private static readonly AsyncLocal<int> recursionCounter = new AsyncLocal<int>();
 
-        partial void BeforeRegister<T>(Func<PocketContainer, T> factory)
+        public static PocketContainer AccumulateRegistrations(
+            this PocketContainer container)
+        {
+            container.BeforeRegister += resolver =>
+                AddFactoryToList(container, (dynamic) resolver);
+
+            return container;
+        }
+
+        private static void AddFactoryToList<T>(
+            PocketContainer container,
+            Func<PocketContainer, T> factory)
         {
             // avoid re-entrancy which would result in a stack overflow
-            if (recursionCounter.Value == 0)
+            if (recursionCounter.Value != 0)
             {
-                try
-                {
-                    recursionCounter.Value++;
+                return;
+            }
 
-                    TryRegister(c => c.Resolve<List<Func<PocketContainer, T>>>()
-                                               .Select(f => f(c)));
+            try
+            {
+                recursionCounter.Value++;
 
-                    TryRegisterSingle(c => new List<Func<PocketContainer, T>>());
+                // register IEnumerable<Func<PocketContainer, T>>
+                container.TryRegister(c => c.Resolve<List<Func<PocketContainer, T>>>()
+                                            .Select(f => f(c)));
 
-                    var registrations = Resolve<List<Func<PocketContainer, T>>>();
+                // register the registration list as a singleton
+                container.TryRegisterSingle(c => new List<Func<PocketContainer, T>>());
 
-                    registrations.Add(factory);
-                }
-                finally
-                {
-                    recursionCounter.Value--;
-                }
+                // resolve it and add the factory
+                var registrations = container.Resolve<List<Func<PocketContainer, T>>>();
+
+                registrations.Add(factory);
+            }
+            finally
+            {
+                recursionCounter.Value--;
             }
         }
     }

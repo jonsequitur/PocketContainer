@@ -10,7 +10,6 @@
 // PM> Get-Package -Updates
 
 using System;
-using System.Collections.Concurrent;
 
 namespace Pocket
 {
@@ -23,18 +22,12 @@ namespace Pocket
         {
             var fallback = this;
 
-            var child = new PocketContainer
-            {
-                resolvers = new ConcurrentDictionary<Type, Func<PocketContainer, object>>(resolvers),
-                strategyChain = strategyChain
-            };
+            var child = Clone();
 
             return child.AddStrategy(t =>
             {
                 // if the parent already has a registation, use it
-                Func<PocketContainer, object> resolver;
-
-                if (fallback.resolvers.TryGetValue(t, out resolver))
+                if (fallback.resolvers.TryGetValue(t, out var resolver))
                 {
                     return resolver;
                 }

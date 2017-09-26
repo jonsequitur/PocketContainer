@@ -22,35 +22,10 @@
     <None Remove="PocketContainerItsConfigurationSettingsStrategy.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <Compile Include="..\Pocket.Container.Extensions.TryRegister\PocketContainer.TryRegister.cs" Link="PocketContainer.TryRegister.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="desktop\Discover.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="PocketContainerMicrosoftDependencyInjection.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="PocketContainer.AfterResolve.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="PocketContainer.Clone.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="PocketContainer.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="PocketContainerOpenGenericStrategy.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="PocketContainerPrimitiveAvoidanceStrategy.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="PocketContainerSingleImplementationStrategy.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="Properties\AssemblyInfo.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
+    <Folder Include="Properties\" />
   </ItemGroup>
+
 </Project>

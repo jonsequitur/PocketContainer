@@ -73,40 +73,53 @@ namespace Pocket
             AfterConstructor();
         }
 
+        private Type resolving;
+
         /// <summary>
         /// Resolves an instance of the specified type.
         /// </summary>
         public T Resolve<T>()
         {
-            var resolved = (T) resolvers.GetOrAdd(typeof (T), t =>
+            T resolved;
+
+            if (resolving != typeof(T))
             {
-                var customFactory = strategyChain(t);
-                if (customFactory != null)
+                resolving = typeof(T);
+                resolved = (T) resolvers.GetOrAdd(typeof (T), t =>
                 {
-                    return customFactory;
-                }
-
-                Func<PocketContainer, T> defaultFactory;
-                try
-                {
-                    defaultFactory = Factory<T>.Default;
-                }
-                catch (TypeInitializationException ex)
-                {
-                    var ex2 = OnFailedResolve(typeof(T), ex);
-
-                    if (ex2 != null)
+                    var customFactory = strategyChain(t);
+                    if (customFactory != null)
                     {
-                        throw ex2;
+                        return customFactory;
                     }
 
-                    defaultFactory = c => default(T);
-                }
+                    Func<PocketContainer, T> defaultFactory;
+                    try
+                    {
+                        defaultFactory = Factory<T>.Default;
+                    }
+                    catch (TypeInitializationException ex)
+                    {
+                        var ex2 = OnFailedResolve(typeof(T), ex);
 
-                return c => defaultFactory(c);
-            })(this);
+                        if (ex2 != null)
+                        {
+                            throw ex2;
+                        }
 
-            AfterResolve(typeof(T), resolved);
+                        defaultFactory = c => default(T);
+                    }
+
+                    return c => defaultFactory(c);
+                })(this);
+                resolving = null;
+            }
+            else
+            {
+                resolved = Activator.CreateInstance<T>();
+            }
+
+            AfterResolve?.Invoke(typeof(T), resolved);
 
             return resolved;
         }
@@ -124,8 +137,7 @@ namespace Pocket
         /// </summary>
         public object Resolve(Type type)
         {
-            Func<PocketContainer, object> func;
-            if (!resolvers.TryGetValue(type, out func))
+            if (!resolvers.TryGetValue(type, out var func))
             {
                 try
                 {
@@ -143,7 +155,7 @@ namespace Pocket
 
             var resolved = func(this);
 
-            AfterResolve(type, resolved);
+            AfterResolve?.Invoke(type, resolved);
 
             return resolved;
         }
@@ -167,16 +179,16 @@ namespace Pocket
 
         partial void AfterConstructor();
 
-        partial void BeforeRegister<T>(Func<PocketContainer, T> factory);
+        public event Action<Type, object> AfterResolve;
 
-        partial void AfterResolve(Type type, object resolved);
+        public event Action<Delegate> BeforeRegister;
 
         /// <summary>
         /// Registers a delegate to retrieve instances of the specified type.
         /// </summary>
         public PocketContainer Register<T>(Func<PocketContainer, T> factory)
         {
-            BeforeRegister(factory);
+            BeforeRegister?.Invoke(factory);
             resolvers[typeof (T)] = c => factory(c);
             resolvers[typeof (Lazy<T>)] = c => new Lazy<T>(c.Resolve<T>);
             return this;
@@ -198,7 +210,14 @@ namespace Pocket
         /// </summary>
         public PocketContainer RegisterSingle<T>(Func<PocketContainer, T> factory)
         {
-            Register(c => (T) singletons.GetOrAdd(typeof (T), t => factory(c)));
+            Register(c => (T) singletons.GetOrAdd(typeof(T), t =>
+            {
+                var resolved = factory(c);
+
+                TryRegisterSingle(resolved.GetType(), _ => resolved);
+
+                return resolved;
+            }));
             singletons.TryRemove(typeof(T), out object _);
             return this;
         }
@@ -270,25 +289,13 @@ namespace Pocket
             }
         }
 
-        /// <summary>
-        /// Returns an enumerator that iterates through the collection.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.
-        /// </returns>
         public IEnumerator<KeyValuePair<Type, Func<PocketContainer, object>>> GetEnumerator() => resolvers.GetEnumerator();
 
-        /// <summary>
-        /// Returns an enumerator that iterates through a collection.
-        /// </summary>
-        /// <returns>
-        /// An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.
-        /// </returns>
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         // ReSharper disable UnusedMember.Local
         private Func<PocketContainer, Func<T>> MakeResolverFunc<T>()
-            // ReSharper restore UnusedMember.Local
+        // ReSharper restore UnusedMember.Local
         {
             var container = Expression.Parameter(typeof (PocketContainer), "container");
 

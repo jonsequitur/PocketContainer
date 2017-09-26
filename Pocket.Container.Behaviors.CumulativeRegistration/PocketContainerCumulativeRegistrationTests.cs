@@ -10,7 +10,8 @@ namespace Pocket.Container.CumulativeRegistration.Tests
         [Fact]
         public void Multiple_registrations_of_T_can_be_resolved_as_an_IEnumerable_of_T()
         {
-            var container = new PocketContainer();
+            var container = new PocketContainer()
+                .AccumulateRegistrations();
 
             container.Register(c => "one");
             container.Register(c => "two");

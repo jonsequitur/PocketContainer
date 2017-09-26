@@ -100,6 +100,7 @@ namespace Pocket.Container.Microsoft.Extensions.DependencyInjection.Tests
                 .AddTransient<IAmAnInterface, AlsoHasDefaultCtor>();
 
             var container = new PocketContainer()
+                .AccumulateRegistrations()
                 .AsServiceProvider(services);
 
             var fromServices = services.BuildServiceProvider()
@@ -113,12 +114,47 @@ namespace Pocket.Container.Microsoft.Extensions.DependencyInjection.Tests
         }
 
         [Fact]
+        public void Open_generic_types_registrations_behave_as_expected
+            ()
+        {
+            var services = new ServiceCollection()
+                .AddTransient(
+                    serviceType: typeof(IAmAGenericInterface<>),
+                    implementationType: typeof(IAmAGenericImplementation<>));
+
+            var foo = services.BuildServiceProvider()
+                              .GetService<IAmAGenericInterface<string>>();
+
+            foo.Should().BeOfType<IAmAGenericImplementation<string>>();
+
+            foo = new PocketContainer()
+                .AsServiceProvider(services)
+                .GetService<IAmAGenericInterface<string>>();
+
+            foo.Should().BeOfType<IAmAGenericImplementation<string>>();
+        }
+
+        [Fact]
+        public void When_service_type_and_implementation_type_are_the_same_the_type_is_resolvable()
+        {
+            var services = new ServiceCollection()
+                .AddTransient<HasDefaultCtor, HasDefaultCtor>();
+
+            var obj = services.BuildServiceProvider()
+                              .GetRequiredService<HasDefaultCtor>();
+
+            obj = new PocketContainer()
+                .AsServiceProvider(services)
+                .GetRequiredService<HasDefaultCtor>();
+        }
+
+        [Fact]
         public void EXAMPLE_Singleton_instances_resolved_from_the_root_are_disposed_when_the_container_is_disposed()
         {
             var wasDisposed = false;
 
             var services = new ServiceCollection()
-                .AddSingleton(_ => Create.Disposable(() => { wasDisposed = true; }));
+                .AddSingleton(_ => Disposable.Create(() => { wasDisposed = true; }));
 
             var serviceProvider = services.BuildServiceProvider();
 
@@ -135,7 +171,7 @@ namespace Pocket.Container.Microsoft.Extensions.DependencyInjection.Tests
             var wasDisposed = false;
 
             var services = new ServiceCollection()
-                .AddTransient(_ => Create.Disposable(() => { wasDisposed = true; }));
+                .AddTransient(_ => Disposable.Create(() => { wasDisposed = true; }));
 
             var serviceProvider = services.BuildServiceProvider();
 
@@ -152,11 +188,35 @@ namespace Pocket.Container.Microsoft.Extensions.DependencyInjection.Tests
             var wasDisposed = false;
 
             var services = new ServiceCollection()
-                .AddSingleton(_ => Create.Disposable(() => { wasDisposed = true; }));
+                .AddSingleton(_ => Disposable.Create(() => { wasDisposed = true; }));
 
             var scope = services.BuildServiceProvider().CreateScope();
 
             scope.ServiceProvider.GetService<IDisposable>();
+
+            scope.Dispose();
+
+            wasDisposed.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Singleton_instances_resolved_from_a_scope_are_not_disposed_when_the_scope_is_disposed()
+        {
+            var wasDisposed = false;
+
+            var services = new ServiceCollection()
+                .AddSingleton(_ => Disposable.Create(() =>
+                {
+                    wasDisposed = true;
+                }));
+
+            var scope = new PocketContainer()
+                .AsServiceProvider(services)
+                .CreateScope();
+
+            var provider = scope.ServiceProvider;
+
+            provider.GetService<IDisposable>();
 
             scope.Dispose();
 
@@ -169,7 +229,7 @@ namespace Pocket.Container.Microsoft.Extensions.DependencyInjection.Tests
             var wasDisposed = false;
 
             var services = new ServiceCollection()
-                .AddTransient(_ => Create.Disposable(() => { wasDisposed = true; }));
+                .AddTransient(_ => Disposable.Create(() => { wasDisposed = true; }));
 
             var scope = services.BuildServiceProvider().CreateScope();
 
@@ -181,34 +241,25 @@ namespace Pocket.Container.Microsoft.Extensions.DependencyInjection.Tests
         }
 
         [Fact]
-        public void hmm_really()
+        public void Transient_instances_resolved_from_a_scope_are_disposed_when_the_scope_is_disposed()
         {
-            var services = new ServiceCollection();
+            var wasDisposed = false;
 
-            services.AddSingleton("hello");
-            services.AddSingleton("hello2");
+            var services = new ServiceCollection()
+                .AddTransient(_ => Disposable.Create(() =>
+                {
+                    wasDisposed = true;
+                }));
 
-            var x = services.BuildServiceProvider();
+            var scope = new PocketContainer()
+                .AsServiceProvider(services)
+                .CreateScope();
 
-            var oneString = x.GetService<string>();
-            var twoStrings = x.GetService<IEnumerable<string>>();
+            scope.ServiceProvider.GetService<IDisposable>();
 
-            oneString.Should().Be("hello2");
-            twoStrings.Should().BeEquivalentTo("hello", "hello2");
-        }
-    }
+            scope.Dispose();
 
-    internal static class Create
-    {
-        public static IDisposable Disposable(Action dispose) =>
-            new AnonymousDisposable(dispose);
-
-        private class AnonymousDisposable : IDisposable
-        {
-            private readonly Action dispose;
-            public AnonymousDisposable(Action dispose) => this.dispose = dispose;
-
-            public void Dispose() => dispose();
+            wasDisposed.Should().BeTrue();
         }
     }
 }

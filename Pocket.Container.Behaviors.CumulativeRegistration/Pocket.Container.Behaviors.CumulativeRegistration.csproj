@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Pocket.Container\PocketContainer.cs" Link="PocketContainer.cs" />
     <Compile Include="..\Pocket.Container.Extensions.TryRegister\PocketContainer.TryRegister.cs" Link="PocketContainer.TryRegister.cs" />
+    <Compile Include="..\Pocket.Container\PocketContainer.cs" Link="PocketContainer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +30,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Pocket.Container.Tests\Pocket.Container.Tests.csproj" />
     <ProjectReference Include="..\Pocket.Container\Pocket.Container.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 
 </Project>

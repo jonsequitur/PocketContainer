@@ -24,7 +24,8 @@ namespace Pocket
             var clone = new PocketContainer
             {
                 resolvers = new ConcurrentDictionary<Type, Func<PocketContainer, object>>(resolvers),
-                strategyChain = strategyChain
+                strategyChain = strategyChain,
+                singletons = singletons
             };
             return clone;
         }

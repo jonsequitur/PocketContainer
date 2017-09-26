@@ -10,8 +10,8 @@
 // PM> Get-Package -Updates
 
 using System;
-using System.Linq;
 using System.Reflection;
+using System.Linq;
 
 namespace Pocket
 {
@@ -38,7 +38,8 @@ namespace Pocket
 
                     if (implementations.Length == 1)
                     {
-                        return c => c.Resolve(implementations.Single());
+                        var implementation = implementations.Single();
+                        return c => c.Resolve(implementation);
                     }
                 }
                 return null;
