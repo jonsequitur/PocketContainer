@@ -15,7 +15,7 @@ namespace Pocket.Container.Tests
         {
             var container = new PocketContainer()
                 .Register(c => new HashSet<string> { "initial" })
-                .AfterCreating<HashSet<string>>((c, hashSet) =>
+                .AfterCreating<HashSet<string>>(hashSet =>
                 {
                     hashSet.Add("next");
                 });
@@ -30,7 +30,7 @@ namespace Pocket.Container.Tests
         public void AfterCreating_can_be_used_to_modify_the_output_of_a_default_registration()
         {
             var container = new PocketContainer()
-                .AfterCreating<HasDefaultCtor<int>>((c, obj) =>
+                .AfterCreating<HasDefaultCtor<int>>(obj =>
                 {
                     obj.Value++;
                 });
@@ -44,7 +44,7 @@ namespace Pocket.Container.Tests
         public void AfterCreating_can_be_called_before_Register_but_still_applies()
         {
             var container = new PocketContainer()
-                .AfterCreating<HashSet<string>>((c, hashSet) =>
+                .AfterCreating<HashSet<string>>(hashSet =>
                 {
                     hashSet.Add("next");
                 })
@@ -61,11 +61,11 @@ namespace Pocket.Container.Tests
         {
             var container = new PocketContainer()
                 .Register(c => new HashSet<string> { "initial" })
-                .AfterCreating<HashSet<string>>((c, hashSet) =>
+                .AfterCreating<HashSet<string>>(hashSet =>
                 {
                     hashSet.Add("one");
                 })
-                .AfterCreating<HashSet<string>>((c, hashSet) =>
+                .AfterCreating<HashSet<string>>(hashSet =>
                 {
                     hashSet.Add("two");
                 });
@@ -80,7 +80,7 @@ namespace Pocket.Container.Tests
         {
             var container = new PocketContainer()
                 .RegisterSingle(c => new HasDefaultCtor<int>())
-                .AfterCreating<HasDefaultCtor<int>>((c, obj) =>
+                .AfterCreating<HasDefaultCtor<int>>(obj =>
                 {
                     obj.Value++;
                 });
@@ -100,7 +100,7 @@ namespace Pocket.Container.Tests
 
             var container = new PocketContainer()
                 .Register(c => new HasDefaultCtor<int>())
-                .AfterCreating<HasDefaultCtor<int>>((c, obj) =>
+                .AfterCreating<HasDefaultCtor<int>>(obj =>
                 {
                     resolveCount++;
                     obj.Value++;
@@ -119,11 +119,11 @@ namespace Pocket.Container.Tests
             var container = new PocketContainer()
                 .Register<IList<string>>(c => new List<string>())
                 .Register<List<string>>(c => new List<string>())
-                .AfterCreating<List<string>>((c, l) =>
+                .AfterCreating<List<string>>(l =>
                 {
                     l.Add("List");
                 })
-                .AfterCreating<IList<string>>((c, l) =>
+                .AfterCreating<IList<string>>(l =>
                 {
                     l.Add("IList");
                 });
