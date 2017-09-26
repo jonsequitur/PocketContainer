@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>PocketContainer.AfterCreating</id>
+    <title>PocketContainer.AfterCreating</title>
+    <version>1.0.0</version>
+    <authors>jonsequitur</authors>
+    <owners>jonsequitur</owners>
+    <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides a hook to receive a call each time an instance is created by PocketContainer.</description>
+    <tags>IoC DI container</tags>
+    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <developmentDependency>true</developmentDependency>
+    <dependencies>
+      <dependency id="PocketContainer" version="[1.4.0,2)" include="all" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="PocketContainer.AfterCreating.cs" 
+          target="contentFiles/cs/any/(Pocket)/Container/PocketContainer.AfterCreating.cs" />
+  </files>
+</package>

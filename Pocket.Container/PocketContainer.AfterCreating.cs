@@ -10,13 +10,12 @@
 // PM> Get-Package -Updates
 
 using System;
-using System.Linq;
 
 namespace Pocket
 {
     internal partial class PocketContainer
     {
-        public PocketContainer AfterResolve<T>(Action<PocketContainer, T> then)
+        public PocketContainer AfterCreating<T>(Action<PocketContainer, T> then)
         {
             var applied = false;
 
