@@ -179,16 +179,16 @@ namespace Pocket
 
         partial void AfterConstructor();
 
-        partial void BeforeRegister<T>(Func<PocketContainer, T> factory);
-
         public event Action<Type, object> AfterResolve;
+
+        public event Action<Delegate> BeforeRegister;
 
         /// <summary>
         /// Registers a delegate to retrieve instances of the specified type.
         /// </summary>
         public PocketContainer Register<T>(Func<PocketContainer, T> factory)
         {
-            BeforeRegister(factory);
+            BeforeRegister?.Invoke(factory);
             resolvers[typeof (T)] = c => factory(c);
             resolvers[typeof (Lazy<T>)] = c => new Lazy<T>(c.Resolve<T>);
             return this;

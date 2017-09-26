@@ -100,6 +100,7 @@ namespace Pocket.Container.Microsoft.Extensions.DependencyInjection.Tests
                 .AddTransient<IAmAnInterface, AlsoHasDefaultCtor>();
 
             var container = new PocketContainer()
+                .AccumulateRegistrations()
                 .AsServiceProvider(services);
 
             var fromServices = services.BuildServiceProvider()
