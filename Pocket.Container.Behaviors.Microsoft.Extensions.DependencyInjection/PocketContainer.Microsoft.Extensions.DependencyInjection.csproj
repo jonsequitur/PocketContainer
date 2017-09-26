@@ -18,7 +18,6 @@
     <Compile Include="..\Pocket.Container.Behaviors.CumulativeRegistration\PocketContainerCumulativeRegistration.cs" Link="PocketContainerCumulativeRegistration.cs" />
     <Compile Include="..\Pocket.Container\PocketContainer.Clone.cs" Link="PocketContainer.Clone.cs" />
     <Compile Include="..\Pocket.Container\PocketContainer.cs" Link="PocketContainer.cs" />
-    <Compile Include="..\Pocket.Container.Extensions.TryRegister\PocketContainer.TryRegister.cs" Link="PocketContainer.TryRegister.cs" />
     <Compile Include="..\Pocket.Container\PocketContainerOpenGenericStrategy.cs" Link="PocketContainerOpenGenericStrategy.cs" />
   </ItemGroup>
 

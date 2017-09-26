@@ -15,7 +15,7 @@ namespace Pocket
 {
     internal partial class PocketContainer
     {
-        public PocketContainer AfterCreating<T>(Action<PocketContainer, T> then)
+        public PocketContainer AfterCreating<T>(Action<T> then)
         {
             var applied = false;
 
@@ -33,7 +33,7 @@ namespace Pocket
                     return;
                 }
 
-                then(this, (T) resolved);
+                then((T) resolved);
 
                 applied = true;
             }

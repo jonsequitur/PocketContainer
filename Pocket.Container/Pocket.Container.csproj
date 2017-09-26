@@ -22,9 +22,6 @@
     <None Remove="PocketContainerItsConfigurationSettingsStrategy.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Pocket.Container.Extensions.TryRegister\PocketContainer.TryRegister.cs" Link="PocketContainer.TryRegister.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
 

@@ -233,6 +233,50 @@ namespace Pocket
             return this;
         }
 
+        public PocketContainer TryRegister(
+            Type type, 
+            Func<PocketContainer, object> factory)
+        {
+            if (!resolvers.ContainsKey(type))
+            {
+                Register(type, factory);
+            }
+
+            return this;
+        }
+
+        public PocketContainer TryRegister<T>(Func<PocketContainer, T> factory)
+        {
+            if (!resolvers.ContainsKey(typeof(T)))
+            {
+                Register(factory);
+            }
+
+            return this;
+        }
+
+        public PocketContainer TryRegisterSingle(
+            Type type, 
+            Func<PocketContainer, object> factory)
+        {
+            if (!resolvers.ContainsKey(type))
+            {
+                RegisterSingle(type, factory);
+            }
+
+            return this;
+        }
+
+        public PocketContainer TryRegisterSingle<T>(Func<PocketContainer, T> factory)
+        {
+            if (!resolvers.ContainsKey(typeof(T)))
+            {
+                RegisterSingle(factory);
+            }
+
+            return this;
+        }
+
         private Delegate ConvertFunc(Func<PocketContainer, object> func, Type resultType)
         {
             var containerParam = Expression.Parameter(typeof (PocketContainer), "c");
