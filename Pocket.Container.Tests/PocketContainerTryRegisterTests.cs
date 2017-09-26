@@ -1,7 +1,7 @@
 using FluentAssertions;
 using Xunit;
 
-namespace Pocket.Container.TryRegister.Tests
+namespace Pocket.Container.Tests
 {
     public class PocketContainerTryRegisterTests
     {

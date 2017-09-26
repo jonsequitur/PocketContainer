@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Pocket.Container.Extensions.TryRegister\PocketContainer.TryRegister.cs" Link="PocketContainer.TryRegister.cs" />
     <Compile Include="..\Pocket.Container\PocketContainer.cs" Link="PocketContainer.cs" />
   </ItemGroup>
 

@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PocketContainer.Microsoft.E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.Container.Behaviors.CumulativeRegistration", "Pocket.Container.Behaviors.CumulativeRegistration\Pocket.Container.Behaviors.CumulativeRegistration.csproj", "{628C9A03-D083-4B04-85CD-51726BB191B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.Container.Extensions.TryRegister", "Pocket.Container.Extensions.TryRegister\Pocket.Container.Extensions.TryRegister.csproj", "{961C4699-8CB5-4B3F-80EA-59D1B640701A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.TypeDiscovery.NetStandard2.0.Tests", "Pocket.TypeDiscovery.NetStandard2.0.Tests\Pocket.TypeDiscovery.NetStandard2.0.Tests.csproj", "{EB4F8356-7CC4-403B-83D7-9CF308852DDE}"
 EndProject
 Global
@@ -37,10 +35,6 @@ Global
 		{628C9A03-D083-4B04-85CD-51726BB191B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{628C9A03-D083-4B04-85CD-51726BB191B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{628C9A03-D083-4B04-85CD-51726BB191B0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{961C4699-8CB5-4B3F-80EA-59D1B640701A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{961C4699-8CB5-4B3F-80EA-59D1B640701A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{961C4699-8CB5-4B3F-80EA-59D1B640701A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{961C4699-8CB5-4B3F-80EA-59D1B640701A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EB4F8356-7CC4-403B-83D7-9CF308852DDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EB4F8356-7CC4-403B-83D7-9CF308852DDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB4F8356-7CC4-403B-83D7-9CF308852DDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
