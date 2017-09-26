@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft. All rights reserved. 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
@@ -21,7 +23,6 @@ namespace Pocket.Container.Tests
                 .AfterResolve<HashSet<string>>((c, hashSet) =>
                 {
                     hashSet.Add("next");
-                    return hashSet;
                 });
 
             var set = container.Resolve<HashSet<string>>();
@@ -37,7 +38,6 @@ namespace Pocket.Container.Tests
                 .AfterResolve<HasDefaultCtor<int>>((c, obj) =>
                 {
                     obj.Value++;
-                    return obj;
                 });
 
             var resolved = container.Resolve<HasDefaultCtor<int>>();
@@ -45,14 +45,13 @@ namespace Pocket.Container.Tests
             resolved.Value.Should().Be(1);
         }
 
-        [Fact(Skip = "Not implemented")]
+        [Fact]
         public void AfterResolve_can_be_called_before_Register_but_still_applies()
         {
             var container = new PocketContainer()
                 .AfterResolve<HashSet<string>>((c, hashSet) =>
                 {
                     hashSet.Add("next");
-                    return hashSet;
                 })
                 .Register(c =>
                 {
@@ -78,12 +77,10 @@ namespace Pocket.Container.Tests
                 .AfterResolve<HashSet<string>>((c, hashSet) =>
                 {
                     hashSet.Add("one");
-                    return hashSet;
                 })
                 .AfterResolve<HashSet<string>>((c, hashSet) =>
                 {
                     hashSet.Add("two");
-                    return hashSet;
                 });
 
             var set = container.Resolve<HashSet<string>>();
@@ -91,7 +88,7 @@ namespace Pocket.Container.Tests
             set.Should().BeEquivalentTo(new object[] { "initial", "one", "two" });
         }
 
-        [Fact(Skip = "Not implemented")]
+        [Fact]
         public void When_used_with_RegisterSingle_then_AfterResolve_is_only_called_once_per_instantiation()
         {
             var container = new PocketContainer()
@@ -99,10 +96,8 @@ namespace Pocket.Container.Tests
                 .AfterResolve<HasDefaultCtor<int>>((c, obj) =>
                 {
                     obj.Value++;
-                    return obj;
                 });
 
-            container.Resolve<HasDefaultCtor<int>>();
             container.Resolve<HasDefaultCtor<int>>();
             container.Resolve<HasDefaultCtor<int>>();
 
@@ -111,24 +106,53 @@ namespace Pocket.Container.Tests
             resolved.Value.Should().Be(1);
         }
 
-        [Fact(Skip = "Not implemented")]
+        [Fact]
         public void When_used_with_Register_then_AfterResolve_is_only_called_once_per_resolve()
         {
+            var resolveCount = 0;
+
             var container = new PocketContainer()
                 .Register(c => new HasDefaultCtor<int>())
                 .AfterResolve<HasDefaultCtor<int>>((c, obj) =>
                 {
+                    resolveCount++;
                     obj.Value++;
-                    return obj;
                 });
 
             container.Resolve<HasDefaultCtor<int>>();
             container.Resolve<HasDefaultCtor<int>>();
             container.Resolve<HasDefaultCtor<int>>();
 
-            var resolved = container.Resolve<HasDefaultCtor<int>>();
+            resolveCount.Should().Be(3);
+        }
 
-            resolved.Value.Should().Be(3);
+        [Fact]
+        public void AfterResolve_type_matching_is_precise()
+        {
+            var container = new PocketContainer()
+                .Register<IList<string>>(c => new List<string>())
+                .Register<List<string>>(c => new List<string>())
+                .AfterResolve<List<string>>((c, l) =>
+                {
+                    l.Add("List");
+                })
+                .AfterResolve<IList<string>>((c, l) =>
+                {
+                    l.Add("IList");
+                });
+
+            var ilist = container.Resolve<IList<string>>();
+            var list = container.Resolve<List<string>>();
+
+            ilist.Should()
+                 .HaveCount(1)
+                 .And
+                 .OnlyContain(item => item == "IList");
+
+            list.Should()
+                .HaveCount(1)
+                .And
+                .OnlyContain(item => item == "List");
         }
     }
 }

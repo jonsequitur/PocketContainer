@@ -41,11 +41,6 @@ namespace Pocket
             Resolve(serviceType) ??
             throw new ArgumentNullException($"Service of type {serviceType} is not registered.");
 
-        public event Action<(Type serviceType, object resolved)> OnResolved;
-
-        partial void AfterResolve(Type type, object resolved) =>
-            OnResolved?.Invoke((type, resolved));
-
         public bool HasSingletonOfType(Type type) => singletons.ContainsKey(type);
     }
 

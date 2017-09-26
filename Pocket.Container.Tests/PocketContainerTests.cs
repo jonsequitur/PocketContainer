@@ -376,6 +376,42 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
+        public void RegisterSingle_registers_the_single_instance_for_both_interface_and_resolved_type()
+        {
+            var container = new PocketContainer()
+                .RegisterSingle<IList<string>>(c => new List<string>());
+
+            var one = container.Resolve<IList<string>>();
+            var two = container.Resolve<List<string>>();
+            var three = container.Resolve<IList<string>>();
+            var four = container.Resolve<List<string>>();
+
+            one.Should().BeSameAs(two);
+            two.Should().BeSameAs(three);
+            three.Should().BeSameAs(four);
+        }
+
+        [Fact]
+        public void Interface_and_resolved_type_can_be_registered_independently_without_interfering()
+        {
+             var container = new PocketContainer()
+                .RegisterSingle<IList<string>>(c => new List<string>())
+                .Register(c => new List<string>());
+
+            var ilistOne = container.Resolve<IList<string>>();
+            var listOne = container.Resolve<List<string>>();
+            var ilistTwo = container.Resolve<IList<string>>();
+            var listTwo = container.Resolve<List<string>>();
+
+            ilistOne.Should().BeSameAs(ilistTwo);
+
+            ilistOne.Should().NotBeSameAs(listOne);
+            ilistOne.Should().NotBeSameAs(listTwo);
+
+            listOne.Should().NotBeSameAs(listTwo);
+        }
+
+        [Fact]
         public void RegisterSingle_returns_only_single_instances_when_dependent_and_dependency_are_both_registered_as_single()
         {
             var container = new PocketContainer()
@@ -417,7 +453,20 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void Recursive_resolve_does_not_stack_overflow()
+        public void Recursive_resolve_does_not_stack_overflow_when_the_resolved_type_has_a_parameterless_constructor()
+        {
+            var container = new PocketContainer()
+                .Register(c => c.Resolve<IAmAGenericImplementation<string>>());
+
+            var direct = container.Resolve<IAmAGenericImplementation<string>>();
+            direct.Should().NotBeNull();
+
+            var indirect = container.Resolve<HasOneParamCtor<IAmAGenericImplementation<string>>>();
+            indirect.Value1.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void Recursive_resolve_of_singleton_instances()
         {
             var container = new PocketContainer()
                 .RegisterSingle(c => c.Resolve<IAmAGenericImplementation<string>>());

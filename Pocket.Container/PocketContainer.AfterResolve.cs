@@ -10,65 +10,38 @@
 // PM> Get-Package -Updates
 
 using System;
-using System.Collections.Concurrent;
 using System.Linq;
 
 namespace Pocket
 {
     internal partial class PocketContainer
     {
-        public PocketContainer AfterResolve<T>(Func<PocketContainer, T, T> then)
+        public PocketContainer AfterResolve<T>(Action<PocketContainer, T> then)
         {
-            var pipeline = new AfterResolvePipeline<T>(this, GetResolver<T>());
-            pipeline.Transforms.Enqueue(then);
-            Register(typeof (T), c => pipeline.Resolve());
-            return this;
-        }
+            var applied = false;
 
-        private class AfterResolvePipeline<T>
-        {
-            public readonly ConcurrentQueue<Func<PocketContainer, T, T>> Transforms = new ConcurrentQueue<Func<PocketContainer, T, T>>();
-            private readonly PocketContainer container;
-            private readonly Func<PocketContainer, object> originalRegistration;
-
-            public AfterResolvePipeline(
-                PocketContainer container, 
-                Func<PocketContainer, object> originalResolver)
+            void Apply(Type type, object resolved)
             {
-                if (container == null)
+                if (type != typeof(T))
                 {
-                    throw new ArgumentNullException("container");
+                    return;
                 }
-                this.container = container;
-                originalRegistration = originalResolver;
+
+                if (applied &&
+                    singletons.TryGetValue(typeof(T), out var existing) &&
+                    existing == resolved)
+                {
+                    return;
+                }
+
+                then(this, (T) resolved);
+
+                applied = true;
             }
 
-            public T Resolve()
-            {
-                var instance = originalRegistration(container);
+            OnResolved += Apply;
 
-                var transformed = (T) Transforms.Aggregate(instance,
-                                                           (current, transform) => transform(container, (T) current));
-
-                return transformed;
-            }
-        }
-
-        private Func<PocketContainer, object> GetResolver<T>()
-        {
-            var existing = this.Where(f => f.Key == typeof (T))
-                               .Select(pair => pair.Value)
-                               .SingleOrDefault();
-
-            if (existing != null)
-            {
-                return existing;
-            }
-
-            // trigger the creation of one:
-            var instance = Resolve<T>();
-
-            return GetResolver<T>();
+            return this;
         }
     }
 }
