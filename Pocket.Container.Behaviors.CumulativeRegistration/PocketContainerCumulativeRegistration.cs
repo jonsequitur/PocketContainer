@@ -7,7 +7,7 @@ namespace Pocket
 {
     internal partial class PocketContainer
     {
-        private static readonly ThreadLocal<int> recursionCounter = new ThreadLocal<int>(() => 0);
+        private static readonly AsyncLocal<int> recursionCounter = new AsyncLocal<int>();
 
         partial void BeforeRegister<T>(Func<PocketContainer, T> factory)
         {
@@ -19,7 +19,7 @@ namespace Pocket
                     recursionCounter.Value++;
 
                     TryRegister(c => c.Resolve<List<Func<PocketContainer, T>>>()
-                                               .Select(f => f(c)));
+                                      .Select(f => f(c)));
 
                     TryRegisterSingle(c => new List<Func<PocketContainer, T>>());
 
