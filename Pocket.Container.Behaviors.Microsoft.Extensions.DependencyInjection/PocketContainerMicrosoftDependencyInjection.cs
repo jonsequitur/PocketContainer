@@ -161,25 +161,24 @@ namespace Pocket
 
             disposables = new CompositeDisposable
             {
-                Disposable.Create(() =>
-                                      this.container.OnResolved -= OnResolved),
-                Disposable.Create(() => isDisposed = true)
+                () => this.container.OnResolved -= OnResolved,
+                () => isDisposed = true
             };
         }
 
         private void OnResolved(
-            (Type serviceType,
-                object resolved) service)
+            Type serviceType,
+            object service)
         {
-            if (service.resolved is IDisposable disposable)
+            if (service is IDisposable disposable)
             {
-                disposables.Add(Disposable.Create(() =>
+                disposables.Add(() =>
                 {
-                    if (!container.HasSingletonOfType(service.serviceType))
+                    if (!container.HasSingletonOfType(serviceType))
                     {
                         disposable.Dispose();
                     }
-                }));
+                });
             }
         }
 
