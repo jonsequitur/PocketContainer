@@ -152,16 +152,16 @@ namespace Pocket
             this.container = container?.Clone() ??
                              throw new ArgumentNullException(nameof(container));
 
-            this.container.OnResolved += OnResolved;
+            this.container.AfterResolve += AfterResolve;
 
             disposables = new CompositeDisposable
             {
-                () => this.container.OnResolved -= OnResolved,
+                () => this.container.AfterResolve -= AfterResolve,
                 () => isDisposed = true
             };
         }
 
-        private void OnResolved(
+        private void AfterResolve(
             Type serviceType,
             object service)
         {

@@ -119,7 +119,7 @@ namespace Pocket
                 resolved = Activator.CreateInstance<T>();
             }
 
-            OnResolved?.Invoke(typeof(T), resolved);
+            AfterResolve?.Invoke(typeof(T), resolved);
 
             return resolved;
         }
@@ -155,7 +155,7 @@ namespace Pocket
 
             var resolved = func(this);
 
-            OnResolved?.Invoke(type, resolved);
+            AfterResolve?.Invoke(type, resolved);
 
             return resolved;
         }
@@ -181,7 +181,7 @@ namespace Pocket
 
         partial void BeforeRegister<T>(Func<PocketContainer, T> factory);
 
-        public event Action<Type, object> OnResolved;
+        public event Action<Type, object> AfterResolve;
 
         /// <summary>
         /// Registers a delegate to retrieve instances of the specified type.

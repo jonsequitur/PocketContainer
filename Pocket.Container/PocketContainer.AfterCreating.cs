@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved. 
+// Copyright (c) Microsoft. All rights reserved. 
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 // THIS FILE IS NOT INTENDED TO BE EDITED. 
@@ -38,7 +38,7 @@ namespace Pocket
                 applied = true;
             }
 
-            OnResolved += Apply;
+            AfterResolve += Apply;
 
             return this;
         }
