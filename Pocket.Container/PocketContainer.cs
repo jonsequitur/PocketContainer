@@ -85,11 +85,12 @@ namespace Pocket
             if (resolving != typeof(T))
             {
                 resolving = typeof(T);
-                resolved = (T) resolvers.GetOrAdd(typeof (T), t =>
+                resolved = (T) resolvers.GetOrAdd(typeof(T), t =>
                 {
                     var customFactory = strategyChain(t);
                     if (customFactory != null)
                     {
+                        BeforeRegister?.Invoke(customFactory);
                         return customFactory;
                     }
 
@@ -109,6 +110,8 @@ namespace Pocket
 
                         defaultFactory = c => default(T);
                     }
+
+                    BeforeRegister?.Invoke(defaultFactory);
 
                     return c => defaultFactory(c);
                 })(this);
@@ -137,11 +140,13 @@ namespace Pocket
         /// </summary>
         public object Resolve(Type type)
         {
+            object resolved;
+
             if (!resolvers.TryGetValue(type, out var func))
             {
                 try
                 {
-                    return resolveMethod.MakeGenericMethod(type).Invoke(this, null);
+                    resolved = resolveMethod.MakeGenericMethod(type).Invoke(this, null);
                 }
                 catch (TargetInvocationException ex)
                 {
@@ -152,8 +157,10 @@ namespace Pocket
                     throw;
                 }
             }
-
-            var resolved = func(this);
+            else
+            {
+                resolved = func(this);
+            }
 
             AfterResolve?.Invoke(type, resolved);
 
