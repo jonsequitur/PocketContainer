@@ -13,9 +13,9 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 #pragma warning disable CS0436 // Type conflicts with imported type
 
@@ -34,13 +34,13 @@ namespace Pocket
     internal partial class PocketContainer : IEnumerable<KeyValuePair<Type, Func<PocketContainer, object>>>
     {
         private static readonly MethodInfo resolveMethod =
-            typeof (PocketContainer).GetMethod(nameof(Resolve), Type.EmptyTypes);
+            typeof(PocketContainer).GetMethod(nameof(Resolve), Type.EmptyTypes);
 
         private static readonly MethodInfo registerMethod =
-            typeof (PocketContainer).GetMethods().Single(m => m.Name == nameof(Register) && m.IsGenericMethod);
+            typeof(PocketContainer).GetMethods().Single(m => m.Name == nameof(Register) && m.IsGenericMethod);
 
         private static readonly MethodInfo registerSingleMethod =
-            typeof (PocketContainer).GetMethods().Single(m => m.Name == nameof(RegisterSingle) && m.IsGenericMethod);
+            typeof(PocketContainer).GetMethods().Single(m => m.Name == nameof(RegisterSingle) && m.IsGenericMethod);
 
         private ConcurrentDictionary<Type, Func<PocketContainer, object>> resolvers = new ConcurrentDictionary<Type, Func<PocketContainer, object>>();
 
@@ -58,12 +58,12 @@ namespace Pocket
             AddStrategy(type =>
             {
                 // add a default strategy for Func<T> to resolve by convention to return a Func that does a resolve when invoked
-                if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Func<>))
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Func<>))
                 {
                     return (Func<PocketContainer, object>)
                         GetType()
                             .GetMethod(nameof(MakeResolverFunc), BindingFlags.Instance | BindingFlags.NonPublic)
-                            .MakeGenericMethod(type.GetGenericArguments().Single())
+                            .MakeGenericMethod(type.GetGenericArguments()[0])
                             .Invoke(this, null);
                 }
 
@@ -122,18 +122,10 @@ namespace Pocket
                 resolved = Activator.CreateInstance<T>();
             }
 
-            AfterResolve?.Invoke(typeof(T), resolved);
-
-            return resolved;
+            return CallAfterResolve(typeof(T), resolved, out var replaced)
+                       ? (T) replaced
+                       : resolved;
         }
-
-        /// <summary>
-        /// Returns an exception to be thrown when resolve fails.
-        /// </summary>
-        public Func<Type, Exception, Exception> OnFailedResolve =
-            (type, exception) =>
-                new ArgumentException(
-                    $"PocketContainer can't construct a {type} unless you register it first. ☹", exception);
 
         /// <summary>
         /// Resolves an instance of the specified type.
@@ -162,10 +154,18 @@ namespace Pocket
                 resolved = func(this);
             }
 
-            AfterResolve?.Invoke(type, resolved);
-
-            return resolved;
+            return CallAfterResolve(type, resolved, out var replaced)
+                       ? replaced
+                       : resolved;
         }
+
+        /// <summary>
+        /// Returns an exception to be thrown when resolve fails.
+        /// </summary>
+        public Func<Type, Exception, Exception> OnFailedResolve =
+            (type, exception) =>
+                new ArgumentException(
+                    $"PocketContainer can't construct a {type} unless you register it first. ☹", exception);
 
         /// <remarks>When an unregistered type is resolved for the first time, the strategies are checked until one returns a delegate. This delegate will be used in the future to resolve the specified type.</remarks>
         public PocketContainer AddStrategy(
@@ -186,7 +186,7 @@ namespace Pocket
 
         partial void AfterConstructor();
 
-        public event Action<Type, object> AfterResolve;
+        public event Func<Type, object, object> AfterResolve;
 
         public event Action<Delegate> BeforeRegister;
 
@@ -196,8 +196,8 @@ namespace Pocket
         public PocketContainer Register<T>(Func<PocketContainer, T> factory)
         {
             BeforeRegister?.Invoke(factory);
-            resolvers[typeof (T)] = c => factory(c);
-            resolvers[typeof (Lazy<T>)] = c => new Lazy<T>(c.Resolve<T>);
+            resolvers[typeof(T)] = c => factory(c);
+            resolvers[typeof(Lazy<T>)] = c => new Lazy<T>(c.Resolve<T>);
             return this;
         }
 
@@ -241,7 +241,7 @@ namespace Pocket
         }
 
         public PocketContainer TryRegister(
-            Type type, 
+            Type type,
             Func<PocketContainer, object> factory)
         {
             if (!resolvers.ContainsKey(type))
@@ -263,7 +263,7 @@ namespace Pocket
         }
 
         public PocketContainer TryRegisterSingle(
-            Type type, 
+            Type type,
             Func<PocketContainer, object> factory)
         {
             if (!resolvers.ContainsKey(type))
@@ -284,9 +284,26 @@ namespace Pocket
             return this;
         }
 
+        private bool CallAfterResolve(Type type, object resolved, out object replaced)
+        {
+            var afterResolve = AfterResolve;
+            if (afterResolve != null)
+            {
+                replaced = afterResolve(type, resolved);
+                if (replaced != null)
+                {
+                    singletons.TryUpdate(type, replaced, resolved);
+                    return true;
+                }
+            }
+
+            replaced = null;
+            return false;
+        }
+
         private Delegate ConvertFunc(Func<PocketContainer, object> func, Type resultType)
         {
-            var containerParam = Expression.Parameter(typeof (PocketContainer), "c");
+            var containerParam = Expression.Parameter(typeof(PocketContainer), "c");
 
             ConstantExpression constantExpression = null;
             if (func.Target != null)
@@ -294,10 +311,8 @@ namespace Pocket
                 constantExpression = Expression.Constant(func.Target);
             }
 
-            // ReSharper disable PossiblyMistakenUseOfParamsMethod
             var call = Expression.Call(constantExpression, func.GetMethodInfo(), containerParam);
-            // ReSharper restore PossiblyMistakenUseOfParamsMethod
-            var delegateType = typeof (Func<,>).MakeGenericType(typeof (PocketContainer), resultType);
+            var delegateType = typeof(Func<,>).MakeGenericType(typeof(PocketContainer), resultType);
             var body = Expression.Convert(call, resultType);
             var expression = Expression.Lambda(delegateType,
                                                body,
@@ -314,26 +329,26 @@ namespace Pocket
         {
             public static Func<PocketContainer, T> UsingLongestConstructor<T>()
             {
-                if (typeof (Delegate).IsAssignableFrom(typeof (T)))
+                if (typeof(Delegate).IsAssignableFrom(typeof(T)))
                 {
-                    throw new TypeInitializationException(typeof (T).FullName, null);
+                    throw new TypeInitializationException(typeof(T).FullName, null);
                 }
 
-                var ctors = typeof (T).GetConstructors();
+                var ctors = typeof(T).GetConstructors();
 
                 var longestCtorParamCount = ctors.Max(c => c.GetParameters().Length);
 
                 var chosenCtor = ctors.Single(c => c.GetParameters().Length == longestCtorParamCount);
 
-                var container = Expression.Parameter(typeof (PocketContainer), "container");
+                var container = Expression.Parameter(typeof(PocketContainer), "container");
 
                 var factoryExpr = Expression.Lambda<Func<PocketContainer, T>>(
                     Expression.New(chosenCtor,
                                    chosenCtor.GetParameters()
                                              .Select(p =>
-                                                     Expression.Call(container,
-                                                                     resolveMethod
-                                                                         .MakeGenericMethod(p.ParameterType)))),
+                                                         Expression.Call(container,
+                                                                         resolveMethod
+                                                                             .MakeGenericMethod(p.ParameterType)))),
                     container);
 
                 return factoryExpr.Compile();
@@ -344,16 +359,14 @@ namespace Pocket
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        // ReSharper disable UnusedMember.Local
         private Func<PocketContainer, Func<T>> MakeResolverFunc<T>()
-        // ReSharper restore UnusedMember.Local
         {
-            var container = Expression.Parameter(typeof (PocketContainer), "container");
+            var container = Expression.Parameter(typeof(PocketContainer), "container");
 
             var resolve = Expression.Lambda<Func<PocketContainer, Func<T>>>(
                 Expression.Lambda<Func<T>>(
                     Expression.Call(container,
-                                    resolveMethod.MakeGenericMethod(typeof (T)))),
+                                    resolveMethod.MakeGenericMethod(typeof(T)))),
                 container);
 
             return resolve.Compile();

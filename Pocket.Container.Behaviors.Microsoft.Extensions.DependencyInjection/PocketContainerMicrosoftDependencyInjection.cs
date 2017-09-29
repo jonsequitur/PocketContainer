@@ -161,7 +161,7 @@ namespace Pocket
             };
         }
 
-        private void AfterResolve(
+        private object AfterResolve(
             Type serviceType,
             object service)
         {
@@ -175,6 +175,8 @@ namespace Pocket
                     }
                 });
             }
+
+            return service;
         }
 
         public void Dispose() => disposables.Dispose();

@@ -19,6 +19,7 @@ namespace Pocket.Container.Tests
             {
                 typeArg = type;
                 instanceArg = instance;
+                return instance;
             };
 
             container.Resolve<string>();
@@ -40,6 +41,7 @@ namespace Pocket.Container.Tests
             {
                 typeArg = type;
                 instanceArg = instance;
+                return instance;
             };
 
             container.Resolve(typeof(string));
@@ -61,6 +63,7 @@ namespace Pocket.Container.Tests
             {
                 typeArg = type;
                 instanceArg = instance;
+                return instance;
             };
 
             container.Resolve<string>();
@@ -82,6 +85,7 @@ namespace Pocket.Container.Tests
             {
                 typeArg = type;
                 instanceArg = instance;
+                return instance;
             };
 
             container.Resolve(typeof(string));
@@ -111,6 +115,7 @@ namespace Pocket.Container.Tests
             {
                 typeArg = type;
                 instanceArg = instance;
+                return instance;
             };
 
             container.Resolve<string>();
@@ -140,6 +145,7 @@ namespace Pocket.Container.Tests
             {
                 typeArg = type;
                 instanceArg = instance;
+                return instance;
             };
 
             container.Resolve(typeof(string));

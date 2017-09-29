@@ -15,32 +15,41 @@ namespace Pocket
 {
     internal partial class PocketContainer
     {
-        public PocketContainer AfterCreating<T>(Action<T> then)
+        public PocketContainer AfterCreating<T>(Func<T, T> then)
         {
             var applied = false;
 
-            void Apply(Type type, object resolved)
+            object Apply(Type type, object resolved)
             {
                 if (type != typeof(T))
                 {
-                    return;
+                    return resolved;
                 }
 
                 if (applied &&
                     singletons.TryGetValue(typeof(T), out var existing) &&
-                    existing == resolved)
+                    existing.Equals(resolved))
                 {
-                    return;
+                    return resolved;
                 }
 
-                then((T) resolved);
-
                 applied = true;
+
+                return then((T) resolved);
             }
 
             AfterResolve += Apply;
 
             return this;
+        }
+
+        public PocketContainer AfterCreating<T>(Action<T> then)
+        {
+            return AfterCreating<T>(resolved =>
+            {
+                then(resolved);
+                return resolved;
+            });
         }
     }
 }
