@@ -11,7 +11,7 @@ namespace Pocket.Container.Tests
     public class PocketContainerAfterCreatingTests
     {
         [Fact]
-        public void AfterCreating_can_be_used_to_get_an_existing_registration_and_modify_its_output_before_returning_it()
+        public void AfterCreating_can_be_used_to_get_an_existing_registration_and_modify_its_output_before_returning_it_when_using_Resolve_T()
         {
             var container = new PocketContainer()
                 .Register(c => new HashSet<string> { "initial" })
@@ -21,6 +21,22 @@ namespace Pocket.Container.Tests
                 });
 
             var set = container.Resolve<HashSet<string>>();
+
+            set.Should().Contain("initial");
+            set.Should().Contain("next");
+        }
+
+        [Fact]
+        public void AfterCreating_can_be_used_to_get_an_existing_registration_and_modify_its_output_before_returning_it_when_using_Resolve()
+        {
+            var container = new PocketContainer()
+                .Register(c => new HashSet<string> { "initial" })
+                .AfterCreating<HashSet<string>>(hashSet =>
+                {
+                    hashSet.Add("next");
+                });
+
+            var set = (HashSet<string>) container.Resolve(typeof(HashSet<string>));
 
             set.Should().Contain("initial");
             set.Should().Contain("next");
@@ -140,6 +156,58 @@ namespace Pocket.Container.Tests
                 .HaveCount(1)
                 .And
                 .OnlyContain(item => item == "List");
+        }
+
+        [Fact]
+        public void AfterCreating_can_be_used_to_replace_the_returned_instance_when_using_Resolve_T()
+        {
+            var container = new PocketContainer()
+                .Register(c => "before")
+                .AfterCreating<string>(instance => "after");
+
+            var resolved = container.Resolve<string>();
+
+            resolved.Should().Be("after");
+        }
+
+        [Fact]
+        public void AfterCreating_can_be_used_to_replace_the_returned_instance_when_using_Resolve()
+        {
+            var container = new PocketContainer()
+                .Register(c => "before")
+                .AfterCreating<string>(instance => "after");
+
+            var resolved = (string) container.Resolve(typeof(string));
+
+            resolved.Should().Be("after");
+        }
+
+        [Fact]
+        public void When_used_with_RegisterSingleton_then_AfterCreating_can_be_used_to_replace_the_returned_instance_when_resolved_using_generic_Resolve()
+        {
+            var container = new PocketContainer()
+                .RegisterSingle(c => new HasOneParamCtor<string>("before"))
+                .AfterCreating<HasOneParamCtor<string>>(instance => new HasOneParamCtor<string>("after"));
+
+            var resolved1 = container.Resolve<HasOneParamCtor<string>>();
+            var resolved2 = container.Resolve<HasOneParamCtor<string>>();
+
+            resolved1.Value1.Should().Be("after");
+            resolved2.Should().BeSameAs(resolved1);
+        }
+
+        [Fact]
+        public void When_used_with_RegisterSingleton_then_AfterCreating_can_be_used_to_replace_the_returned_instance_when_resolved_using_non_generic_Resolve()
+        {
+            var container = new PocketContainer()
+                .RegisterSingle(c => new HasOneParamCtor<string>("before"))
+                .AfterCreating<HasOneParamCtor<string>>(instance => new HasOneParamCtor<string>("after"));
+
+            var resolved1 = container.Resolve(typeof(HasOneParamCtor<string>)) as HasOneParamCtor<string>;
+            var resolved2 = container.Resolve(typeof(HasOneParamCtor<string>)) as HasOneParamCtor<string>;
+
+            resolved1.Value1.Should().Be("after");
+            resolved2.Should().BeSameAs(resolved1);
         }
     }
 }
