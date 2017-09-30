@@ -82,7 +82,7 @@ namespace Pocket
                     var customFactory = strategyChain(t);
                     if (customFactory != null)
                     {
-                        BeforeRegister?.Invoke(customFactory);
+                        customFactory = (Func<PocketContainer, object>) Registering?.Invoke(customFactory) ?? customFactory;
                         return customFactory;
                     }
 
@@ -103,7 +103,7 @@ namespace Pocket
                         defaultFactory = c => default(T);
                     }
 
-                    BeforeRegister?.Invoke(defaultFactory);
+                    defaultFactory = (Func<PocketContainer, T>) Registering?.Invoke(defaultFactory) ?? defaultFactory;
 
                     return c => defaultFactory(c);
                 })(this);
@@ -180,14 +180,14 @@ namespace Pocket
 
         public event Func<Type, object, object> AfterResolve;
 
-        public event Action<Delegate> BeforeRegister;
+        public event Func<Delegate, Delegate> Registering;
 
         /// <summary>
         /// Registers a delegate to retrieve instances of the specified type.
         /// </summary>
         public PocketContainer Register<T>(Func<PocketContainer, T> factory)
         {
-            BeforeRegister?.Invoke(factory);
+            factory = (Func<PocketContainer, T>) Registering?.Invoke(factory) ?? factory;
             resolvers[typeof(T)] = c => factory(c);
             resolvers[typeof(Lazy<T>)] = c => new Lazy<T>(c.Resolve<T>);
             return this;

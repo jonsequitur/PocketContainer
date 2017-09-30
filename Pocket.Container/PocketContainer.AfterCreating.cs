@@ -7,6 +7,8 @@ namespace Pocket
 {
     internal partial class PocketContainer
     {
+       
+
         public PocketContainer AfterCreating<T>(Func<T, T> then)
         {
             var applied = false;

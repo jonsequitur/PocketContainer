@@ -15,7 +15,11 @@ namespace Pocket.Container.Tests
 
             var container = new PocketContainer();
 
-            container.BeforeRegister += receivedDelegates.Add;
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
 
             container.Register(c => "hello");
 
@@ -37,7 +41,11 @@ namespace Pocket.Container.Tests
 
             var container = new PocketContainer();
 
-            container.BeforeRegister += receivedDelegates.Add;
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
 
             container.Register(typeof(string), c => "hello");
 
@@ -59,7 +67,11 @@ namespace Pocket.Container.Tests
 
             var container = new PocketContainer();
 
-            container.BeforeRegister += receivedDelegates.Add;
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
 
             container.RegisterSingle(c => "hello");
 
@@ -81,7 +93,11 @@ namespace Pocket.Container.Tests
 
             var container = new PocketContainer();
 
-            container.BeforeRegister += receivedDelegates.Add;
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
 
             container.RegisterSingle(typeof(string), c => "hello");
 
@@ -97,15 +113,43 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void BeforeRegister_is_invoked_when_implicit_registration_occurs()
+        public void BeforeRegister_is_invoked_when_implicit_registration_occurs_during_calls_to_generic_Resolve()
         {
             var receivedDelegates = new List<Delegate>();
 
             var container = new PocketContainer();
 
-            container.BeforeRegister += receivedDelegates.Add;
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
 
             container.Resolve<HasDefaultCtor>();
+
+            receivedDelegates
+                .Should()
+                .HaveCount(1);
+            receivedDelegates
+                .Single()
+                .Should()
+                .BeOfType<Func<PocketContainer, HasDefaultCtor>>();
+        }
+
+        [Fact]
+        public void BeforeRegister_is_invoked_when_implicit_registration_occurs_during_calls_to_non_generic_Resolve()
+        {
+            var receivedDelegates = new List<Delegate>();
+
+            var container = new PocketContainer();
+
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
+
+            container.Resolve(typeof(HasDefaultCtor));
 
             receivedDelegates
                 .Should()
@@ -123,7 +167,11 @@ namespace Pocket.Container.Tests
 
             var container = new PocketContainer();
 
-            container.BeforeRegister += receivedDelegates.Add;
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
 
             container.AddStrategy(type =>
             {
