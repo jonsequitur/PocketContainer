@@ -13,7 +13,7 @@
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
     <developmentDependency>true</developmentDependency>
     <dependencies>
-      <dependency id="PocketContainer" version="[1.4.0,2)" include="all" />
+      <dependency id="PocketContainer" version="[1.4.4,2)" include="all" />
     </dependencies>
   </metadata>
   <files>
