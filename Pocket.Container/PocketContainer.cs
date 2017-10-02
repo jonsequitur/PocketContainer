@@ -77,36 +77,7 @@ namespace Pocket
             if (resolving != typeof(T))
             {
                 resolving = typeof(T);
-                resolved = (T) resolvers.GetOrAdd(typeof(T), t =>
-                {
-                    var customFactory = strategyChain(t);
-                    if (customFactory != null)
-                    {
-                        customFactory = (Func<PocketContainer, object>) Registering?.Invoke(customFactory) ?? customFactory;
-                        return customFactory;
-                    }
-
-                    Func<PocketContainer, T> defaultFactory;
-                    try
-                    {
-                        defaultFactory = Factory<T>.Default;
-                    }
-                    catch (TypeInitializationException ex)
-                    {
-                        var ex2 = OnFailedResolve(typeof(T), ex);
-
-                        if (ex2 != null)
-                        {
-                            throw ex2;
-                        }
-
-                        defaultFactory = c => default(T);
-                    }
-
-                    defaultFactory = (Func<PocketContainer, T>) Registering?.Invoke(defaultFactory) ?? defaultFactory;
-
-                    return c => defaultFactory(c);
-                })(this);
+                resolved = (T) resolvers.GetOrAdd(typeof(T), RegisterImplicit<T>())(this);
                 resolving = null;
             }
             else
@@ -117,6 +88,44 @@ namespace Pocket
             return CallAfterResolve(typeof(T), resolved, out var replaced)
                        ? (T) replaced
                        : resolved;
+        }
+
+        private Func<Type, Func<PocketContainer, object>> RegisterImplicit<T>()
+        {
+            return t =>
+            {
+                var customFactory = strategyChain(t);
+                if (customFactory != null)
+                {
+                    customFactory = (Func<PocketContainer, object>) Registering?.Invoke(customFactory) ?? customFactory;
+                    return customFactory;
+                }
+
+                Func<PocketContainer, T> defaultFactory;
+                try
+                {
+                    defaultFactory = Factory<T>.Default;
+                }
+                catch (TypeInitializationException ex)
+                {
+                    var ex2 = OnFailedResolve(typeof(T), ex);
+
+                    if (ex2 != null)
+                    {
+                        throw ex2;
+                    }
+
+                    defaultFactory = c => default(T);
+                }
+
+                var f = (Func<PocketContainer, object>) Registering?.Invoke(defaultFactory);
+                if (f != null)
+                {
+                    defaultFactory = c => (T) f(c);
+                }
+
+                return c => defaultFactory(c);
+            };
         }
 
         /// <summary>
@@ -187,7 +196,12 @@ namespace Pocket
         /// </summary>
         public PocketContainer Register<T>(Func<PocketContainer, T> factory)
         {
-            factory = (Func<PocketContainer, T>) Registering?.Invoke(factory) ?? factory;
+            var replaced = (Func<PocketContainer, object>) Registering?.Invoke(factory);
+            if (replaced != null)
+            {
+                factory = c => ((dynamic) replaced)(c);
+            }
+
             resolvers[typeof(T)] = c => factory(c);
             resolvers[typeof(Lazy<T>)] = c => new Lazy<T>(c.Resolve<T>);
             return this;

@@ -57,42 +57,7 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void AfterCreating_can_be_called_before_Register_but_still_applies()
-        {
-            var container = new PocketContainer()
-                .AfterCreating<HashSet<string>>(hashSet =>
-                {
-                    hashSet.Add("next");
-                })
-                .Register(c => new HashSet<string> { "initial" });
-
-            var set = container.Resolve<HashSet<string>>();
-
-            set.Should().Contain("initial");
-            set.Should().Contain("next");
-        }
-
-        [Fact]
-        public void Multiple_AfterCreating_functions_can_be_applied()
-        {
-            var container = new PocketContainer()
-                .Register(c => new HashSet<string> { "initial" })
-                .AfterCreating<HashSet<string>>(hashSet =>
-                {
-                    hashSet.Add("one");
-                })
-                .AfterCreating<HashSet<string>>(hashSet =>
-                {
-                    hashSet.Add("two");
-                });
-
-            var set = container.Resolve<HashSet<string>>();
-
-            set.Should().BeEquivalentTo(new object[] { "initial", "one", "two" });
-        }
-
-        [Fact]
-        public void When_used_with_RegisterSingle_then_AfterCreating_is_only_called_once_per_instantiation()
+        public void When_used_after_RegisterSingle_then_transform_is_only_called_once_per_instantiation()
         {
             var container = new PocketContainer()
                 .RegisterSingle(c => new HasDefaultCtor<int>())
@@ -100,6 +65,24 @@ namespace Pocket.Container.Tests
                 {
                     obj.Value++;
                 });
+
+            container.Resolve<HasDefaultCtor<int>>();
+            container.Resolve<HasDefaultCtor<int>>();
+
+            var resolved = container.Resolve<HasDefaultCtor<int>>();
+
+            resolved.Value.Should().Be(1);
+        }
+
+        [Fact]
+        public void When_used_before_RegisterSingle_then_transform_is_only_called_once_per_instantiation()
+        {
+            var container = new PocketContainer()
+                .AfterCreating<HasDefaultCtor<int>>(obj =>
+                {
+                    obj.Value++;
+                })
+                .RegisterSingle(c => new HasDefaultCtor<int>());
 
             container.Resolve<HasDefaultCtor<int>>();
             container.Resolve<HasDefaultCtor<int>>();
@@ -208,6 +191,34 @@ namespace Pocket.Container.Tests
 
             resolved1.Value1.Should().Be("after");
             resolved2.Should().BeSameAs(resolved1);
+        }
+
+        [Fact]
+        public void AfterCreating_can_be_called_multiple_times_before_Register()
+        {
+            var container = new PocketContainer()
+                .AfterCreating<IList<string>>(c => c.Add("one"))
+                .AfterCreating<IList<string>>(c => c.Add("two"))
+                .AfterCreating<IList<string>>(c => c.Add("three"))
+                .Register<IList<string>>(c => new List<string> { "initial" });
+
+            container.Resolve<IList<string>>()
+                     .Should()
+                     .BeEquivalentTo("initial", "one", "two", "three");
+        }
+
+        [Fact]
+        public void AfterCreating_can_be_called_multiple_times_after_Register()
+        {
+            var container = new PocketContainer()
+                .Register<IList<string>>(c => new List<string> { "initial" })
+                .AfterCreating<IList<string>>(c => c.Add("one"))
+                .AfterCreating<IList<string>>(c => c.Add("two"))
+                .AfterCreating<IList<string>>(c => c.Add("three"));
+
+            container.Resolve<IList<string>>()
+                     .Should()
+                     .BeEquivalentTo("initial", "one", "two", "three");
         }
     }
 }

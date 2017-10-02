@@ -6,10 +6,10 @@ using Xunit;
 
 namespace Pocket.Container.Tests
 {
-    public class PocketContainerBeforeRegisterTests
+    public class PocketContainerRegisteringTests
     {
         [Fact]
-        public void BeforeRegister_is_invoked_when_registering_using_Register_T()
+        public void Registering_is_invoked_when_registering_using_Register_T()
         {
             var receivedDelegates = new List<Delegate>();
 
@@ -35,7 +35,7 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void BeforeRegister_is_invoked_when_registering_using_Register()
+        public void Registering_is_invoked_when_registering_using_Register()
         {
             var receivedDelegates = new List<Delegate>();
 
@@ -61,7 +61,7 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void BeforeRegister_is_invoked_when_registering_using_RegisterSingle_T()
+        public void Registering_is_invoked_when_registering_using_RegisterSingle_T()
         {
             var receivedDelegates = new List<Delegate>();
 
@@ -87,7 +87,7 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void BeforeRegister_is_invoked_when_registering_using_RegisterSingle()
+        public void Registering_is_invoked_when_registering_using_RegisterSingle()
         {
             var receivedDelegates = new List<Delegate>();
 
@@ -113,7 +113,7 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void BeforeRegister_is_invoked_when_implicit_registration_occurs_during_calls_to_generic_Resolve()
+        public void Registering_is_invoked_when_implicit_registration_occurs_during_calls_to_generic_Resolve()
         {
             var receivedDelegates = new List<Delegate>();
 
@@ -137,7 +137,7 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void BeforeRegister_is_invoked_when_implicit_registration_occurs_during_calls_to_non_generic_Resolve()
+        public void Registering_is_invoked_when_implicit_registration_occurs_during_calls_to_non_generic_Resolve()
         {
             var receivedDelegates = new List<Delegate>();
 
@@ -161,7 +161,7 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void BeforeRegister_is_invoked_when_lazy_registration_occurs()
+        public void Registering_is_invoked_when_lazy_registration_occurs()
         {
             var receivedDelegates = new List<Delegate>();
 
