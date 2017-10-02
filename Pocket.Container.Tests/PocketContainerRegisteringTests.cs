@@ -6,16 +6,20 @@ using Xunit;
 
 namespace Pocket.Container.Tests
 {
-    public class PocketContainerBeforeRegisterTests
+    public class PocketContainerRegisteringTests
     {
         [Fact]
-        public void BeforeRegister_is_invoked_when_registering_using_Register_T()
+        public void Registering_is_invoked_when_registering_using_Register_T()
         {
             var receivedDelegates = new List<Delegate>();
 
             var container = new PocketContainer();
 
-            container.BeforeRegister += receivedDelegates.Add;
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
 
             container.Register(c => "hello");
 
@@ -31,13 +35,17 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void BeforeRegister_is_invoked_when_registering_using_Register()
+        public void Registering_is_invoked_when_registering_using_Register()
         {
             var receivedDelegates = new List<Delegate>();
 
             var container = new PocketContainer();
 
-            container.BeforeRegister += receivedDelegates.Add;
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
 
             container.Register(typeof(string), c => "hello");
 
@@ -53,13 +61,17 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void BeforeRegister_is_invoked_when_registering_using_RegisterSingle_T()
+        public void Registering_is_invoked_when_registering_using_RegisterSingle_T()
         {
             var receivedDelegates = new List<Delegate>();
 
             var container = new PocketContainer();
 
-            container.BeforeRegister += receivedDelegates.Add;
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
 
             container.RegisterSingle(c => "hello");
 
@@ -75,13 +87,17 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void BeforeRegister_is_invoked_when_registering_using_RegisterSingle()
+        public void Registering_is_invoked_when_registering_using_RegisterSingle()
         {
             var receivedDelegates = new List<Delegate>();
 
             var container = new PocketContainer();
 
-            container.BeforeRegister += receivedDelegates.Add;
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
 
             container.RegisterSingle(typeof(string), c => "hello");
 
@@ -97,13 +113,17 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void BeforeRegister_is_invoked_when_implicit_registration_occurs()
+        public void Registering_is_invoked_when_implicit_registration_occurs_during_calls_to_generic_Resolve()
         {
             var receivedDelegates = new List<Delegate>();
 
             var container = new PocketContainer();
 
-            container.BeforeRegister += receivedDelegates.Add;
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
 
             container.Resolve<HasDefaultCtor>();
 
@@ -117,13 +137,41 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void BeforeRegister_is_invoked_when_lazy_registration_occurs()
+        public void Registering_is_invoked_when_implicit_registration_occurs_during_calls_to_non_generic_Resolve()
         {
             var receivedDelegates = new List<Delegate>();
 
             var container = new PocketContainer();
 
-            container.BeforeRegister += receivedDelegates.Add;
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
+
+            container.Resolve(typeof(HasDefaultCtor));
+
+            receivedDelegates
+                .Should()
+                .HaveCount(1);
+            receivedDelegates
+                .Single()
+                .Should()
+                .BeOfType<Func<PocketContainer, HasDefaultCtor>>();
+        }
+
+        [Fact]
+        public void Registering_is_invoked_when_lazy_registration_occurs()
+        {
+            var receivedDelegates = new List<Delegate>();
+
+            var container = new PocketContainer();
+
+            container.Registering += f =>
+            {
+                receivedDelegates.Add(f);
+                return f;
+            };
 
             container.AddStrategy(type =>
             {

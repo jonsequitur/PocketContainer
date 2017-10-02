@@ -452,8 +452,8 @@ namespace Pocket.Container.Tests
             container.Resolve<IAmAnInterface>().Should().BeOfType<HasOneParamCtor<string>>();
         }
 
-        [Fact]
-        public void Recursive_resolve_does_not_stack_overflow_when_the_resolved_type_has_a_parameterless_constructor()
+        [Fact(Skip = "Under consideration")]
+        public void Recursive_resolve_of_transient_instances_does_not_stack_overflow_when_the_resolved_type_has_a_parameterless_constructor()
         {
             var container = new PocketContainer()
                 .Register(c => c.Resolve<IAmAGenericImplementation<string>>());
@@ -465,8 +465,8 @@ namespace Pocket.Container.Tests
             indirect.Value1.Should().NotBeNull();
         }
 
-        [Fact]
-        public void Recursive_resolve_of_singleton_instances()
+        [Fact(Skip = "Under consideration")]
+        public void Recursive_resolve_of_singleton_instances_does_not_stack_overflow_when_the_resolved_type_has_a_parameterless_constructor()
         {
             var container = new PocketContainer()
                 .RegisterSingle(c => c.Resolve<IAmAGenericImplementation<string>>());
