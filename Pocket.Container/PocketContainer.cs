@@ -65,67 +65,16 @@ namespace Pocket
             AfterConstructor();
         }
 
-        private Type resolving;
-
         /// <summary>
         /// Resolves an instance of the specified type.
         /// </summary>
         public T Resolve<T>()
         {
-            T resolved;
-
-            if (resolving != typeof(T))
-            {
-                resolving = typeof(T);
-                resolved = (T) resolvers.GetOrAdd(typeof(T), RegisterImplicit<T>())(this);
-                resolving = null;
-            }
-            else
-            {
-                resolved = Activator.CreateInstance<T>();
-            }
+            var resolved = (T) resolvers.GetOrAdd(typeof(T), ImplicitResolver<T>())(this);
 
             return CallAfterResolve(typeof(T), resolved, out var replaced)
                        ? (T) replaced
                        : resolved;
-        }
-
-        private Func<Type, Func<PocketContainer, object>> RegisterImplicit<T>()
-        {
-            return t =>
-            {
-                var customFactory = strategyChain(t);
-                if (customFactory != null)
-                {
-                    customFactory = (Func<PocketContainer, object>) Registering?.Invoke(customFactory) ?? customFactory;
-                    return customFactory;
-                }
-
-                Func<PocketContainer, T> defaultFactory;
-                try
-                {
-                    defaultFactory = Factory<T>.Default;
-                }
-                catch (TypeInitializationException ex)
-                {
-                    var ex2 = OnFailedResolve(typeof(T), ex);
-
-                    if (ex2 != null)
-                    {
-                        throw ex2;
-                    }
-
-                    defaultFactory = c => default(T);
-                }
-
-                var f = (Func<PocketContainer, object>) Registering?.Invoke(defaultFactory);
-                if (f != null)
-                {
-                    defaultFactory = c => (T) f(c);
-                }
-
-                return c => defaultFactory(c);
-            };
         }
 
         /// <summary>
@@ -217,6 +166,42 @@ namespace Pocket
                 .Invoke(this, new object[] { ConvertFunc(factory, type) });
             return this;
         }
+
+        private Func<Type, Func<PocketContainer, object>> ImplicitResolver<T>() =>
+            type =>
+            {
+                var customFactory = strategyChain(type);
+                if (customFactory != null)
+                {
+                    customFactory = (Func<PocketContainer, object>) Registering?.Invoke(customFactory) ?? customFactory;
+                    return customFactory;
+                }
+
+                Func<PocketContainer, T> defaultFactory;
+                try
+                {
+                    defaultFactory = Factory<T>.Default;
+                }
+                catch (TypeInitializationException ex)
+                {
+                    var ex2 = OnFailedResolve(typeof(T), ex);
+
+                    if (ex2 != null)
+                    {
+                        throw ex2;
+                    }
+
+                    defaultFactory = c => default(T);
+                }
+
+                var f = (Func<PocketContainer, object>) Registering?.Invoke(defaultFactory);
+                if (f != null)
+                {
+                    defaultFactory = c => (T) f(c);
+                }
+
+                return c => defaultFactory(c);
+            };
 
         /// <summary>
         /// Registers a delegate to retrieve an instance of the specified type when it is first resolved. This instance will be reused for the lifetime of the container.
