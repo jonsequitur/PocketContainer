@@ -166,6 +166,19 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
+        public void AfterCreating_on_transient_registration_does_not_result_in_singleton_registration()
+        {
+            var container = new PocketContainer()
+                .Register(c => new List<string>())
+                .AfterCreating<List<string>>(list => list.Add("hi"));
+
+            var resolved1 = container.Resolve<List<string>>();
+            var resolved2 = container.Resolve<List<string>>();
+
+            resolved2.Should().NotBeSameAs(resolved1);
+        }
+
+        [Fact]
         public void When_used_with_RegisterSingleton_then_AfterCreating_can_be_used_to_replace_the_returned_instance_when_resolved_using_generic_Resolve()
         {
             var container = new PocketContainer()
@@ -194,6 +207,25 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
+        public void AfterCreating_can_be_called_before_Register()
+        {
+            // arrange
+            var container = new PocketContainer()
+                .AfterCreating<List<string>>(l =>
+                {
+                    l.Add("one");
+                })
+                .Register(c => new List<string> { "initial" });
+
+            // act
+            var list = container.Resolve<List<string>>();
+
+            // assert
+            list.Should()
+                .BeEquivalentTo("initial", "one");
+        }
+
+        [Fact]
         public void AfterCreating_can_be_called_multiple_times_before_Register()
         {
             var container = new PocketContainer()
@@ -208,6 +240,28 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
+        public void AfterCreating_can_be_called_after_Register()
+        {
+            // arrange
+            var container = new PocketContainer()
+                .Register(c =>
+                {
+                    return new List<string> { "initial" };
+                })
+                .AfterCreating<List<string>>(l =>
+                {
+                    l.Add("one");
+                });
+
+            // act
+            var list = container.Resolve<List<string>>();
+
+            // assert
+            list.Should()
+                .BeEquivalentTo("initial", "one");
+        }
+
+        [Fact]
         public void AfterCreating_can_be_called_multiple_times_after_Register()
         {
             var container = new PocketContainer()
@@ -219,6 +273,36 @@ namespace Pocket.Container.Tests
             container.Resolve<IList<string>>()
                      .Should()
                      .BeEquivalentTo("initial", "one", "two", "three");
+        }
+
+        [Fact]
+        public void AfterCreating_can_be_called_before_and_after_Register()
+        {
+            var container = new PocketContainer()
+                .AfterCreating<IList<string>>(c => c.Add("one"))
+                .AfterCreating<IList<string>>(c => c.Add("two"))
+                .Register<IList<string>>(c => new List<string> { "initial" })
+                .AfterCreating<IList<string>>(c => c.Add("three"));
+
+            container.Resolve<IList<string>>()
+                     .Should()
+                     .BeEquivalentTo("initial", "one", "two", "three");
+        }
+
+        [Fact]
+        public void Register_can_be_called_multiple_times_after_AfterCreating()
+        {
+            var container = new PocketContainer()
+                .AfterCreating<IList<string>>(c => c.Add("one"))
+                .AfterCreating<IList<string>>(c => c.Add("two"))
+                .Register<IList<string>>(c => new List<string> { "initial" })
+                .Register<IList<string>>(c => new List<string> { "no, this initial" })
+                .Register<IList<string>>(c => new List<string> { "ok, this initial" })
+                .AfterCreating<IList<string>>(c => c.Add("three"));
+
+            container.Resolve<IList<string>>()
+                     .Should()
+                     .BeEquivalentTo("ok, this initial", "one", "two", "three");
         }
     }
 }

@@ -132,8 +132,9 @@ namespace Pocket.Container.Tests
                 .HaveCount(1);
             receivedDelegates
                 .Single()
+                .DynamicInvoke(container)
                 .Should()
-                .BeOfType<Func<PocketContainer, HasDefaultCtor>>();
+                .BeOfType<HasDefaultCtor>();
         }
 
         [Fact]
@@ -156,8 +157,9 @@ namespace Pocket.Container.Tests
                 .HaveCount(1);
             receivedDelegates
                 .Single()
+                .DynamicInvoke(container)
                 .Should()
-                .BeOfType<Func<PocketContainer, HasDefaultCtor>>();
+                .BeOfType<HasDefaultCtor>();
         }
 
         [Fact]

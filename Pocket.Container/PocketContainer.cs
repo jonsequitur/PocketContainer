@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using System.Linq.Expressions;
+using Strategy = System.Func<System.Type, System.Func<Pocket.PocketContainer, object>>;
 
 #pragma warning disable CS0436 // Type conflicts with imported type
 
@@ -38,7 +39,7 @@ namespace Pocket
 
         private ConcurrentDictionary<Type, object> singletons = new ConcurrentDictionary<Type, object>();
 
-        private Func<Type, Func<PocketContainer, object>> strategyChain = type => null;
+        private Strategy strategyChain = type => null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PocketContainer"/> class.
@@ -70,8 +71,20 @@ namespace Pocket
         /// </summary>
         public T Resolve<T>()
         {
-            var resolved = (T) resolvers.GetOrAdd(typeof(T), ImplicitResolver<T>())(this);
+            var resolved = (T) resolvers.GetOrAdd(typeof(T), _ =>
+            {
+                var implicitResolver = ImplicitResolver<T>();
 
+                var replacedResolver = (Func<PocketContainer, object>) Registering?.Invoke(implicitResolver);
+
+                if (replacedResolver != null)
+                {
+                    implicitResolver = c => (T) replacedResolver(c);
+                }
+
+                return implicitResolver;
+            })(this);
+             
             return CallAfterResolve(typeof(T), resolved, out var replaced)
                        ? (T) replaced
                        : resolved;
@@ -119,18 +132,13 @@ namespace Pocket
 
         /// <remarks>When an unregistered type is resolved for the first time, the strategies are checked until one returns a delegate. This delegate will be used in the future to resolve the specified type.</remarks>
         public PocketContainer AddStrategy(
-            Func<Type, Func<PocketContainer, object>> strategy,
+            Strategy strategy,
             bool executeFirst = true)
         {
             var previousStrategy = strategyChain;
-            if (executeFirst)
-            {
-                strategyChain = type => strategy(type) ?? previousStrategy(type);
-            }
-            else
-            {
-                strategyChain = type => previousStrategy(type) ?? strategy(type);
-            }
+            strategyChain = !executeFirst
+                                ? (type => previousStrategy(type) ?? strategy(type))
+                                : (Strategy) (type => strategy(type) ?? previousStrategy(type));
             return this;
         }
 
@@ -148,7 +156,7 @@ namespace Pocket
             var replaced = (Func<PocketContainer, object>) Registering?.Invoke(factory);
             if (replaced != null)
             {
-                factory = c => ((dynamic) replaced)(c);
+                factory = c => (T) replaced(c);
             }
 
             resolvers[typeof(T)] = c => factory(c);
@@ -167,55 +175,12 @@ namespace Pocket
             return this;
         }
 
-        private Func<Type, Func<PocketContainer, object>> ImplicitResolver<T>() =>
-            type =>
-            {
-                var customFactory = strategyChain(type);
-                if (customFactory != null)
-                {
-                    customFactory = (Func<PocketContainer, object>) Registering?.Invoke(customFactory) ?? customFactory;
-                    return customFactory;
-                }
-
-                Func<PocketContainer, T> defaultFactory;
-                try
-                {
-                    defaultFactory = Factory<T>.Default;
-                }
-                catch (TypeInitializationException ex)
-                {
-                    var ex2 = OnFailedResolve(typeof(T), ex);
-
-                    if (ex2 != null)
-                    {
-                        throw ex2;
-                    }
-
-                    defaultFactory = c => default(T);
-                }
-
-                var f = (Func<PocketContainer, object>) Registering?.Invoke(defaultFactory);
-                if (f != null)
-                {
-                    defaultFactory = c => (T) f(c);
-                }
-
-                return c => defaultFactory(c);
-            };
-
         /// <summary>
         /// Registers a delegate to retrieve an instance of the specified type when it is first resolved. This instance will be reused for the lifetime of the container.
         /// </summary>
         public PocketContainer RegisterSingle<T>(Func<PocketContainer, T> factory)
         {
-            Register(c => (T) singletons.GetOrAdd(typeof(T), t =>
-            {
-                var resolved = factory(c);
-
-                TryRegisterSingle(resolved.GetType(), _ => resolved);
-
-                return resolved;
-            }));
+            Register(c => (T) singletons.GetOrAdd(typeof(T), t => factory(c)));
             singletons.TryRemove(typeof(T), out object _);
             return this;
         }
@@ -314,6 +279,34 @@ namespace Pocket
         internal static class Factory<T>
         {
             public static readonly Func<PocketContainer, T> Default = Build.UsingLongestConstructor<T>();
+        }
+
+        private Func<PocketContainer, object> ImplicitResolver<T>()
+        {
+            var customFactory = strategyChain(typeof(T));
+            if (customFactory != null)
+            {
+                return customFactory;
+            }
+
+            Func<PocketContainer, T> defaultFactory;
+            try
+            {
+                defaultFactory = Factory<T>.Default;
+            }
+            catch (TypeInitializationException ex)
+            {
+                var ex2 = OnFailedResolve(typeof(T), ex);
+
+                if (ex2 != null)
+                {
+                    throw ex2;
+                }
+
+                defaultFactory = c => default(T);
+            }
+
+            return c => defaultFactory(c);
         }
 
         internal static class Build

@@ -376,22 +376,6 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void RegisterSingle_registers_the_single_instance_for_both_interface_and_resolved_type()
-        {
-            var container = new PocketContainer()
-                .RegisterSingle<IList<string>>(c => new List<string>());
-
-            var one = container.Resolve<IList<string>>();
-            var two = container.Resolve<List<string>>();
-            var three = container.Resolve<IList<string>>();
-            var four = container.Resolve<List<string>>();
-
-            one.Should().BeSameAs(two);
-            two.Should().BeSameAs(three);
-            three.Should().BeSameAs(four);
-        }
-
-        [Fact]
         public void Interface_and_resolved_type_can_be_registered_independently_without_interfering()
         {
              var container = new PocketContainer()
