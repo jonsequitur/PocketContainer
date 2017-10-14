@@ -34,7 +34,7 @@ namespace Pocket
                                .Any(i => i.IsConstructedGenericType &&
                                          interfaces.Contains(i.GetGenericTypeDefinition())));
 
-        private static IEnumerable<Type> Types() =>
+        public static IEnumerable<Type> Types() =>
             AppDomain.CurrentDomain
                      .GetAssemblies()
                      .Where(a => !a.IsDynamic)
