@@ -15,7 +15,6 @@
     <Compile Remove="PocketContainerItsConfigurationSettingsStrategy.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="PocketContainer.v3.ncrunchproject" />
     <None Remove="PocketContainerAutoMockingStrategy.nuspec" />
     <None Remove="PocketContainerDependencyResolver.nuspec" />
     <None Remove="PocketContainerDependencyResolverStrategy.nuspec" />

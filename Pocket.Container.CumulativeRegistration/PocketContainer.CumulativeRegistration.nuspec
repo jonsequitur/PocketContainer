@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>PocketContainer.CumulativeRegistration</id>
+    <title>PocketContainer Cumulative Registration</title>
+    <version>1.0.0-beta</version>
+    <authors>jonsequitur</authors>
+    <owners>jonsequitur</owners>
+    <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Enables PocketContainer to accumulate repeated registrations of the same type T and resolve them collectively using IEnumerable<T>.</description>
+    <tags>PocketContainer IoC DI container</tags>
+    <developmentDependency>true</developmentDependency>
+    <dependencies>
+      <dependency id="PocketContainer" version="[1.4.6,)" include="all" />
+    </dependencies>
+    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+  </metadata>
+  <files>
+    <file src="PocketContainerCumulativeRegistration.cs" 
+          target="contentFiles/cs/any/(Pocket)/Container/PocketContainerCumulativeRegistration.cs" />
+  </files>
+</package>

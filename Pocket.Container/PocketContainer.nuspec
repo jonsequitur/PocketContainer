@@ -12,9 +12,6 @@
     <tags>IoC DI container PocketContainer</tags>
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
     <developmentDependency>true</developmentDependency>
-    <dependencies>
-      <dependency id="System.Reflection.TypeExtensions" version="[4.4.0,)" />
-    </dependencies>
   </metadata>
   <files>
     <file src="PocketContainer.cs" 

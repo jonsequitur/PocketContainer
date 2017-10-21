@@ -12,18 +12,19 @@ namespace Pocket
         public PocketContainer AfterCreating<T>(Func<T, T> transform)
         {
             TryRegisterSingle(c =>
-                                  new AfterResolvePipeline<T>(this, ExistingResolver<T>()));
+            {
+                var resolvePipeline = new AfterResolvePipeline<T>(this, ExistingResolver<T>());
+
+                Registering += d => Reregister((dynamic) d);
+
+                return resolvePipeline;
+            });
 
             var pipeline = Resolve<AfterResolvePipeline<T>>();
 
             pipeline.Transforms.Enqueue(transform);
 
             resolvers[typeof(T)] = c => pipeline.Resolve();
-
-            if (pipeline.Transforms.Count == 1)
-            {
-                Registering += (type, d) => Reregister((dynamic) d);
-            }
 
             return this;
         }

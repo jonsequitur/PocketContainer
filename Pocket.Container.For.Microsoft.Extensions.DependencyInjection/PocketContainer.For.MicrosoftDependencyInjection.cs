@@ -10,30 +10,42 @@ namespace Pocket
 {
     internal partial class PocketContainer :
         IServiceProvider,
-        ISupportRequiredService
+        ISupportRequiredService,
+        IDisposable
     {
+        private readonly CompositeDisposable disposables = new CompositeDisposable();
+
         partial void AfterConstructor() =>
             OnFailedResolve = (type, exception) => null;
 
-        /// <summary>Gets the service object of the specified type.</summary>
-        /// <returns>A service object of type <paramref name="serviceType" />.-or- null if there is no service object of type <paramref name="serviceType" />.</returns>
-        /// <param name="serviceType">An object that specifies the type of service object to get. </param>
-        /// <filterpriority>2</filterpriority>
+        /// <inheritdoc />
         public object GetService(Type serviceType) =>
             Resolve(serviceType);
 
-        /// <summary>
-        /// Gets service of type <paramref name="serviceType" /> from the <see cref="T:System.IServiceProvider" /> implementing
-        /// this interface.
-        /// </summary>
-        /// <param name="serviceType">An object that specifies the type of service object to get.</param>
-        /// <returns>A service object of type <paramref name="serviceType" />.
-        /// Throws an exception if the <see cref="T:System.IServiceProvider" /> cannot create the object.</returns>
+        /// <inheritdoc />
         public object GetRequiredService(Type serviceType) =>
             Resolve(serviceType) ??
             throw new ArgumentNullException($"Service of type {serviceType} is not registered.");
 
         public bool HasSingletonOfType(Type type) => singletons.ContainsKey(type);
+
+        internal object RegisterSingletonForDisposal(Type serviceType, object service)
+        {
+            if (service is IDisposable disposable)
+            {
+                disposables.Add(() =>
+                {
+                    if (HasSingletonOfType(serviceType))
+                    {
+                        disposable.Dispose();
+                    }
+                });
+            }
+
+            return service;
+        }
+
+        public void Dispose() => disposables.Dispose();
     }
 
     internal static class MicrosoftDependencyInjectionExtensions
@@ -49,6 +61,8 @@ namespace Pocket
 
             container.RegisterSingle<IServiceProvider>(c => container)
                      .RegisterSingle<IServiceScopeFactory>(c => new ServiceScopeFactory(c));
+
+            container.AfterResolve += container.RegisterSingletonForDisposal;
 
             container.OnFailedResolve = (type, exception) => null;
 
@@ -116,72 +130,72 @@ namespace Pocket
 
         public static bool IsOpenGeneric(this ServiceDescriptor descriptor) =>
             descriptor.ServiceType.GetTypeInfo().IsGenericTypeDefinition;
-    }
 
-    internal class ServiceScopeFactory : IServiceScopeFactory
-    {
-        private readonly PocketContainer container;
-
-        public ServiceScopeFactory(PocketContainer container)
+        private class ServiceScopeFactory : IServiceScopeFactory
         {
-            this.container = container ??
-                             throw new ArgumentNullException(nameof(container));
-        }
+            private readonly PocketContainer container;
 
-        public IServiceScope CreateScope() => new ServiceScope(container);
-    }
-
-    internal class ServiceScope : IServiceScope
-    {
-        private readonly PocketContainer container;
-
-        private readonly CompositeDisposable disposables;
-
-        private bool isDisposed;
-
-        public ServiceScope(PocketContainer container)
-        {
-            this.container = container?.Clone() ??
-                             throw new ArgumentNullException(nameof(container));
-
-            this.container.AfterResolve += AfterResolve;
-
-            disposables = new CompositeDisposable
+            public ServiceScopeFactory(PocketContainer container)
             {
-                () => this.container.AfterResolve -= AfterResolve,
-                () => isDisposed = true
-            };
-        }
-
-        private object AfterResolve(
-            Type serviceType,
-            object service)
-        {
-            if (service is IDisposable disposable)
-            {
-                disposables.Add(() =>
-                {
-                    if (!container.HasSingletonOfType(serviceType))
-                    {
-                        disposable.Dispose();
-                    }
-                });
+                this.container = container ??
+                                 throw new ArgumentNullException(nameof(container));
             }
 
-            return service;
+            public IServiceScope CreateScope() => new ServiceScope(container);
         }
 
-        public void Dispose() => disposables.Dispose();
-
-        public IServiceProvider ServiceProvider
+        private class ServiceScope : IServiceScope
         {
-            get
+            private readonly PocketContainer container;
+
+            private readonly CompositeDisposable disposables;
+
+            private bool isDisposed;
+
+            public ServiceScope(PocketContainer container)
             {
-                if (isDisposed)
+                this.container = container?.Clone() ??
+                                 throw new ArgumentNullException(nameof(container));
+
+                this.container.AfterResolve += RegisterTransientsForDisposal;
+
+                disposables = new CompositeDisposable
                 {
-                    throw new ObjectDisposedException("The ServiceScope has been disposed.");
+                    () => this.container.AfterResolve -= RegisterTransientsForDisposal,
+                    () => isDisposed = true
+                };
+            }
+
+            private object RegisterTransientsForDisposal(
+                Type serviceType,
+                object service)
+            {
+                if (service is IDisposable disposable)
+                {
+                    disposables.Add(() =>
+                    {
+                        if (!container.HasSingletonOfType(serviceType))
+                        {
+                            disposable.Dispose();
+                        }
+                    });
                 }
-                return container;
+
+                return service;
+            }
+
+            public void Dispose() => disposables.Dispose();
+
+            public IServiceProvider ServiceProvider
+            {
+                get
+                {
+                    if (isDisposed)
+                    {
+                        throw new ObjectDisposedException("The ServiceScope has been disposed.");
+                    }
+                    return container;
+                }
             }
         }
     }
