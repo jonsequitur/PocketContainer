@@ -26,7 +26,7 @@ after_build:
   - nuget pack Pocket.Container\PocketContainerSingleImplementationStrategy.nuspec  
   - nuget pack Pocket.Container\TypeDiscovery.nuspec
   - nuget pack Pocket.Container.CumulativeRegistration\PocketContainer.CumulativeRegistration.nuspec
-  - nuget pack Pocket.Container.For.MicrosoftExtensionsDependencyInjection\PocketContainer.For.MicrosoftExtensionsDependencyInjection.nuspec
+  - nuget pack Pocket.Container.For.Microsoft.Extensions.DependencyInjection\PocketContainer.For.MicrosoftExtensionsDependencyInjection.nuspec
 
 test_script:
   - cmd: dotnet test .\Pocket.Container.Tests\Pocket.Container.Tests.csproj -l:trx
