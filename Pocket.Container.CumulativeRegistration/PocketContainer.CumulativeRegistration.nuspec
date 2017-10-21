@@ -8,7 +8,7 @@
     <owners>jonsequitur</owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Enables PocketContainer to accumulate repeated registrations of the same type T and resolve them collectively using IEnumerable<T>.</description>
+    <description>Enables PocketContainer to accumulate repeated registrations of the same type T and resolve them collectively using IEnumerable&lt;T&gt;.</description>
     <tags>PocketContainer IoC DI container</tags>
     <developmentDependency>true</developmentDependency>
     <dependencies>
