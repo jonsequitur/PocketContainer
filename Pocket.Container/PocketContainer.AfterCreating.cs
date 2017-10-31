@@ -15,7 +15,7 @@ namespace Pocket
             {
                 var resolvePipeline = new AfterResolvePipeline<T>(this, ExistingResolver<T>());
 
-                Registering += d => Reregister((dynamic) d);
+                Registering += (type, d) => Reregister((dynamic) d);
 
                 return resolvePipeline;
             });
