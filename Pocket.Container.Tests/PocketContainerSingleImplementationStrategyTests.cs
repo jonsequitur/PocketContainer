@@ -3,23 +3,14 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using FluentAssertions;
 using System.Linq;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Pocket.Container.Tests
 {
     public class PocketContainerSingleImplementationStrategyTests
     {
-        private readonly ITestOutputHelper output;
-
-        public PocketContainerSingleImplementationStrategyTests(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
-
         [Fact]
         public void When_a_single_concrete_type_implementing_an_interface_is_found_then_it_is_Resolved()
         {
