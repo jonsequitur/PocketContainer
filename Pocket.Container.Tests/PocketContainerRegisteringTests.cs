@@ -15,7 +15,7 @@ namespace Pocket.Container.Tests
 
             var container = new PocketContainer();
 
-            container.Registering += f =>
+            container.Registering += (type, f) =>
             {
                 receivedDelegates.Add(f);
                 return f;
@@ -41,7 +41,7 @@ namespace Pocket.Container.Tests
 
             var container = new PocketContainer();
 
-            container.Registering += f =>
+            container.Registering += (type, f) =>
             {
                 receivedDelegates.Add(f);
                 return f;
@@ -67,7 +67,7 @@ namespace Pocket.Container.Tests
 
             var container = new PocketContainer();
 
-            container.Registering += f =>
+            container.Registering += (type, f) =>
             {
                 receivedDelegates.Add(f);
                 return f;
@@ -93,7 +93,7 @@ namespace Pocket.Container.Tests
 
             var container = new PocketContainer();
 
-            container.Registering += f =>
+            container.Registering += (type, f) =>
             {
                 receivedDelegates.Add(f);
                 return f;
@@ -119,7 +119,7 @@ namespace Pocket.Container.Tests
 
             var container = new PocketContainer();
 
-            container.Registering += f =>
+            container.Registering += (type, f) =>
             {
                 receivedDelegates.Add(f);
                 return f;
@@ -144,7 +144,7 @@ namespace Pocket.Container.Tests
 
             var container = new PocketContainer();
 
-            container.Registering += f =>
+            container.Registering += (type, f) =>
             {
                 receivedDelegates.Add(f);
                 return f;
@@ -169,7 +169,7 @@ namespace Pocket.Container.Tests
 
             var container = new PocketContainer();
 
-            container.Registering += f =>
+            container.Registering += (type, f) =>
             {
                 receivedDelegates.Add(f);
                 return f;
