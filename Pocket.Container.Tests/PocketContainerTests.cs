@@ -364,6 +364,29 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
+        public void A_strategy_can_be_used_to_register_a_singleton()
+        {
+            var container = new PocketContainer();
+
+            container.AddStrategy(type =>
+            {
+                if (type == typeof(IList<string>))
+                {
+                    container.RegisterSingle<IList<string>>(c => new List<string>());
+
+                    return c => c.Resolve<IList<string>>();
+                }
+
+                return null;
+            });
+
+            var list1 = container.Resolve<IList<string>>();
+            var list2 = container.Resolve<IList<string>>();
+
+            list1.Should().BeSameAs(list2);
+        }
+
+        [Fact]
         public void RegisterSingle_can_be_used_to_register_the_same_instance_for_the_lifetime_of_the_container()
         {
             var container = new PocketContainer()

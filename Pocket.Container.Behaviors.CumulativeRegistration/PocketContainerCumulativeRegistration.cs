@@ -12,7 +12,7 @@ namespace Pocket
         public static PocketContainer AccumulateRegistrations(
             this PocketContainer container)
         {
-            container.Registering += resolver =>
+            container.Registering += (type, resolver) =>
             {
                 AddFactoryToList(container, (dynamic) resolver);
                 return resolver;

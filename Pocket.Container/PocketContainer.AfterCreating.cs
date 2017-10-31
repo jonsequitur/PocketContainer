@@ -22,7 +22,7 @@ namespace Pocket
 
             if (pipeline.Transforms.Count == 1)
             {
-                Registering += d => Reregister((dynamic) d);
+                Registering += (type, d) => Reregister((dynamic) d);
             }
 
             return this;
@@ -40,8 +40,6 @@ namespace Pocket
                     var pipelineType = pipeline.GetType().GetGenericArguments()[0];
                     if (resolverType == pipelineType)
                     {
-                        //                    Console.WriteLine($"RE-registering {transform} for {pipeline.ResolvesType}");
-
                         pipeline.InnerResolver = newResolver;
                     }
                     else
@@ -49,7 +47,9 @@ namespace Pocket
                         Console.WriteLine($"[HMMM] wanting to replace {resolverType} but pipeline is {pipelineType}");
                     }
 
-                    return c => pipeline.Resolve();
+                    return Resolve;
+
+                    object Resolve(PocketContainer c) => pipeline.Resolve();
                 }
             }
 
@@ -80,11 +80,11 @@ namespace Pocket
 
                 if (originalResolver != null)
                 {
-                    InnerResolver = c => (T) originalResolver(c);
+                    InnerResolver = Resolve;
+
+                    T Resolve(PocketContainer c) => (T) originalResolver(c);
                 }
             }
-
-            public Type ResolvesType { get; } = typeof(T);
 
             public Func<PocketContainer, T> InnerResolver
             {
@@ -92,11 +92,13 @@ namespace Pocket
                 {
                     if (innerResolver == null)
                     {
-                        innerResolver = c =>
+                        innerResolver = Resolve;
+
+                        T Resolve(PocketContainer c)
                         {
                             var implicitResolver = container.ImplicitResolver<T>();
                             return (T) implicitResolver(container);
-                        };
+                        }
                     }
 
                     return innerResolver;

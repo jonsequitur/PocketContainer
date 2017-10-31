@@ -75,7 +75,7 @@ namespace Pocket
             {
                 var implicitResolver = ImplicitResolver<T>();
 
-                var replacedResolver = (Func<PocketContainer, object>) Registering?.Invoke(implicitResolver);
+                var replacedResolver = (Func<PocketContainer, object>) Registering?.Invoke(typeof(T), implicitResolver);
 
                 if (replacedResolver != null)
                 {
@@ -146,14 +146,14 @@ namespace Pocket
 
         public event Func<Type, object, object> AfterResolve;
 
-        public event Func<Delegate, Delegate> Registering;
+        public event Func<Type, Delegate, Delegate> Registering;
 
         /// <summary>
         /// Registers a delegate to retrieve instances of the specified type.
         /// </summary>
         public PocketContainer Register<T>(Func<PocketContainer, T> factory)
         {
-            var replaced = (Func<PocketContainer, object>) Registering?.Invoke(factory);
+            var replaced = (Func<PocketContainer, object>) Registering?.Invoke(typeof(T), factory);
             if (replaced != null)
             {
                 factory = c => (T) replaced(c);
