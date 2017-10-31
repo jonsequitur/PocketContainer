@@ -62,6 +62,17 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
+        public void When_a_singleton_registration_already_exists_then_TryRegister_does_not_overwrite_it()
+        {
+            var container = new PocketContainer();
+
+            container.RegisterSingle(c => "one");
+            container.TryRegister(typeof(string), c => "two");
+
+            container.Resolve<string>().Should().Be("one");
+        }
+
+        [Fact]
         public void When_no_registration_exists_then_TryRegister_registers()
         {
             var container = new PocketContainer();
@@ -94,8 +105,7 @@ namespace Pocket.Container.Tests
             container.Resolve<string>().Should().Be("one");
         }
 
-
-           [Fact]
+        [Fact]
         public void When_a_registration_already_exists_then_TryRegisterSingle_T_does_not_overwrite_it()
         {
             var container = new PocketContainer();
@@ -148,6 +158,33 @@ namespace Pocket.Container.Tests
             container.TryRegisterSingle(typeof(string), c => "two");
 
             container.Resolve<string>().Should().Be("one");
+        }
+
+        [Fact]
+        public void When_a_singleton_registration_already_exists_then_TryRegisterSingle_does_not_overwrite_it()
+        {
+            var container = new PocketContainer();
+
+            container.RegisterSingle(c => "one");
+            container.TryRegisterSingle(typeof(string), c => "two");
+
+            container.Resolve<string>().Should().Be("one");
+        }
+
+        [Fact]
+        public void When_a_singleton_registration_already_exists_but_has_not_been_resolved_then_TryRegisterSingle_does_not_trigger_its_resolution()
+        {
+            var container = new PocketContainer();
+            var resolved = false;
+
+            container.RegisterSingle(c =>
+            {
+                resolved = true;
+                return "one";
+            });
+            container.TryRegisterSingle(typeof(string), c => "two");
+
+            resolved.Should().BeFalse();
         }
 
         [Fact]

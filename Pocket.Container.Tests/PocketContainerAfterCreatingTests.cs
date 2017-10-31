@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
@@ -303,6 +305,41 @@ namespace Pocket.Container.Tests
             container.Resolve<IList<string>>()
                      .Should()
                      .BeEquivalentTo("ok, this initial", "one", "two", "three");
+        }
+
+        [Fact]
+        public async Task AfterCreating_is_threadsafe()
+        {
+            var container = new PocketContainer()
+                .Register<IList<string>>(c => new List<string>());
+
+            var barrier = new Barrier(2);
+
+            var task1 = Task.Run(() =>
+            {
+                barrier.SignalAndWait();
+                container.AfterCreating<IList<string>>(list =>
+                {
+                    list.Add("one");
+                });
+            });
+
+            var task2 = Task.Run(() =>
+            {
+                barrier.SignalAndWait();
+                container.AfterCreating<IList<string>>(list =>
+                {
+                    list.Add("two");
+                });
+            });
+
+            await Task.WhenAll(task1, task2);
+
+            container.Resolve<IList<string>>()
+                     .Should()
+                     .Contain("one")
+                     .And
+                     .Contain("two");
         }
     }
 }

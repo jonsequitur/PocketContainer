@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26923.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.Container", "Pocket.Container\Pocket.Container.csproj", "{4AE6628C-CD5B-4504-BD30-659FFC41903D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.Container.Tests", "Pocket.Container.Tests\Pocket.Container.Tests.csproj", "{0AE687B5-9EFA-4A51-A0AA-82A5D9C97075}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PocketContainer.Microsoft.Extensions.DependencyInjection", "Pocket.Container.Behaviors.Microsoft.Extensions.DependencyInjection\PocketContainer.Microsoft.Extensions.DependencyInjection.csproj", "{F3A05E35-729D-4D4E-B059-E57430541757}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.Container.For.Microsoft.Extensions.DependencyInjection", "Pocket.Container.For.Microsoft.Extensions.DependencyInjection\Pocket.Container.For.Microsoft.Extensions.DependencyInjection.csproj", "{F3A05E35-729D-4D4E-B059-E57430541757}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.Container.Behaviors.CumulativeRegistration", "Pocket.Container.Behaviors.CumulativeRegistration\Pocket.Container.Behaviors.CumulativeRegistration.csproj", "{628C9A03-D083-4B04-85CD-51726BB191B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.Container.CumulativeRegistration", "Pocket.Container.CumulativeRegistration\Pocket.Container.CumulativeRegistration.csproj", "{628C9A03-D083-4B04-85CD-51726BB191B0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.TypeDiscovery.NetStandard2.0.Tests", "Pocket.TypeDiscovery.NetStandard2.0.Tests\Pocket.TypeDiscovery.NetStandard2.0.Tests.csproj", "{EB4F8356-7CC4-403B-83D7-9CF308852DDE}"
 EndProject

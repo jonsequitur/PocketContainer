@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TestResults\**" />
+    <EmbeddedResource Remove="TestResults\**" />
+    <None Remove="TestResults\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="..\Pocket.Container\netstandard2.0\Discover.cs" Link="Discover.cs" />
   </ItemGroup>
 
