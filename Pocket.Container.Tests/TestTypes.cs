@@ -6,10 +6,6 @@ namespace Pocket.Container.Tests
     {
         public HasOneParamCtor(T value1)
         {
-            if (value1 == null)
-            {
-                throw new ArgumentNullException(nameof(value1));
-            }
             Value1 = value1;
         }
 
@@ -38,6 +34,27 @@ namespace Pocket.Container.Tests
         }
 
         public T Value { get; }
+    }
+
+    public class HasOneRequiredAndOneOptionalWithDefaultParamCtor<T>
+    {
+        public const int DefaultIntValue = 123;
+
+        public HasOneRequiredAndOneOptionalWithDefaultParamCtor(T nonOptionalValue, int optionalIntValue = DefaultIntValue)
+        {
+            if (nonOptionalValue == null)
+            {
+                throw new ArgumentNullException(nameof(nonOptionalValue));
+            }
+
+            NonOptionalValue = nonOptionalValue;
+
+            OptionalIntValue = optionalIntValue;
+        }
+
+        public T NonOptionalValue { get; }
+
+        public int OptionalIntValue { get; }
     }
 
     public class HasOneOptionalAndOneRequiredParameterCtor<T1, T2>

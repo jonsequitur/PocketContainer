@@ -517,9 +517,21 @@ namespace Pocket.Container.Tests
 
             container.OnFailedResolve = (type, exception) => null;
 
-            var o = container.Resolve<HasOneOptionalParameterCtor<string>>();
+            var o = container.Resolve<HasOneParamCtor<string>>();
 
-            o.Value.Should().BeNull();
+            o.Value1.Should().BeNull();
+        }
+
+        [Fact]
+        public void Optional_parameters_for_unregistered_types_are_filled_correctly()
+        {
+            var container = new PocketContainer()
+                .Register(c => "hello");
+
+            var o = container.Resolve<HasOneRequiredAndOneOptionalWithDefaultParamCtor<string>>();
+
+            o.NonOptionalValue.Should().Be("hello");
+            o.OptionalIntValue.Should().Be(HasOneRequiredAndOneOptionalWithDefaultParamCtor<string>.DefaultIntValue);
         }
     }
 }
