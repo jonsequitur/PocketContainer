@@ -327,12 +327,16 @@ namespace Pocket
                 var container = Expression.Parameter(typeof(PocketContainer), "container");
 
                 var factoryExpr = Expression.Lambda<Func<PocketContainer, T>>(
-                    Expression.New(chosenCtor,
-                                   chosenCtor.GetParameters()
-                                             .Select(p =>
-                                                         Expression.Call(container,
-                                                                         resolveMethod
-                                                                             .MakeGenericMethod(p.ParameterType)))),
+                    Expression.New(
+                        chosenCtor,
+                        chosenCtor.GetParameters()
+                                  .Select(p =>
+                                              p.HasDefaultValue
+                                                  ? (Expression) Expression.Constant(p.DefaultValue)
+                                                  : Expression.Call(
+                                                      container,
+                                                      resolveMethod
+                                                          .MakeGenericMethod(p.ParameterType)))),
                     container);
 
                 return factoryExpr.Compile();
