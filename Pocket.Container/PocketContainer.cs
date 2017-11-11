@@ -143,6 +143,9 @@ namespace Pocket
         /// </summary>
         public event Func<Type, object, object> AfterResolve;
 
+        /// <summary>
+        /// Invoked when registering a type. Handlers can return a different delegate in order to replace the specified delegate or apply middleware.
+        /// </summary>
         public event Func<Type, Delegate, Delegate> Registering;
 
         /// <summary>
