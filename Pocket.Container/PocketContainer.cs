@@ -251,9 +251,9 @@ namespace Pocket
 
         private bool CallAfterResolve(Type type, object resolved, out object replaced)
         {
-            if (AfterResolve?.Invoke(type, resolved) is object o &&
-                singletons.TryUpdate(type, o, resolved))
+            if (AfterResolve?.Invoke(type, resolved) is object o)
             {
+                singletons.TryUpdate(type, o, resolved);
                 replaced = o;
                 return true;
             }
