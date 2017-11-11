@@ -533,5 +533,15 @@ namespace Pocket.Container.Tests
             o.NonOptionalValue.Should().Be("hello");
             o.OptionalIntValue.Should().Be(HasOneRequiredAndOneOptionalWithDefaultParamCtor<string>.DefaultIntValue);
         }
+
+        [Fact]
+        public void Nullable_optional_parameters_for_unregistered_types_are_filled_correctly()
+        {
+            var container = new PocketContainer();
+
+            var o = container.Resolve<HasOneNullableOptionalParamWithDefaultCtor>();
+
+            o.OptionalIntValue.Should().Be(HasOneNullableOptionalParamWithDefaultCtor.DefaultIntValue);
+        }
     }
 }
