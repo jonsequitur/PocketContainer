@@ -57,6 +57,18 @@ namespace Pocket.Container.Tests
         public int OptionalIntValue { get; }
     }
 
+    public class HasOneNullableOptionalParamWithDefaultCtor
+    {
+        public const int DefaultIntValue = 123;
+
+        public HasOneNullableOptionalParamWithDefaultCtor(int? optionalIntValue = DefaultIntValue)
+        {
+            OptionalIntValue = optionalIntValue;
+        }
+
+        public int? OptionalIntValue { get; }
+    }
+
     public class HasOneOptionalAndOneRequiredParameterCtor<T1, T2>
     {
         public HasOneOptionalAndOneRequiredParameterCtor(T1 value1, T2 value2 = default(T2))
