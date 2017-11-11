@@ -55,7 +55,7 @@ namespace Pocket
                 {
                     return (Func<PocketContainer, object>)
                         GetType()
-                            .GetMethod(nameof(MakeResolverFunc), BindingFlags.Instance | BindingFlags.NonPublic)
+                            .GetMethod(nameof(MakeResolverFunc), BindingFlags.Static | BindingFlags.NonPublic)
                             .MakeGenericMethod(type.GetGenericArguments()[0])
                             .Invoke(this, null);
                 }
@@ -74,10 +74,8 @@ namespace Pocket
             var resolved = (T) resolvers.GetOrAdd(typeof(T), _ =>
             {
                 var implicitResolver = ImplicitResolver<T>();
-
-                var replacedResolver = (Func<PocketContainer, object>) Registering?.Invoke(typeof(T), implicitResolver);
-
-                if (replacedResolver != null)
+                
+                if (Registering?.Invoke(typeof(T), implicitResolver) is Func<PocketContainer, object> replacedResolver)
                 {
                     implicitResolver = c => (T) replacedResolver(c);
                 }
@@ -105,11 +103,7 @@ namespace Pocket
                 }
                 catch (TargetInvocationException ex)
                 {
-                    if (ex.InnerException != null)
-                    {
-                        throw ex.InnerException;
-                    }
-                    throw;
+                    throw ex.InnerException;
                 }
             }
             else
@@ -242,15 +236,11 @@ namespace Pocket
 
         private bool CallAfterResolve(Type type, object resolved, out object replaced)
         {
-            var afterResolve = AfterResolve;
-            if (afterResolve != null)
+            if (AfterResolve?.Invoke(type, resolved) is object o &&
+                singletons.TryUpdate(type, o, resolved))
             {
-                replaced = afterResolve(type, resolved);
-                if (replaced != null)
-                {
-                    singletons.TryUpdate(type, replaced, resolved);
-                    return true;
-                }
+                replaced = o;
+                return true;
             }
 
             replaced = null;
@@ -334,23 +324,18 @@ namespace Pocket
 
                 return factoryExpr.Compile();
 
-                Expression ResolveParameter(ParameterInfo p)
-                {
-                    if (!p.HasDefaultValue)
-                    {
-                        return Expression.Call(container, resolveMethod.MakeGenericMethod(p.ParameterType));
-                    }
+                Expression ResolveParameter(ParameterInfo p) =>
+                    p.HasDefaultValue
+                        ? (p.ParameterType.IsGenericType &&
+                           p.ParameterType.GetGenericTypeDefinition() == typeof(Nullable<>)
+                               ? Nullable(p.DefaultValue)
+                               : Expression.Constant(p.DefaultValue))
+                        : CallResolve(container, p.ParameterType);
 
-                    if (p.ParameterType.IsGenericType &&
-                        p.ParameterType.GetGenericTypeDefinition() == typeof(Nullable<>))
-                    {
-                        return Expression.New(
-                            typeof(Nullable<>).MakeGenericType(p.DefaultValue.GetType())
-                                              .GetConstructor(new[] { p.DefaultValue.GetType() }), Expression.Constant(p.DefaultValue));
-                    }
-
-                    return Expression.Constant(p.DefaultValue);
-                }
+                Expression Nullable(object value) =>
+                    Expression.New(
+                        typeof(Nullable<>).MakeGenericType(value.GetType())
+                                          .GetConstructor(new[] { value.GetType() }), Expression.Constant(value));
             }
         }
 
@@ -358,17 +343,18 @@ namespace Pocket
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private Func<PocketContainer, Func<T>> MakeResolverFunc<T>()
+        private static Func<PocketContainer, Func<T>> MakeResolverFunc<T>()
         {
             var container = Expression.Parameter(typeof(PocketContainer), "container");
 
             var resolve = Expression.Lambda<Func<PocketContainer, Func<T>>>(
                 Expression.Lambda<Func<T>>(
-                    Expression.Call(container,
-                                    resolveMethod.MakeGenericMethod(typeof(T)))),
+                    CallResolve(container, typeof(T))),
                 container);
 
             return resolve.Compile();
         }
+
+        private static MethodCallExpression CallResolve(ParameterExpression container, Type type) => Expression.Call(container, resolveMethod.MakeGenericMethod(type));
     }
 }
