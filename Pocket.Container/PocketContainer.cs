@@ -74,7 +74,7 @@ namespace Pocket
             var resolved = (T) resolvers.GetOrAdd(typeof(T), _ =>
             {
                 var implicitResolver = ImplicitResolver<T>();
-                
+
                 if (Registering?.Invoke(typeof(T), implicitResolver) is Func<PocketContainer, object> replacedResolver)
                 {
                     implicitResolver = c => (T) replacedResolver(c);
@@ -82,7 +82,7 @@ namespace Pocket
 
                 return implicitResolver;
             })(this);
-             
+
             return CallAfterResolve(typeof(T), resolved, out var replaced)
                        ? (T) replaced
                        : resolved;
@@ -138,8 +138,14 @@ namespace Pocket
 
         partial void AfterConstructor();
 
+        /// <summary>
+        /// Invoked after each resolve operation. Handlers can return a different object in order to change the result of the resolve operation.
+        /// </summary>
         public event Func<Type, object, object> AfterResolve;
 
+        /// <summary>
+        /// Invoked when registering a type. Handlers can return a different delegate in order to replace the specified delegate or apply middleware.
+        /// </summary>
         public event Func<Type, Delegate, Delegate> Registering;
 
         /// <summary>
@@ -170,7 +176,7 @@ namespace Pocket
         }
 
         /// <summary>
-        /// Registers a delegate to retrieve an instance of the specified type when it is first resolved. This instance will be reused for the lifetime of the container.
+        /// Registers a delegate to retrieve an instance of the specified type when it is first resolved. The instance created will be reused for the lifetime of the container.
         /// </summary>
         public PocketContainer RegisterSingle<T>(Func<PocketContainer, T> factory)
         {
@@ -180,7 +186,7 @@ namespace Pocket
         }
 
         /// <summary>
-        /// Registers a delegate to retrieve an instance of the specified type when it is first resolved. This instance will be reused for the lifetime of the container.
+        /// Registers a delegate to retrieve an instance of the specified type when it is first resolved. The instance created will be reused for the lifetime of the container.
         /// </summary>
         public PocketContainer RegisterSingle(Type type, Func<PocketContainer, object> factory)
         {
@@ -190,6 +196,9 @@ namespace Pocket
             return this;
         }
 
+        /// <summary>
+        /// Registers  a delegate to retrieve an instance of the specified type only if it has not previously been registered or successfully resolved.
+        /// </summary>
         public PocketContainer TryRegister(
             Type type,
             Func<PocketContainer, object> factory)
@@ -202,6 +211,9 @@ namespace Pocket
             return this;
         }
 
+        /// <summary>
+        /// Registers  a delegate to retrieve an instance of the specified type only if it has not previously been registered or successfully resolved.
+        /// </summary>
         public PocketContainer TryRegister<T>(Func<PocketContainer, T> factory)
         {
             if (!resolvers.ContainsKey(typeof(T)))
@@ -212,6 +224,9 @@ namespace Pocket
             return this;
         }
 
+        /// <summary>
+        /// Registers  a delegate to retrieve an instance of the specified type only if it has not previously been registered or successfully resolved. The instance created will be reused for the lifetime of the container.
+        /// </summary>
         public PocketContainer TryRegisterSingle(
             Type type,
             Func<PocketContainer, object> factory)
@@ -224,6 +239,9 @@ namespace Pocket
             return this;
         }
 
+        /// <summary>
+        /// Registers  a delegate to retrieve an instance of the specified type only if it has not previously been registered or successfully resolved. The instance created will be reused for the lifetime of the container.
+        /// </summary>
         public PocketContainer TryRegisterSingle<T>(Func<PocketContainer, T> factory)
         {
             if (!resolvers.ContainsKey(typeof(T)))
@@ -236,9 +254,9 @@ namespace Pocket
 
         private bool CallAfterResolve(Type type, object resolved, out object replaced)
         {
-            if (AfterResolve?.Invoke(type, resolved) is object o &&
-                singletons.TryUpdate(type, o, resolved))
+            if (AfterResolve?.Invoke(type, resolved) is object o)
             {
+                singletons.TryUpdate(type, o, resolved);
                 replaced = o;
                 return true;
             }
@@ -326,16 +344,42 @@ namespace Pocket
 
                 Expression ResolveParameter(ParameterInfo p) =>
                     p.HasDefaultValue
-                        ? (p.ParameterType.IsGenericType &&
-                           p.ParameterType.GetGenericTypeDefinition() == typeof(Nullable<>)
-                               ? Nullable(p.DefaultValue)
-                               : Expression.Constant(p.DefaultValue))
+                        ? (IsNullable(p)
+                               ? Nullable(p)
+                               : (IsDefaultStruct(p)
+                                      ? DefaultStruct(p)
+                                      : DeclaredDefaultValue(p)))
                         : CallResolve(container, p.ParameterType);
 
-                Expression Nullable(object value) =>
-                    Expression.New(
-                        typeof(Nullable<>).MakeGenericType(value.GetType())
-                                          .GetConstructor(new[] { value.GetType() }), Expression.Constant(value));
+                bool IsDefaultStruct(ParameterInfo p) =>
+                    p.ParameterType.IsValueType && Equals(p.DefaultValue, null);
+
+                bool IsNullable(ParameterInfo p) =>
+                    p.ParameterType.IsGenericType &&
+                    p.ParameterType.GetGenericTypeDefinition() == typeof(Nullable<>);
+
+                Expression DefaultStruct(ParameterInfo p) =>
+                    Expression.Constant(Activator.CreateInstance(p.ParameterType), p.ParameterType);
+
+                Expression DeclaredDefaultValue(ParameterInfo p) =>
+                    Expression.Constant(p.DefaultValue, p.ParameterType);
+
+                Expression Nullable(ParameterInfo p)
+                {
+                    var genericArgument = p.ParameterType.GetGenericArguments()[0];
+
+                    var defaultValueForType = Activator.CreateInstance(genericArgument);
+
+                    var argument = Expression.Constant(
+                        p.DefaultValue ?? defaultValueForType);
+
+                    var constructor = typeof(Nullable<>)
+                        .MakeGenericType(genericArgument)
+                        .GetConstructor(new[] { genericArgument });
+
+                    return Expression.New(
+                        constructor, argument);
+                }
             }
         }
 

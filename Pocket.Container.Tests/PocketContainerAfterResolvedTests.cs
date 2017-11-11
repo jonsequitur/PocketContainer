@@ -95,7 +95,7 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void AfterResolve_is_invoked_after_a_lazy_registration_is_resolved_using_Resolve_T()
+        public void AfterResolve_is_invoked_after_a_strategy_registration_is_resolved_using_Resolve_T()
         {
             Type typeArg = null;
             object instanceArg = null;
@@ -125,7 +125,7 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void AfterResolve_is_invoked_after_a_lazy_registration_is_resolved_using_Resolve()
+        public void AfterResolve_is_invoked_after_a_strategy_registration_is_resolved_using_Resolve()
         {
             Type typeArg = null;
             object instanceArg = null;
@@ -152,6 +152,82 @@ namespace Pocket.Container.Tests
 
             typeArg.Should().Be(typeof(string));
             instanceArg.Should().Be("hello");
+        }
+
+        [Fact]
+        public void AfterResolve_can_be_used_to_replace_an_instance_created_by_Resolve_T()
+        {
+            var container = new PocketContainer()
+                .Register(c => "hello");
+
+            container.AfterResolve += (type, o) =>
+            {
+                if (type == typeof(string))
+                {
+                    return "goodbye";
+                }
+
+                return o;
+            };
+
+            container.Resolve<string>().Should().Be("goodbye");
+        }
+
+        [Fact]
+        public void AfterResolve_can_be_used_to_replace_an_instance_created_by_Resolve()
+        {
+            var container = new PocketContainer()
+                .Register(c => "hello");
+
+            container.AfterResolve += (type, o) =>
+            {
+                if (type == typeof(string))
+                {
+                    return "goodbye";
+                }
+
+                return o;
+            };
+
+            container.Resolve(typeof(string)).Should().Be("goodbye");
+        }
+
+        [Fact]
+        public void AfterResolve_can_be_used_to_replace_a_singleton_instance_created_by_Resolve_T()
+        {
+            var container = new PocketContainer()
+                .RegisterSingle(c => "hello");
+
+            container.AfterResolve += (type, o) =>
+            {
+                if (type == typeof(string))
+                {
+                    return "goodbye";
+                }
+
+                return o;
+            };
+
+            container.Resolve<string>().Should().Be("goodbye");
+        }
+
+        [Fact]
+        public void AfterResolve_can_be_used_to_replace_a_singleton_instance_created_by_Resolve()
+        {
+            var container = new PocketContainer()
+                .RegisterSingle(c => "hello");
+
+            container.AfterResolve += (type, o) =>
+            {
+                if (type == typeof(string))
+                {
+                    return "goodbye";
+                }
+
+                return o;
+            };
+
+            container.Resolve(typeof(string)).Should().Be("goodbye");
         }
     }
 }
