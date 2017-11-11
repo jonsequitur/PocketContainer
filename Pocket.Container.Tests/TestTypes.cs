@@ -36,56 +36,6 @@ namespace Pocket.Container.Tests
         public T Value { get; }
     }
 
-    public class HasOneRequiredAndOneOptionalWithDefaultParamCtor<T>
-    {
-        public const int DefaultIntValue = 123;
-
-        public HasOneRequiredAndOneOptionalWithDefaultParamCtor(T nonOptionalValue, int optionalIntValue = DefaultIntValue)
-        {
-            if (nonOptionalValue == null)
-            {
-                throw new ArgumentNullException(nameof(nonOptionalValue));
-            }
-
-            NonOptionalValue = nonOptionalValue;
-
-            OptionalIntValue = optionalIntValue;
-        }
-
-        public T NonOptionalValue { get; }
-
-        public int OptionalIntValue { get; }
-    }
-
-    public class HasOneNullableOptionalParamWithDefaultCtor
-    {
-        public const int DefaultIntValue = 123;
-
-        public HasOneNullableOptionalParamWithDefaultCtor(int? optionalIntValue = DefaultIntValue)
-        {
-            OptionalIntValue = optionalIntValue;
-        }
-
-        public int? OptionalIntValue { get; }
-    }
-
-    public class HasOneOptionalAndOneRequiredParameterCtor<T1, T2>
-    {
-        public HasOneOptionalAndOneRequiredParameterCtor(T1 value1, T2 value2 = default(T2))
-        {
-            if (value1 == null)
-            {
-                throw new ArgumentNullException(nameof(value1));
-            }
-
-            Value1 = value1;
-            Value2 = value2;
-        }
-
-        public T1 Value1 { get; }
-        public T2 Value2 { get; }
-    }
-
     public class HasTwoCtorsWithTheSameNumberOfParams
     {
         public HasTwoCtorsWithTheSameNumberOfParams(string one, string two)

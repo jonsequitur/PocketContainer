@@ -326,16 +326,42 @@ namespace Pocket
 
                 Expression ResolveParameter(ParameterInfo p) =>
                     p.HasDefaultValue
-                        ? (p.ParameterType.IsGenericType &&
-                           p.ParameterType.GetGenericTypeDefinition() == typeof(Nullable<>)
-                               ? Nullable(p.DefaultValue)
-                               : Expression.Constant(p.DefaultValue))
+                        ? (IsNullable(p)
+                               ? Nullable(p)
+                               : (IsDefaultStruct(p)
+                                      ? DefaultStruct(p)
+                                      : DeclaredDefaultValue(p)))
                         : CallResolve(container, p.ParameterType);
 
-                Expression Nullable(object value) =>
-                    Expression.New(
-                        typeof(Nullable<>).MakeGenericType(value.GetType())
-                                          .GetConstructor(new[] { value.GetType() }), Expression.Constant(value));
+                bool IsDefaultStruct(ParameterInfo p) =>
+                    p.ParameterType.IsValueType && Equals(p.DefaultValue, null);
+
+                bool IsNullable(ParameterInfo p) =>
+                    p.ParameterType.IsGenericType &&
+                    p.ParameterType.GetGenericTypeDefinition() == typeof(Nullable<>);
+
+                Expression DefaultStruct(ParameterInfo p) =>
+                    Expression.Constant(Activator.CreateInstance(p.ParameterType), p.ParameterType);
+
+                Expression DeclaredDefaultValue(ParameterInfo p) =>
+                    Expression.Constant(p.DefaultValue, p.ParameterType);
+
+                Expression Nullable(ParameterInfo p)
+                {
+                    var genericArgument = p.ParameterType.GetGenericArguments()[0];
+
+                    var defaultValueForType = Activator.CreateInstance(genericArgument);
+
+                    var argument = Expression.Constant(
+                        p.DefaultValue ?? defaultValueForType);
+
+                    var constructor = typeof(Nullable<>)
+                        .MakeGenericType(genericArgument)
+                        .GetConstructor(new[] { genericArgument });
+
+                    return Expression.New(
+                        constructor, argument);
+                }
             }
         }
 

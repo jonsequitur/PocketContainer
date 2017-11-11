@@ -401,7 +401,7 @@ namespace Pocket.Container.Tests
         [Fact]
         public void Interface_and_resolved_type_can_be_registered_independently_without_interfering()
         {
-             var container = new PocketContainer()
+            var container = new PocketContainer()
                 .RegisterSingle<IList<string>>(c => new List<string>())
                 .Register(c => new List<string>());
 
@@ -520,28 +520,6 @@ namespace Pocket.Container.Tests
             var o = container.Resolve<HasOneParamCtor<string>>();
 
             o.Value1.Should().BeNull();
-        }
-
-        [Fact]
-        public void Optional_parameters_for_unregistered_types_are_filled_correctly()
-        {
-            var container = new PocketContainer()
-                .Register(c => "hello");
-
-            var o = container.Resolve<HasOneRequiredAndOneOptionalWithDefaultParamCtor<string>>();
-
-            o.NonOptionalValue.Should().Be("hello");
-            o.OptionalIntValue.Should().Be(HasOneRequiredAndOneOptionalWithDefaultParamCtor<string>.DefaultIntValue);
-        }
-
-        [Fact]
-        public void Nullable_optional_parameters_for_unregistered_types_are_filled_correctly()
-        {
-            var container = new PocketContainer();
-
-            var o = container.Resolve<HasOneNullableOptionalParamWithDefaultCtor>();
-
-            o.OptionalIntValue.Should().Be(HasOneNullableOptionalParamWithDefaultCtor.DefaultIntValue);
         }
     }
 }
