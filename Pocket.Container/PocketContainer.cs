@@ -74,7 +74,7 @@ namespace Pocket
             var resolved = (T) resolvers.GetOrAdd(typeof(T), _ =>
             {
                 var implicitResolver = ImplicitResolver<T>();
-                
+
                 if (Registering?.Invoke(typeof(T), implicitResolver) is Func<PocketContainer, object> replacedResolver)
                 {
                     implicitResolver = c => (T) replacedResolver(c);
@@ -82,7 +82,7 @@ namespace Pocket
 
                 return implicitResolver;
             })(this);
-             
+
             return CallAfterResolve(typeof(T), resolved, out var replaced)
                        ? (T) replaced
                        : resolved;
@@ -138,6 +138,9 @@ namespace Pocket
 
         partial void AfterConstructor();
 
+        /// <summary>
+        /// Invoked after each resolve operation. Handlers can return a different object in order to change the result of the resolve operation.
+        /// </summary>
         public event Func<Type, object, object> AfterResolve;
 
         public event Func<Type, Delegate, Delegate> Registering;
@@ -170,7 +173,7 @@ namespace Pocket
         }
 
         /// <summary>
-        /// Registers a delegate to retrieve an instance of the specified type when it is first resolved. This instance will be reused for the lifetime of the container.
+        /// Registers a delegate to retrieve an instance of the specified type when it is first resolved. The instance created will be reused for the lifetime of the container.
         /// </summary>
         public PocketContainer RegisterSingle<T>(Func<PocketContainer, T> factory)
         {
@@ -180,7 +183,7 @@ namespace Pocket
         }
 
         /// <summary>
-        /// Registers a delegate to retrieve an instance of the specified type when it is first resolved. This instance will be reused for the lifetime of the container.
+        /// Registers a delegate to retrieve an instance of the specified type when it is first resolved. The instance created will be reused for the lifetime of the container.
         /// </summary>
         public PocketContainer RegisterSingle(Type type, Func<PocketContainer, object> factory)
         {
@@ -190,6 +193,9 @@ namespace Pocket
             return this;
         }
 
+        /// <summary>
+        /// Registers  a delegate to retrieve an instance of the specified type only if it has not previously been registered or successfully resolved.
+        /// </summary>
         public PocketContainer TryRegister(
             Type type,
             Func<PocketContainer, object> factory)
@@ -202,6 +208,9 @@ namespace Pocket
             return this;
         }
 
+        /// <summary>
+        /// Registers  a delegate to retrieve an instance of the specified type only if it has not previously been registered or successfully resolved.
+        /// </summary>
         public PocketContainer TryRegister<T>(Func<PocketContainer, T> factory)
         {
             if (!resolvers.ContainsKey(typeof(T)))
@@ -212,6 +221,9 @@ namespace Pocket
             return this;
         }
 
+        /// <summary>
+        /// Registers  a delegate to retrieve an instance of the specified type only if it has not previously been registered or successfully resolved. The instance created will be reused for the lifetime of the container.
+        /// </summary>
         public PocketContainer TryRegisterSingle(
             Type type,
             Func<PocketContainer, object> factory)
@@ -224,6 +236,9 @@ namespace Pocket
             return this;
         }
 
+        /// <summary>
+        /// Registers  a delegate to retrieve an instance of the specified type only if it has not previously been registered or successfully resolved. The instance created will be reused for the lifetime of the container.
+        /// </summary>
         public PocketContainer TryRegisterSingle<T>(Func<PocketContainer, T> factory)
         {
             if (!resolvers.ContainsKey(typeof(T)))
