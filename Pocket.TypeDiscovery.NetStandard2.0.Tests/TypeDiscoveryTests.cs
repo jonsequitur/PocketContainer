@@ -25,6 +25,24 @@ namespace Pocket.TypeDiscovery.Tests
         }
 
         [Fact]
+        public void Concrete_types_does_not_include_static_classes()
+        {
+            Discover.ConcreteTypes().Should().NotContain(t => t == typeof(StaticClass));
+        }
+
+        [Fact]
+        public void Concrete_types_does_not_include_delegates()
+        {
+            Discover.ConcreteTypes().Should().NotContain(t => t == typeof(ADelegate));
+        }
+
+        [Fact]
+        public void Concrete_types_does_not_include_enums()
+        {
+            Discover.ConcreteTypes().Should().NotContain(t => t == typeof(Enum));
+        }
+
+        [Fact]
         public void DerivedFrom_returns_classes_implementing_the_specified_interface()
         {
             Discover.ConcreteTypes()
@@ -81,5 +99,15 @@ namespace Pocket.TypeDiscovery.Tests
         public interface ICommandHandler<T>
         {
         }
+
+        public enum Enum
+        {
+        }
+
+        public static class StaticClass
+        {
+        }
+
+        public delegate void ADelegate();
     }
 }

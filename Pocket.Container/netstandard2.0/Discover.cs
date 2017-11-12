@@ -18,18 +18,31 @@ namespace Pocket
 #endif
     internal static class Discover
     {
+        /// <summary>
+        ///  Filters to types that can be instantiated.
+        /// </summary>
         public static IEnumerable<Type> Concrete(this IEnumerable<Type> types) =>
-            types
-                .Where(t => !t.IsAbstract &&
-                            !t.IsInterface &&
-                            !t.IsGenericTypeDefinition);
+            types.Where(t => !t.IsAbstract &&
+                             !t.IsEnum &&
+                             !typeof(Delegate).IsAssignableFrom(t) &&
+                             !t.IsInterface &&
+                             !t.IsGenericTypeDefinition);
 
-        public static IEnumerable<Type> DerivedFrom(this IEnumerable<Type> types, Type type) =>
-            types.Where(type.IsAssignableFrom);
-
+        /// <summary>
+        /// Discovers concrete types within the current AppDomain.
+        /// </summary>
         public static IEnumerable<Type> ConcreteTypes() =>
             Types().Concrete();
 
+        /// <summary>
+        /// Filters to types that are derived from the specified type.
+        /// </summary>
+        public static IEnumerable<Type> DerivedFrom(this IEnumerable<Type> types, Type type) =>
+            types.Where(type.IsAssignableFrom);
+
+        /// <summary>
+        /// Filters to types that implement a generic variant of one of the specified open generic interfaces.
+        /// </summary>
         public static IEnumerable<Type> ImplementingOpenGenericInterfaces(
             this IEnumerable<Type> source,
             params Type[] interfaces) =>
@@ -37,6 +50,9 @@ namespace Pocket
                                .Any(i => i.IsConstructedGenericType &&
                                          interfaces.Contains(i.GetGenericTypeDefinition())));
 
+        /// <summary>
+        /// Gets types within the current AppDomain.
+        /// </summary>
         public static IEnumerable<Type> Types() =>
             AppDomain.CurrentDomain
                      .GetAssemblies()
@@ -44,6 +60,9 @@ namespace Pocket
                      .Where(a => !a.GlobalAssemblyCache)
                      .Types();
 
+        /// <summary>
+        /// Gets types within the specified assemblies.
+        /// </summary>
         public static IEnumerable<Type> Types(this IEnumerable<Assembly> assemblies) =>
             assemblies.SelectMany(a =>
             {
