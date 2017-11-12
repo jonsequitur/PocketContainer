@@ -18,14 +18,17 @@ namespace Pocket
 #endif
     internal static class Discover
     {
+        public static IEnumerable<Type> Concrete(this IEnumerable<Type> types) =>
+            types
+                .Where(t => !t.IsAbstract &&
+                            !t.IsInterface &&
+                            !t.IsGenericTypeDefinition);
+
         public static IEnumerable<Type> DerivedFrom(this IEnumerable<Type> types, Type type) =>
             types.Where(type.IsAssignableFrom);
 
         public static IEnumerable<Type> ConcreteTypes() =>
-            Types()
-                .Where(t => !t.IsAbstract &&
-                            !t.IsInterface &&
-                            !t.IsGenericTypeDefinition);
+            Types().Concrete();
 
         public static IEnumerable<Type> ImplementingOpenGenericInterfaces(
             this IEnumerable<Type> source,
@@ -39,25 +42,28 @@ namespace Pocket
                      .GetAssemblies()
                      .Where(a => !a.IsDynamic)
                      .Where(a => !a.GlobalAssemblyCache)
-                     .SelectMany(a =>
-                     {
-                         try
-                         {
-                             return a.DefinedTypes;
-                         }
-                         catch (TypeLoadException)
-                         {
-                         }
-                         catch (ReflectionTypeLoadException)
-                         {
-                         }
-                         catch (FileNotFoundException)
-                         {
-                         }
-                         catch (FileLoadException)
-                         {
-                         }
-                         return Enumerable.Empty<Type>();
-                     });
+                     .Types();
+
+        public static IEnumerable<Type> Types(this IEnumerable<Assembly> assemblies) =>
+            assemblies.SelectMany(a =>
+            {
+                try
+                {
+                    return a.DefinedTypes;
+                }
+                catch (TypeLoadException)
+                {
+                }
+                catch (ReflectionTypeLoadException)
+                {
+                }
+                catch (FileNotFoundException)
+                {
+                }
+                catch (FileLoadException)
+                {
+                }
+                return Enumerable.Empty<Type>();
+            });
     }
 }
