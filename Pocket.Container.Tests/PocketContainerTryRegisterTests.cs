@@ -7,11 +7,22 @@ namespace Pocket.Container.Tests
     public class PocketContainerTryRegisterTests
     {
         [Fact]
-        public void When_a_registration_already_exists_then_TryRegister_T_does_not_overwrite_it()
+        public void When_a_registration_made_using_Register_already_exists_then_TryRegister_T_does_not_overwrite_it()
         {
             var container = new PocketContainer();
 
             container.Register(c => "one");
+            container.TryRegister(c => "two");
+
+            container.Resolve<string>().Should().Be("one");
+        }
+
+        [Fact]
+        public void When_a_registration_made_using_TryRegister_already_exists_then_TryRegister_T_does_not_overwrite_it()
+        {
+            var container = new PocketContainer();
+
+            container.TryRegister(c => "one");
             container.TryRegister(c => "two");
 
             container.Resolve<string>().Should().Be("one");
@@ -51,7 +62,7 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void When_a_registration_already_exists_then_TryRegister_does_not_overwrite_it()
+        public void When_a_registration_made_using_Register_already_exists_then_TryRegister_does_not_overwrite_it()
         {
             var container = new PocketContainer();
 
@@ -62,11 +73,33 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void When_a_singleton_registration_already_exists_then_TryRegister_does_not_overwrite_it()
+        public void When_a_registration_made_using_TryRegister_already_exists_then_TryRegister_does_not_overwrite_it()
+        {
+            var container = new PocketContainer();
+
+            container.TryRegister(c => "one");
+            container.TryRegister(typeof(string), c => "two");
+
+            container.Resolve<string>().Should().Be("one");
+        }
+
+        [Fact]
+        public void When_a_singleton_registration_made_using_RegisterSingle_already_exists_then_TryRegister_does_not_overwrite_it()
         {
             var container = new PocketContainer();
 
             container.RegisterSingle(c => "one");
+            container.TryRegister(typeof(string), c => "two");
+
+            container.Resolve<string>().Should().Be("one");
+        }
+
+        [Fact]
+        public void When_a_singleton_registration_made_using_TryRegisterSingle_already_exists_then_TryRegister_does_not_overwrite_it()
+        {
+            var container = new PocketContainer();
+
+            container.TryRegisterSingle(c => "one");
             container.TryRegister(typeof(string), c => "two");
 
             container.Resolve<string>().Should().Be("one");
@@ -106,11 +139,22 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void When_a_registration_already_exists_then_TryRegisterSingle_T_does_not_overwrite_it()
+        public void When_a_registration_made_using_Register_already_exists_then_TryRegisterSingle_T_does_not_overwrite_it()
         {
             var container = new PocketContainer();
 
             container.Register(c => "one");
+            container.TryRegisterSingle(c => "two");
+
+            container.Resolve<string>().Should().Be("one");
+        }
+
+        [Fact]
+        public void When_a_registration_made_using_TryRegister_already_exists_then_TryRegisterSingle_T_does_not_overwrite_it()
+        {
+            var container = new PocketContainer();
+
+            container.TryRegister(c => "one");
             container.TryRegisterSingle(c => "two");
 
             container.Resolve<string>().Should().Be("one");
@@ -150,7 +194,7 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void When_a_registration_already_exists_then_TryRegisterSingle_does_not_overwrite_it()
+        public void When_a_registration_made_using_Register_already_exists_then_TryRegisterSingle_does_not_overwrite_it()
         {
             var container = new PocketContainer();
 
@@ -161,7 +205,18 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void When_a_singleton_registration_already_exists_then_TryRegisterSingle_does_not_overwrite_it()
+        public void When_a_registration_made_using_TryRegister_already_exists_then_TryRegisterSingle_does_not_overwrite_it()
+        {
+            var container = new PocketContainer();
+
+            container.TryRegister(c => "one");
+            container.TryRegisterSingle(typeof(string), c => "two");
+
+            container.Resolve<string>().Should().Be("one");
+        }
+
+        [Fact]
+        public void When_a_registration_made_using_RegisterSingle_already_exists_then_TryRegisterSingle_does_not_overwrite_it()
         {
             var container = new PocketContainer();
 
@@ -172,7 +227,29 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void When_a_singleton_registration_already_exists_but_has_not_been_resolved_then_TryRegisterSingle_does_not_trigger_its_resolution()
+        public void When_a_registration_made_using_TryRegisterSingle_already_exists_then_TryRegisterSingle_does_not_overwrite_it()
+        {
+            var container = new PocketContainer();
+
+            container.TryRegisterSingle(c => "one");
+            container.TryRegisterSingle(typeof(string), c => "two");
+
+            container.Resolve<string>().Should().Be("one");
+        }
+
+        [Fact]
+        public void When_a_registration_made_using_TryRegisterSingle_already_exists_then_TryRegisterSingle_T_does_not_overwrite_it()
+        {
+            var container = new PocketContainer();
+
+            container.TryRegisterSingle(c => "one");
+            container.TryRegisterSingle(c => "two");
+
+            container.Resolve<string>().Should().Be("one");
+        }
+
+        [Fact]
+        public void When_a_registration_made_using_TryRegisterSingle_already_exists_but_has_not_been_resolved_then_TryRegisterSingle_does_not_trigger_its_resolution()
         {
             var container = new PocketContainer();
             var resolved = false;
