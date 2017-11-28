@@ -3,7 +3,7 @@
   <metadata>
     <id>PocketContainer.For.MicrosoftExtensionsDependencyInjection</id>
     <title>PocketContainer for Microsoft.Extensions.DependencyInjection</title>
-    <version>1.0.0-beta</version>
+    <version>1.0.1-beta</version>
     <authors>jonsequitur</authors>
     <owners>jonsequitur</owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
@@ -13,7 +13,7 @@
     <developmentDependency>true</developmentDependency>
     <dependencies>
       <dependency id="PocketContainer" version="[1.4.6,)" include="all" />
-      <dependency id="PocketContainer.Clone" version="[1.0.5,)" include="all" />
+      <dependency id="PocketContainer.Clone" version="[1.0.6,)" include="all" />
       <dependency id="PocketContainer.CumulativeRegistration" version="[1.0.0-beta,)" include="all" />
       <dependency id="PocketContainer.OpenGenericStrategy" version="[1.1.1,)" include="all" />
       <dependency id="Pocket.Disposable" version="[1.0.3,)" include="all" />
