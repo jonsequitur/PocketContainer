@@ -146,7 +146,9 @@ namespace Pocket
 
         private class ServiceScope : IServiceScope
         {
-            private readonly PocketContainer container;
+            private readonly PocketContainer clonedContainer;
+
+            private readonly PocketContainer originalContainer;
 
             private readonly CompositeDisposable disposables;
 
@@ -154,14 +156,15 @@ namespace Pocket
 
             public ServiceScope(PocketContainer container)
             {
-                this.container = container?.Clone() ??
-                                 throw new ArgumentNullException(nameof(container));
+                originalContainer = container ??
+                                    throw new ArgumentNullException(nameof(container));
+                clonedContainer = container.Clone();
 
-                this.container.AfterResolve += RegisterTransientsForDisposal;
+                clonedContainer.AfterResolve += RegisterTransientsForDisposal;
 
                 disposables = new CompositeDisposable
                 {
-                    () => this.container.AfterResolve -= RegisterTransientsForDisposal,
+                    () => clonedContainer.AfterResolve -= RegisterTransientsForDisposal,
                     () => isDisposed = true
                 };
             }
@@ -174,7 +177,8 @@ namespace Pocket
                 {
                     disposables.Add(() =>
                     {
-                        if (!container.HasSingletonOfType(serviceType))
+                        if (!clonedContainer.HasSingletonOfType(serviceType) &&
+                            !originalContainer.HasSingletonOfType(serviceType))
                         {
                             disposable.Dispose();
                         }
@@ -194,7 +198,7 @@ namespace Pocket
                     {
                         throw new ObjectDisposedException("The ServiceScope has been disposed.");
                     }
-                    return container;
+                    return clonedContainer;
                 }
             }
         }

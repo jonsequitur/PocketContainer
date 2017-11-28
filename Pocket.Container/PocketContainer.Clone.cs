@@ -11,15 +11,12 @@ namespace Pocket
         /// <summary>
         /// Clones the container, allowing for selectively overriding registrations without affecting the state of the original container.
         /// </summary>
-        public PocketContainer Clone()
-        {
-            var clone = new PocketContainer
+        public PocketContainer Clone() =>
+            new PocketContainer
             {
                 resolvers = new ConcurrentDictionary<Type, Func<PocketContainer, object>>(resolvers),
                 strategyChain = strategyChain,
-                singletons = singletons
+                singletons = new ConcurrentDictionary<Type, object>(singletons)
             };
-            return clone;
-        }
     }
 }

@@ -158,7 +158,7 @@ namespace Pocket.Container.Tests
             resolvedFromOriginal.Should().BeSameAs(resolvedFromClone);
         }
 
-        [Fact(Skip="Issue #16")]
+        [Fact]
         public void When_RegisterSingle_is_called_on_the_clone_it_does_not_register_the_singleton_in_the_original()
         {
             var original = new PocketContainer();
@@ -172,6 +172,21 @@ namespace Pocket.Container.Tests
 
             resolvedFromOriginal.Should()
                                 .NotBeSameAs(resolvedFromClone);
+        }
+
+        [Fact]
+        public void When_a_singleton_is_resolved_from_a_clone_first_and_original_second_it_is_the_same_instance()
+        {
+            var original = new PocketContainer();
+            original.RegisterSingle(c => new object());
+
+            var clone = original.Clone();
+
+            var resolvedFromClone = clone.Resolve<object>();
+            var resolvedFromOriginal = original.Resolve<object>();
+
+            resolvedFromOriginal.Should()
+                                .BeSameAs(resolvedFromClone);
         }
     }
 }
