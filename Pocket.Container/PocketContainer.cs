@@ -29,6 +29,9 @@ namespace Pocket
         private static readonly MethodInfo resolveMethod =
             typeof(PocketContainer).GetMethod(nameof(Resolve), Type.EmptyTypes);
 
+        private static readonly MethodInfo resolveOptionalMethod =
+            typeof(PocketContainer).GetMethod(nameof(ResolveOptional), Type.EmptyTypes);
+
         private static readonly MethodInfo registerMethod =
             typeof(PocketContainer).GetMethods().Single(m => m.Name == nameof(Register) && m.IsGenericMethod);
 
@@ -69,11 +72,18 @@ namespace Pocket
         /// <summary>
         /// Resolves an instance of the specified type.
         /// </summary>
-        public T Resolve<T>()
+        public T Resolve<T>() => Resolve<T>(true);
+
+        /// <summary>
+        /// Resolves an instance of the specified type, or default(T) if the type is not registered.
+        /// </summary>
+        public T ResolveOptional<T>() => Resolve<T>(false);
+
+        private T Resolve<T>(bool throwOnFail)
         {
             var resolved = (T) resolvers.GetOrAdd(typeof(T), _ =>
             {
-                var implicitResolver = ImplicitResolver<T>();
+                var implicitResolver = ImplicitResolver<T>(throwOnFail);
 
                 if (Registering?.Invoke(typeof(T), implicitResolver) is Func<PocketContainer, object> replacedResolver)
                 {
@@ -289,7 +299,7 @@ namespace Pocket
             public static readonly Func<PocketContainer, T> Default = Build.UsingLongestConstructor<T>();
         }
 
-        private Func<PocketContainer, object> ImplicitResolver<T>()
+        private Func<PocketContainer, object> ImplicitResolver<T>(bool throwOnFail = true)
         {
             var customFactory = strategyChain(typeof(T));
             if (customFactory != null)
@@ -304,9 +314,7 @@ namespace Pocket
             }
             catch (TypeInitializationException ex)
             {
-                var ex2 = OnFailedResolve(typeof(T), ex);
-
-                if (ex2 != null)
+                if (throwOnFail && OnFailedResolve(typeof(T), ex) is Exception ex2)
                 {
                     throw ex2;
                 }
@@ -346,9 +354,11 @@ namespace Pocket
                     p.HasDefaultValue
                         ? (IsNullable(p)
                                ? Nullable(p)
-                               : (IsDefaultStruct(p)
-                                      ? DefaultStruct(p)
-                                      : DeclaredDefaultValue(p)))
+                               : IsDefaultStruct(p)
+                                   ? DefaultStruct(p)
+                                   : p.ParameterType == typeof(string)
+                                       ? Expression.Constant(p.DefaultValue, p.ParameterType)
+                                       : CallResolveOptional(container, p.ParameterType))
                         : CallResolve(container, p.ParameterType);
 
                 bool IsDefaultStruct(ParameterInfo p) =>
@@ -360,9 +370,6 @@ namespace Pocket
 
                 Expression DefaultStruct(ParameterInfo p) =>
                     Expression.Constant(Activator.CreateInstance(p.ParameterType), p.ParameterType);
-
-                Expression DeclaredDefaultValue(ParameterInfo p) =>
-                    Expression.Constant(p.DefaultValue, p.ParameterType);
 
                 Expression Nullable(ParameterInfo p)
                 {
@@ -377,8 +384,7 @@ namespace Pocket
                         .MakeGenericType(genericArgument)
                         .GetConstructor(new[] { genericArgument });
 
-                    return Expression.New(
-                        constructor, argument);
+                    return Expression.New(constructor, argument);
                 }
             }
         }
@@ -399,6 +405,10 @@ namespace Pocket
             return resolve.Compile();
         }
 
-        private static MethodCallExpression CallResolve(ParameterExpression container, Type type) => Expression.Call(container, resolveMethod.MakeGenericMethod(type));
+        private static Expression CallResolve(ParameterExpression container, Type type) =>
+            Expression.Call(container, resolveMethod.MakeGenericMethod(type));
+
+        private static Expression CallResolveOptional(ParameterExpression container, Type type) =>
+            Expression.Call(container, resolveOptionalMethod.MakeGenericMethod(type));
     }
 }
