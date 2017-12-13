@@ -132,7 +132,7 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void ResolveOptional_returns_default_when_struct_is_unregistered()
+        public void ResolveOptional_T_returns_default_when_struct_is_unregistered()
         {
             var container = new PocketContainer();
 
@@ -141,8 +141,32 @@ namespace Pocket.Container.Tests
             value.Should().Be(0);
         }
 
-        [Fact(Skip = "TODO")]
-        public void ResolveOptional_returns_null_when_dependency_is_unresolvable()
+        [Fact]
+        public void ResolveOptional_returns_default_when_struct_is_unregistered()
+        {
+            var container = new PocketContainer();
+
+            var value = container.ResolveOptional(typeof(int));
+
+            value.Should().Be(0);
+        }
+
+        [Fact]
+        public void A_type_can_be_resolved_as_optional_first_and_later_as_non_optional()
+        {
+            var container = new PocketContainer();
+
+            var optional = container.Resolve<HasOneOptionalParameterCtor<IAmAnInterface>>();
+            
+            optional.Value.Should().BeNull();
+
+            Action resolveNotOptional = () => container.Resolve<HasOneParamCtor<IAmAnInterface>>();
+
+            resolveNotOptional.ShouldThrow<ArgumentException>();
+        }
+
+        [Fact]
+        public void ResolveOptional_T_returns_null_when_dependency_is_unresolvable()
         {
             var container = new PocketContainer();
 
@@ -152,7 +176,17 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void ResolveOptional_returns_null_when_interface_is_unregistered()
+        public void ResolveOptional_returns_null_when_dependency_is_unresolvable()
+        {
+            var container = new PocketContainer();
+
+            var value = container.ResolveOptional(typeof(HasOneParamCtor<IAmAnInterface>));
+
+            value.Should().BeNull();
+        }
+
+        [Fact]
+        public void ResolveOptional_T_returns_null_when_interface_is_unregistered()
         {
             var container = new PocketContainer();
 
@@ -162,11 +196,31 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void ResolveOptional_returns_null_when_delegate_type_is_unregistered()
+        public void ResolveOptional_returns_null_when_interface_is_unregistered()
+        {
+            var container = new PocketContainer();
+
+            var value = container.ResolveOptional(typeof(IAmAnInterface));
+
+            value.Should().BeNull();
+        }
+
+        [Fact]
+        public void ResolveOptional_T_returns_null_when_delegate_type_is_unregistered()
         {
             var container = new PocketContainer();
 
             var value = container.ResolveOptional<SomeDelegateType>();
+
+            value.Should().BeNull();
+        }
+
+        [Fact]
+        public void ResolveOptional_returns_null_when_delegate_type_is_unregistered()
+        {
+            var container = new PocketContainer();
+
+            var value = container.ResolveOptional(typeof(SomeDelegateType));
 
             value.Should().BeNull();
         }

@@ -72,18 +72,11 @@ namespace Pocket
         /// <summary>
         /// Resolves an instance of the specified type.
         /// </summary>
-        public T Resolve<T>() => Resolve<T>(true);
-
-        /// <summary>
-        /// Resolves an instance of the specified type, or default(T) if the type is not registered.
-        /// </summary>
-        public T ResolveOptional<T>() => Resolve<T>(false);
-
-        private T Resolve<T>(bool throwOnFail)
+        public T Resolve<T>()
         {
             var resolved = (T) resolvers.GetOrAdd(typeof(T), _ =>
             {
-                var implicitResolver = ImplicitResolver<T>(throwOnFail);
+                var implicitResolver = ImplicitResolver<T>();
 
                 if (Registering?.Invoke(typeof(T), implicitResolver) is Func<PocketContainer, object> replacedResolver)
                 {
@@ -96,6 +89,21 @@ namespace Pocket
             return CallAfterResolve(typeof(T), resolved, out var replaced)
                        ? (T) replaced
                        : resolved;
+        }
+
+        /// <summary>
+        /// Resolves an instance of the specified type, or default(T) if the type is not registered.
+        /// </summary>
+        public T ResolveOptional<T>()
+        {
+            try
+            {
+                return Resolve<T>();
+            }
+            catch (Exception ex) when (ex.Data.Contains("ResolveFailed"))
+            {
+                return default(T);
+            }
         }
 
         /// <summary>
@@ -124,6 +132,23 @@ namespace Pocket
             return CallAfterResolve(type, resolved, out var replaced)
                        ? replaced
                        : resolved;
+        }
+
+        /// <summary>
+        /// Resolves an instance of the specified type, or default(T) if the type is not registered.
+        /// </summary>
+        public object ResolveOptional(Type type)
+        {
+            try
+            {
+                return Resolve(type);
+            }
+            catch (Exception ex) when (ex.Data.Contains("ResolveFailed"))
+            {
+                return type.IsValueType
+                           ? Activator.CreateInstance(type)
+                           : null;
+            }
         }
 
         /// <summary>
@@ -299,7 +324,7 @@ namespace Pocket
             public static readonly Func<PocketContainer, T> Default = Build.UsingLongestConstructor<T>();
         }
 
-        private Func<PocketContainer, object> ImplicitResolver<T>(bool throwOnFail = true)
+        private Func<PocketContainer, object> ImplicitResolver<T>()
         {
             var customFactory = strategyChain(typeof(T));
             if (customFactory != null)
@@ -314,8 +339,9 @@ namespace Pocket
             }
             catch (TypeInitializationException ex)
             {
-                if (throwOnFail && OnFailedResolve(typeof(T), ex) is Exception ex2)
+                if (OnFailedResolve(typeof(T), ex) is Exception ex2)
                 {
+                    ex2.Data["ResolveFailed"] = true;
                     throw ex2;
                 }
 
