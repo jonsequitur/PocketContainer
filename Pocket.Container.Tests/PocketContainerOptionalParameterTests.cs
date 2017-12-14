@@ -1,3 +1,4 @@
+using System;
 using FluentAssertions;
 using Xunit;
 
@@ -5,6 +6,27 @@ namespace Pocket.Container.Tests
 {
     public class PocketContainerOptionalParameterTests
     {
+        [Fact]
+        public void Optional_parameters_for_non_primitive_types_are_resolved_when_registered()
+        {
+            var container = new PocketContainer()
+                .Register<IAmAnInterface>(c => new HasDefaultCtor());
+
+            var o = container.Resolve<TakesOptionalParamWithNoDefaultValue<IAmAnInterface>>();
+
+            o.OptionalValue.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void Optional_parameters_for_non_primitive_types_are_passed_null_when_not_registered()
+        {
+            var container = new PocketContainer();
+
+            var o = container.Resolve<TakesOptionalParamWithNoDefaultValue<IAmAnInterface>>();
+
+            o.OptionalValue.Should().BeNull();
+        }
+
         [Fact]
         public void Optional_struct_parameters_with_no_default_value_are_filled_correctly()
         {
