@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.Container.For.Micros
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.Container.CumulativeRegistration", "Pocket.Container.CumulativeRegistration\Pocket.Container.CumulativeRegistration.csproj", "{628C9A03-D083-4B04-85CD-51726BB191B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.TypeDiscovery.NetStandard2.0.Tests", "Pocket.TypeDiscovery.NetStandard2.0.Tests\Pocket.TypeDiscovery.NetStandard2.0.Tests.csproj", "{EB4F8356-7CC4-403B-83D7-9CF308852DDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocket.TypeDiscovery.Tests", "Pocket.TypeDiscovery.Tests\Pocket.TypeDiscovery.Tests.csproj", "{EB4F8356-7CC4-403B-83D7-9CF308852DDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
