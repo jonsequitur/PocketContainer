@@ -50,20 +50,21 @@ namespace Pocket
             });
         }
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo(this Pocket.PocketContainer container, Type searchPoint) 
-            => container.ResolveWithFakeTypesCloseTo(searchPoint, "Fake");
 
         public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(this Pocket.PocketContainer container, T _) 
-            => container.ResolveWithFakeTypesCloseTo<T>("Fake");
+            => container.ResolveWithFakeTypesCloseTo<T>();
 
         public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(this Pocket.PocketContainer container, T _, string convention) 
             => container.ResolveWithFakeTypesCloseTo<T>(convention);
 
         public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(this Pocket.PocketContainer container) 
-            => container.ResolveWithFakeTypesCloseTo<T>("Fake");
+            => container.ResolveWithFakeTypesCloseTo(typeof(T));
 
         public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(this Pocket.PocketContainer container, string convention) 
             => container.ResolveWithFakeTypesCloseTo(typeof(T), convention);
+        
+        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo(this Pocket.PocketContainer container, Type searchPoint)
+            => container.ResolveWithFakeTypesCloseTo(searchPoint, "Fake");
 
         public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo(this Pocket.PocketContainer container, Type searchPoint, string convention)
         {
