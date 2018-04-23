@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using Pocket;
 
-namespace PocketContainer
+namespace Pocket
 {
 #if !SourceProject
     [System.Diagnostics.DebuggerStepThrough]

@@ -4,7 +4,6 @@
 using System.Net.Http;
 using FluentAssertions;
 using Pocket.Container.Test.Assembly;
-using PocketContainer;
 using Xunit;
 
 namespace Pocket.Container.Tests
