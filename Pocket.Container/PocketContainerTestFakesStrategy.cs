@@ -68,10 +68,20 @@ namespace Pocket
 
         public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo(this Pocket.PocketContainer container, Type searchPoint, string convention)
         {
-            if (container == null) throw new ArgumentNullException(nameof(container));
-            if (searchPoint == null) throw new ArgumentNullException(nameof(searchPoint));
+            if (container == null)
+            {
+                throw new ArgumentNullException(nameof(container));
+            }
+
+            if (searchPoint == null)
+            {
+                throw new ArgumentNullException(nameof(searchPoint));
+            }
+
             if (string.IsNullOrWhiteSpace(convention))
+            {
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(convention));
+            }
 
             var conventionFilter = convention.ToLower(CultureInfo.InvariantCulture);
             return container.AddStrategy(type =>

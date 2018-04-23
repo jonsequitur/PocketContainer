@@ -2,9 +2,9 @@
 
 namespace Pocket.Container.Test.Assembly
 {
-    public class HttpClientrSurrogate : HttpClient
+    public class HttpClientSurrogate : HttpClient
     {
-        public HttpClientrSurrogate()
+        public HttpClientSurrogate()
         {
         }
     }

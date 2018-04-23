@@ -53,11 +53,11 @@ namespace Pocket.Container.Tests
         [Fact]
         public void When_looking_for_fakes_they_can_be_constriained_to_a_specific_assembly()
         {
-            var container = new PocketContainer().ResolveWithFakeTypesFromAssembly(typeof(HttpClientrSurrogate).Assembly, "Surrogate");
+            var container = new PocketContainer().ResolveWithFakeTypesFromAssembly(typeof(HttpClientSurrogate).Assembly, "Surrogate");
 
             var resolved = container.Resolve<HttpClient>();
             resolved.Should().NotBeNull();
-            resolved.Should().BeOfType<HttpClientrSurrogate>();
+            resolved.Should().BeOfType<HttpClientSurrogate>();
         }
 
 
