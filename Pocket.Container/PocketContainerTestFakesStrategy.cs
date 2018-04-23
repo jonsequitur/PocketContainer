@@ -14,14 +14,10 @@ namespace PocketContainer
 #endif
     internal static class PocketContainerTestFakesStrategy
     {
-        public static Pocket.PocketContainer ResolveWithFakeTypesFromAssembly(
-            this Pocket.PocketContainer container, Assembly assembly)
-        {
-            return container.ResolveWithFakeTypesFromAssembly(assembly, "Fake");
-        }
+        public static Pocket.PocketContainer ResolveWithFakeTypesFromAssembly(this Pocket.PocketContainer container, Assembly assembly) 
+            => container.ResolveWithFakeTypesFromAssembly(assembly, "Fake");
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesFromAssembly(
-            this Pocket.PocketContainer container, Assembly assembly, string convention)
+        public static Pocket.PocketContainer ResolveWithFakeTypesFromAssembly(this Pocket.PocketContainer container, Assembly assembly, string convention)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
@@ -54,38 +50,22 @@ namespace PocketContainer
             });
         }
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo(
-            this Pocket.PocketContainer container, Type searchPoint)
-        {
-            return container.ResolveWithFakeTypesCloseTo(searchPoint, "Fake");
-        }
+        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo(this Pocket.PocketContainer container, Type searchPoint) 
+            => container.ResolveWithFakeTypesCloseTo(searchPoint, "Fake");
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(
-            this Pocket.PocketContainer container, T _)
-        {
-            return container.ResolveWithFakeTypesCloseTo<T>("Fake");
-        }
+        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(this Pocket.PocketContainer container, T _) 
+            => container.ResolveWithFakeTypesCloseTo<T>("Fake");
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(
-            this Pocket.PocketContainer container, T _, string convention)
-        {
-            return container.ResolveWithFakeTypesCloseTo<T>(convention);
-        }
+        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(this Pocket.PocketContainer container, T _, string convention) 
+            => container.ResolveWithFakeTypesCloseTo<T>(convention);
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(
-            this Pocket.PocketContainer container)
-        {
-            return container.ResolveWithFakeTypesCloseTo<T>("Fake");
-        }
+        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(this Pocket.PocketContainer container) 
+            => container.ResolveWithFakeTypesCloseTo<T>("Fake");
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(
-            this Pocket.PocketContainer container, string convention)
-        {
-            return container.ResolveWithFakeTypesCloseTo(typeof(T), convention);
-        }
+        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(this Pocket.PocketContainer container, string convention) 
+            => container.ResolveWithFakeTypesCloseTo(typeof(T), convention);
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo(
-            this Pocket.PocketContainer container, Type searchPoint, string convention)
+        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo(this Pocket.PocketContainer container, Type searchPoint, string convention)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (searchPoint == null) throw new ArgumentNullException(nameof(searchPoint));
@@ -122,7 +102,7 @@ namespace PocketContainer
             var distance = 0;
             if (element.IsNested && element.DeclaringType == searchPoint)
             {
-                return distance;
+                return -1;
             }
             var sameAssmeby = searchPoint.Assembly == element.Assembly;
             var searchPointPath = searchPoint.FullName.Split(new[] {'.', '+'}, StringSplitOptions.RemoveEmptyEntries);
@@ -138,7 +118,7 @@ namespace PocketContainer
                 }
             }
 
-            return distance = sameAssmeby ? distance : distance << 4;
+            return sameAssmeby ? distance : distance << 4;
         }
     }
 }

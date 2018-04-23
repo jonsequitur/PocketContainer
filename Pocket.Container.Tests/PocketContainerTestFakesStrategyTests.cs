@@ -32,16 +32,6 @@ namespace Pocket.Container.Tests
         }
 
         [Fact]
-        public void When_looking_for_fakes_in_a_specific_Assemly_closest_is_used()
-        {
-            var container = new PocketContainer().ResolveWithFakeTypesCloseTo<RealObject>();
-
-            var resolved = container.Resolve<RealObject>();
-            resolved.Should().NotBeNull();
-            resolved.Should().BeOfType<RealObjectFake>();
-        }
-
-        [Fact]
         public void When_looking_for_fakes_user_can_speficy_convention()
         {
             var container = new PocketContainer().ResolveWithFakeTypesCloseTo<RealObject>("Surrogate");
