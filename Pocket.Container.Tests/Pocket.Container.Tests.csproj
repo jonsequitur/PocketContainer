@@ -21,6 +21,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0-beta5-build3769" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Pocket.Container.Test.Assembly\Pocket.Container.Test.Assembly.csproj" />
     <ProjectReference Include="..\Pocket.Container\Pocket.Container.csproj" />
   </ItemGroup>
   <ItemGroup>

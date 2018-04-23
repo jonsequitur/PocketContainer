@@ -38,7 +38,7 @@ namespace Pocket
         /// Filters to types that are derived from the specified type.
         /// </summary>
         public static IEnumerable<Type> DerivedFrom(this IEnumerable<Type> types, Type type) =>
-            types.Where(type.IsAssignableFrom);
+            types.Where(t => type != t && type.IsAssignableFrom(t));
 
         /// <summary>
         /// Filters to types that implement a generic variant of one of the specified open generic interfaces.

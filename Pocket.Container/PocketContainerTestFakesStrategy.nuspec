@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>PocketContainer.TestFakesStrategy</id>
+    <title>PocketContainer Test Fakes Strategy</title>
+    <version>1.0.0</version>
+    <authors>jonsequitur</authors>
+    <owners>jonsequitur</owners>
+    <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A convention that will resolve a type when it is the fake of a real type.</description>
+    <tags>PocketContainer IoC DI container convention strategy</tags>
+    <developmentDependency>true</developmentDependency>
+    
+    <dependencies>
+      <dependency id="PocketContainer" version="[1.4.6,)" include="all" />
+      <dependency id="Pocket.TypeDiscovery" version="[0.3.0,1)" include="all" />
+    </dependencies>
+   
+    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+  </metadata>
+  <files>
+    <file src="PocketContainerTestFakesStrategy.cs" 
+          target="contentFiles/cs/any/(Pocket)/Container/PocketContainerTestFakesStrategy.cs" />
+  </files>
+</package>
