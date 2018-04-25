@@ -5,6 +5,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Pocket;
 
 namespace Pocket
@@ -14,33 +15,26 @@ namespace Pocket
 #endif
     internal static class PocketContainerTestFakesStrategy
     {
-        public static Pocket.PocketContainer ResolveWithFakeTypesFromAssembly(this Pocket.PocketContainer container, Assembly assembly) 
-            => container.ResolveWithFakeTypesFromAssembly(assembly, "Fake");
+        public static Pocket.PocketContainer UseFakeTypesFromAssembly(this PocketContainer container, Assembly assembly)
+            => container.UseTypesFromAssembly(assembly, t => Regex.IsMatch(t.FullName, @".+Fake$", RegexOptions.Compiled | RegexOptions.IgnoreCase));
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesFromAssembly(this Pocket.PocketContainer container, Assembly assembly, string convention)
+        public static Pocket.PocketContainer UseTypesFromAssembly(this PocketContainer container, Assembly assembly, Func<Type, bool> convention)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
-            if (string.IsNullOrWhiteSpace(convention))
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(convention));
-
-            var conventionFilter = convention.ToLower(CultureInfo.InvariantCulture);
+            if (convention == null) throw new ArgumentNullException(nameof(convention));
 
             return container.AddStrategy(type =>
             {
-                Type fake = null;
-                if (!type.FullName.EndsWith(conventionFilter, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var fakes = Discover
-                        .ConcreteTypes()
-                        .DerivedFrom(type)
-                        .Where(t => t.Assembly == assembly && t.FullName.EndsWith(conventionFilter,
-                                        StringComparison.InvariantCultureIgnoreCase))
-                        .OrderBy(t => TypeDistanceFrom(type, t))
-                        .ToArray();
+                var fakes = Discover
+                    .ConcreteTypes()
+                    .DerivedFrom(type)
+                    .Where(t => t.Assembly == assembly && convention(t))
+                    .CloseTo(type)
+                    .ToArray();
 
-                    fake = fakes.FirstOrDefault();
-                }
+                var fake = fakes.FirstOrDefault();
+
 
                 if (fake != null)
                 {
@@ -51,22 +45,22 @@ namespace Pocket
         }
 
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(this Pocket.PocketContainer container, T _) 
-            => container.ResolveWithFakeTypesCloseTo<T>();
+        public static Pocket.PocketContainer UseFakeTypesCloseTo<T>(this PocketContainer container, T _)
+            => container.UseFakeTypesCloseTo<T>();
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(this Pocket.PocketContainer container, T _, string convention) 
-            => container.ResolveWithFakeTypesCloseTo<T>(convention);
+        public static Pocket.PocketContainer UseTypesCloseTo<T>(this PocketContainer container, T _, Func<Type, bool> convention)
+            => container.UseTypesCloseTo<T>(convention);
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(this Pocket.PocketContainer container) 
-            => container.ResolveWithFakeTypesCloseTo(typeof(T));
+        public static Pocket.PocketContainer UseFakeTypesCloseTo<T>(this PocketContainer container)
+            => container.UseFakeTypesCloseTo(typeof(T));
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo<T>(this Pocket.PocketContainer container, string convention) 
-            => container.ResolveWithFakeTypesCloseTo(typeof(T), convention);
-        
-        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo(this Pocket.PocketContainer container, Type searchPoint)
-            => container.ResolveWithFakeTypesCloseTo(searchPoint, "Fake");
+        public static Pocket.PocketContainer UseTypesCloseTo<T>(this PocketContainer container, Func<Type, bool> convention)
+            => container.UseTypesCloseTo(typeof(T), convention);
 
-        public static Pocket.PocketContainer ResolveWithFakeTypesCloseTo(this Pocket.PocketContainer container, Type searchPoint, string convention)
+        public static Pocket.PocketContainer UseFakeTypesCloseTo(this PocketContainer container, Type searchPoint)
+            => container.UseTypesCloseTo(searchPoint, t => Regex.IsMatch(t.FullName, @".+Fake$", RegexOptions.Compiled | RegexOptions.IgnoreCase));
+
+        public static Pocket.PocketContainer UseTypesCloseTo(this PocketContainer container, Type searchPoint, Func<Type, bool> convention)
         {
             if (container == null)
             {
@@ -78,58 +72,27 @@ namespace Pocket
                 throw new ArgumentNullException(nameof(searchPoint));
             }
 
-            if (string.IsNullOrWhiteSpace(convention))
-            {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(convention));
-            }
+            if (convention == null) throw new ArgumentNullException(nameof(convention));
 
-            var conventionFilter = convention.ToLower(CultureInfo.InvariantCulture);
+
             return container.AddStrategy(type =>
             {
-                Type fake = null;
-                if (!type.FullName.EndsWith(conventionFilter, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var fakes = Discover
+                var fakes = Discover
                         .ConcreteTypes()
                         .DerivedFrom(type)
-                        .Where(t => t.FullName.EndsWith(conventionFilter, StringComparison.InvariantCultureIgnoreCase))
-                        .OrderBy(t => TypeDistanceFrom(searchPoint, t)).ToArray();
-                        
-                        fake = fakes.FirstOrDefault();
+                        .Where(convention)
+                        .CloseTo(searchPoint).ToArray();
 
-                    
-                }
+                    var fake = fakes.FirstOrDefault();
+
+
+                
                 if (fake != null)
                 {
                     return c => c.Resolve(fake);
                 }
                 return null;
             });
-        }
-
-        private static int TypeDistanceFrom(Type searchPoint, Type element)
-        {
-            
-            var distance = 0;
-            if (element.IsNested && element.DeclaringType == searchPoint)
-            {
-                return -1;
-            }
-            var sameAssmeby = searchPoint.Assembly == element.Assembly;
-            var searchPointPath = searchPoint.FullName.Split(new[] {'.', '+'}, StringSplitOptions.RemoveEmptyEntries);
-            var elementPath = element.FullName.Split(new[] { '.', '+' }, StringSplitOptions.RemoveEmptyEntries);
-            var scanLimit = Math.Min(elementPath.Length - 1, searchPointPath.Length);
-            var maxDistance = Math.Max(elementPath.Length - 1, searchPointPath.Length);
-            for (var i = 0; i < scanLimit; i++)
-            {
-                if (elementPath[i] != searchPointPath[i])
-                {
-                    distance = maxDistance - i;
-                    break;
-                }
-            }
-
-            return sameAssmeby ? distance : distance << 4;
         }
     }
 }

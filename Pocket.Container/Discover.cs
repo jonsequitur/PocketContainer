@@ -41,6 +41,12 @@ namespace Pocket
             types.Where(t => type != t && type.IsAssignableFrom(t));
 
         /// <summary>
+        /// Orders types by the distance from the specified type.
+        /// </summary>
+        public static IEnumerable<Type> CloseTo(this IEnumerable<Type> types, Type type) =>
+            types.OrderBy(t => t.DistanceFrom(type));
+
+        /// <summary>
         /// Filters to types that implement a generic variant of one of the specified open generic interfaces.
         /// </summary>
         public static IEnumerable<Type> ImplementingOpenGenericInterfaces(
@@ -84,5 +90,30 @@ namespace Pocket
                 }
                 return Enumerable.Empty<Type>();
             });
+  
+        private static int DistanceFrom(this Type queryType, Type targetType)
+        {
+
+            var distance = 0;
+            if (queryType.IsNested && queryType.DeclaringType == targetType)
+            {
+                return -1;
+            }
+            var sameAssmeby = targetType.Assembly == queryType.Assembly;
+            var targetTypePath = targetType.FullName.Split(new[] { '.', '+' }, StringSplitOptions.RemoveEmptyEntries);
+            var queryTypePath = queryType.FullName.Split(new[] { '.', '+' }, StringSplitOptions.RemoveEmptyEntries);
+            var scanLimit = Math.Min(queryTypePath.Length - 1, targetTypePath.Length);
+            var maxDistance = Math.Max(queryTypePath.Length - 1, targetTypePath.Length);
+            for (var i = 0; i < scanLimit; i++)
+            {
+                if (queryTypePath[i] != targetTypePath[i])
+                {
+                    distance = maxDistance - i;
+                    break;
+                }
+            }
+
+            return sameAssmeby ? distance : distance << 4;
+        }
     }
 }
