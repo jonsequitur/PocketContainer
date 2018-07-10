@@ -355,6 +355,8 @@ namespace Pocket
         {
             public static Func<PocketContainer, T> UsingLongestConstructor<T>()
             {
+              
+
                 if (typeof(Delegate).IsAssignableFrom(typeof(T)))
                 {
                     throw new TypeInitializationException(typeof(T).FullName, null);
@@ -379,25 +381,31 @@ namespace Pocket
                 Expression ResolveParameter(ParameterInfo p) =>
                     p.HasDefaultValue
                         ? (IsNullable(p)
-                               ? Nullable(p)
-                               : IsDefaultStruct(p)
-                                   ? DefaultStruct(p)
-                                   : p.ParameterType == typeof(string)
-                                       ? Expression.Constant(p.DefaultValue, p.ParameterType)
+                               ? CreateNullable(p)
+                               : IsStructWithNoDefaultValue(p)
+                                   ? CreateDefaultStruct(p)
+                                   : IsPrimitiveWithDefaultValue(p)
+                                       ? UseSpecifiedDefaultValue(p)
                                        : CallResolveOptional(container, p.ParameterType))
                         : CallResolve(container, p.ParameterType);
 
-                bool IsDefaultStruct(ParameterInfo p) =>
+                bool IsStructWithNoDefaultValue(ParameterInfo p) =>
                     p.ParameterType.IsValueType && Equals(p.DefaultValue, null);
 
                 bool IsNullable(ParameterInfo p) =>
                     p.ParameterType.IsGenericType &&
                     p.ParameterType.GetGenericTypeDefinition() == typeof(Nullable<>);
 
-                Expression DefaultStruct(ParameterInfo p) =>
+                bool IsPrimitiveWithDefaultValue(ParameterInfo p) =>
+                    p.HasDefaultValue && (p.ParameterType.IsPrimitive || p.ParameterType == typeof(string));
+
+                Expression CreateDefaultStruct(ParameterInfo p) =>
                     Expression.Constant(Activator.CreateInstance(p.ParameterType), p.ParameterType);
 
-                Expression Nullable(ParameterInfo p)
+                ConstantExpression UseSpecifiedDefaultValue(ParameterInfo p) =>
+                    Expression.Constant(p.DefaultValue, p.ParameterType);
+
+                Expression CreateNullable(ParameterInfo p)
                 {
                     var genericArgument = p.ParameterType.GetGenericArguments()[0];
 
@@ -407,8 +415,8 @@ namespace Pocket
                         p.DefaultValue ?? defaultValueForType);
 
                     var constructor = typeof(Nullable<>)
-                        .MakeGenericType(genericArgument)
-                        .GetConstructor(new[] { genericArgument });
+                                      .MakeGenericType(genericArgument)
+                                      .GetConstructor(new[] { genericArgument });
 
                     return Expression.New(constructor, argument);
                 }

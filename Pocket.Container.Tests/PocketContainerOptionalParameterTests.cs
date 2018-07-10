@@ -12,7 +12,7 @@ namespace Pocket.Container.Tests
             var container = new PocketContainer()
                 .Register<IAmAnInterface>(c => new HasDefaultCtor());
 
-            var o = container.Resolve<TakesOptionalParamWithNoDefaultValue<IAmAnInterface>>();
+            var o = container.Resolve<TakesOptionalParamWithDefaultValueSpecifiedAsDefault<IAmAnInterface>>();
 
             o.OptionalValue.Should().NotBeNull();
         }
@@ -22,7 +22,7 @@ namespace Pocket.Container.Tests
         {
             var container = new PocketContainer();
 
-            var o = container.Resolve<TakesOptionalParamWithNoDefaultValue<IAmAnInterface>>();
+            var o = container.Resolve<TakesOptionalParamWithDefaultValueSpecifiedAsDefault<IAmAnInterface>>();
 
             o.OptionalValue.Should().BeNull();
         }
@@ -32,7 +32,7 @@ namespace Pocket.Container.Tests
         {
             var container = new PocketContainer();
 
-            var o = container.Resolve<TakesOptionalParamWithNoDefaultValue<int>>();
+            var o = container.Resolve<TakesOptionalParamWithDefaultValueSpecifiedAsDefault<int>>();
 
             o.OptionalValue.Should().Be(0);
         }
@@ -42,9 +42,19 @@ namespace Pocket.Container.Tests
         {
             var container = new PocketContainer();
 
-            var o = container.Resolve<TakesOptionalParamWithNoDefaultValue<int?>>();
+            var o = container.Resolve<TakesOptionalParamWithDefaultValueSpecifiedAsDefault<int?>>();
 
             o.OptionalValue.Should().Be(0);
+        }
+
+        [Fact]
+        public void Optional_struct_parameters_with_default_value_are_filled_correctly()
+        {
+            var container = new PocketContainer();
+
+            var o = container.Resolve<TakesOptionalIntParamWithDefaultValue>();
+
+            o.OptionalValue.Should().Be(TakesOptionalIntParamWithDefaultValue.DefaultValue);
         }
 
         [Fact]
@@ -54,7 +64,7 @@ namespace Pocket.Container.Tests
 
             var o = container.Resolve<TakesOptionalNullableIntParamWithDefaultValue>();
 
-            o.OptionalValue.Should().Be(TakesOptionalNullableIntParamWithDefaultValue.DefaultIntValue);
+            o.OptionalValue.Should().Be(TakesOptionalNullableIntParamWithDefaultValue.DefaultValue);
         }
 
         [Fact]
@@ -64,7 +74,7 @@ namespace Pocket.Container.Tests
 
             var o = container.Resolve<TakesOptionalStringParamWithDefaultValue>();
 
-            o.OptionalValue.Should().Be(TakesOptionalStringParamWithDefaultValue.DefaultIntValue);
+            o.OptionalValue.Should().Be(TakesOptionalStringParamWithDefaultValue.DefaultValue);
         }
 
         [Fact]
@@ -72,17 +82,29 @@ namespace Pocket.Container.Tests
         {
             var container = new PocketContainer();
 
-            var o = container.Resolve<TakesOptionalParamWithNoDefaultValue<string>>();
+            var o = container.Resolve<TakesOptionalParamWithDefaultValueSpecifiedAsDefault<string>>();
 
             o.OptionalValue.Should().BeNull();
         }
     }
 
+    public class TakesOptionalIntParamWithDefaultValue
+    {
+        public const int DefaultValue = 123;
+
+        public TakesOptionalIntParamWithDefaultValue(int optionalValue = DefaultValue)
+        {
+            OptionalValue = optionalValue;
+        }
+
+        public int OptionalValue { get; }
+    }
+
     public class TakesOptionalNullableIntParamWithDefaultValue
     {
-        public const int DefaultIntValue = 123;
+        public const int DefaultValue = 123;
 
-        public TakesOptionalNullableIntParamWithDefaultValue(int? optionalValue = DefaultIntValue)
+        public TakesOptionalNullableIntParamWithDefaultValue(int? optionalValue = DefaultValue)
         {
             OptionalValue = optionalValue;
         }
@@ -92,9 +114,9 @@ namespace Pocket.Container.Tests
 
     public class TakesOptionalStringParamWithDefaultValue
     {
-        public const string DefaultIntValue = "the-default-value";
+        public const string DefaultValue = "the-default-value";
 
-        public TakesOptionalStringParamWithDefaultValue(string optionalValue = DefaultIntValue)
+        public TakesOptionalStringParamWithDefaultValue(string optionalValue = DefaultValue)
         {
             OptionalValue = optionalValue;
         }
@@ -102,9 +124,9 @@ namespace Pocket.Container.Tests
         public string OptionalValue { get; }
     }
 
-    public class TakesOptionalParamWithNoDefaultValue<T>
+    public class TakesOptionalParamWithDefaultValueSpecifiedAsDefault<T>
     {
-        public TakesOptionalParamWithNoDefaultValue(T optionalValue = default(T))
+        public TakesOptionalParamWithDefaultValueSpecifiedAsDefault(T optionalValue = default(T))
         {
             OptionalValue = optionalValue;
         }
