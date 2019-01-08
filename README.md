@@ -56,7 +56,7 @@ If a strategy returns a delegate, `PocketContainer` registers it and uses it to 
 
 #### Extensibility via partial classes
 
-[The Clone extension](https://github.com/jonsequitur/PocketContainer/blob/master/PocketContainer/PocketContainer.Clone.cs) is an example of a partial class being used to extend `PocketContainer`. Because this extensibility mechanism relies on access to `PocketContainer`'s private fields, these fields are considered to be part of the backwards compatibility contract of `PocketContainer`, and a change to one of them constitutes a breaking change and will incur a major version bump. 
+[The Clone extension](Pocket.Container/PocketContainer.Clone.cs) is an example of a partial class being used to extend `PocketContainer`. Because this extensibility mechanism relies on access to `PocketContainer`'s private fields, these fields are considered to be part of the backwards compatibility contract of `PocketContainer`, and a change to one of them constitutes a breaking change and will incur a major version bump. 
 
 #### Lazy<T> and Func<T>
 
