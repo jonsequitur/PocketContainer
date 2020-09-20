@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>    
-    <TargetFramework>netcoreapp2.0</TargetFramework>    
-    <AssemblyName>Pocket.Container.For.Microsoft.Extensions.DependencyInjection</AssemblyName>    
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>Pocket.Container.For.Microsoft.Extensions.DependencyInjection</AssemblyName>
     <RootNamespace>Pocket.Container.For.Microsoft.Extensions.DependencyInjection</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETCOREAPP2_0;SourceProject</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP3_1;SourceProject</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,12 +24,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="fluentassertions" Version="4.19.4" />
-    <PackageReference Include="microsoft.extensions.dependencyinjection" Version="2.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
-    <PackageReference Include="pocket.disposable" Version="1.0.3" />
-    <PackageReference Include="xunit" Version="2.3.0-beta5-build3769" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0-beta5-build3769" />
+    <PackageReference Include="fluentassertions" Version="5.10.3" />
+    <PackageReference Include="microsoft.extensions.dependencyinjection" Version="3.1.8" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="pocket.disposable" Version="1.0.5" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
   </ItemGroup>
 
   <ItemGroup>

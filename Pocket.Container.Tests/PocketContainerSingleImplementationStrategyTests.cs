@@ -51,7 +51,7 @@ namespace Pocket.Container.Tests
                 .IfOnlyOneImplementationUseIt();
 
             Action resolve = () => container.Resolve<IEnumerable>();
-            resolve.ShouldThrow<ArgumentException>();
+            resolve.Should().Throw<ArgumentException>();
         }
 
         public interface IHaveOnlyOneImplementation

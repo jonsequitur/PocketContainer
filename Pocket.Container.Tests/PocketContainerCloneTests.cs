@@ -125,7 +125,7 @@ namespace Pocket.Container.Tests
             Action resolveFromOriginal = () =>
                 original.Resolve<IEnumerable<string>>();
 
-            resolveFromOriginal.ShouldThrow<ArgumentException>();
+            resolveFromOriginal.Should().Throw<ArgumentException>();
         }
 
         [Fact]

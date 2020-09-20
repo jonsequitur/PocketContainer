@@ -52,7 +52,7 @@ namespace Pocket.Container.Tests
             Action registerWrongType = () =>
                 container.RegisterGeneric(typeof(string), typeof(List<>));
 
-            registerWrongType.ShouldThrow<ArgumentException>()
+            registerWrongType.Should().Throw<ArgumentException>()
                              .And
                              .Message
                              .Should()
@@ -67,7 +67,7 @@ namespace Pocket.Container.Tests
             Action registerWrongType = () =>
                 container.RegisterGeneric(typeof(IEnumerable<>), typeof(string));
 
-            registerWrongType.ShouldThrow<ArgumentException>()
+            registerWrongType.Should().Throw<ArgumentException>()
                              .And
                              .Message
                              .Should()

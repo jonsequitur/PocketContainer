@@ -43,7 +43,7 @@ namespace Pocket.Container.CumulativeRegistration.Tests
 
             Action resolveEnumerable = () => container.Resolve<IEnumerable<int>>();
 
-            resolveEnumerable.ShouldThrow<ArgumentException>();
+            resolveEnumerable.Should().Throw<ArgumentException>();
         }
     }
 }
