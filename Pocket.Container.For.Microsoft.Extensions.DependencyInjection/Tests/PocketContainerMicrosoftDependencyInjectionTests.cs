@@ -42,7 +42,7 @@ namespace Pocket.Container.For.Microsoft.Extensions.DependencyInjection.Tests
 
             Action resolve = () => container.GetRequiredService(typeof(string));
 
-            resolve.ShouldThrow<ArgumentException>();
+            resolve.Should().Throw<ArgumentException>();
         }
 
         [Fact]

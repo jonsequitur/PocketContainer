@@ -112,7 +112,7 @@ namespace Pocket.Container.Tests
 
             Action resolve = () => container.Resolve<SomeDelegateType>();
 
-            resolve.ShouldThrow<ArgumentException>()
+            resolve.Should().Throw<ArgumentException>()
                    .And
                    .Message
                    .Should()
@@ -162,7 +162,7 @@ namespace Pocket.Container.Tests
 
             Action resolveNotOptional = () => container.Resolve<HasOneParamCtor<IAmAnInterface>>();
 
-            resolveNotOptional.ShouldThrow<ArgumentException>();
+            resolveNotOptional.Should().Throw<ArgumentException>();
         }
 
         [Fact]
@@ -244,7 +244,7 @@ namespace Pocket.Container.Tests
             Action resolve = () =>
                 container.Resolve<HasTwoCtorsWithTheSameNumberOfParams>();
 
-            resolve.ShouldThrow<ArgumentException>()
+            resolve.Should().Throw<ArgumentException>()
                    .And
                    .Message
                    .Should()
@@ -259,7 +259,7 @@ namespace Pocket.Container.Tests
             Action resolve = () =>
                 container.Resolve<IAmAnInterface>();
 
-            resolve.ShouldThrow<ArgumentException>()
+            resolve.Should().Throw<ArgumentException>()
                    .And
                    .Message
                    .Should()
@@ -588,7 +588,7 @@ namespace Pocket.Container.Tests
 
             Action resolve = () => container.Resolve<IEnumerable<string>>();
 
-            resolve.ShouldThrow<DataMisalignedException>();
+            resolve.Should().Throw<DataMisalignedException>();
         }
 
         [Fact]
@@ -601,7 +601,7 @@ namespace Pocket.Container.Tests
 
             Action resolve = () => container.Resolve(typeof(IEnumerable<string>));
 
-            resolve.ShouldThrow<DataMisalignedException>();
+            resolve.Should().Throw<DataMisalignedException>();
         }
 
         [Fact]

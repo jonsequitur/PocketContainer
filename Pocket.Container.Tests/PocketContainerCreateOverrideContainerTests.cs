@@ -139,7 +139,7 @@ namespace Pocket.Container.Tests
 
             Action resolve = () => primary.Resolve<IEnumerable<string>>();
 
-            resolve.ShouldThrow<ArgumentException>();
+            resolve.Should().Throw<ArgumentException>();
         }
     }
 }
