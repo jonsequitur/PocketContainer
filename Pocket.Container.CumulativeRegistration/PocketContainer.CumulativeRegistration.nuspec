@@ -3,7 +3,7 @@
   <metadata>
     <id>PocketContainer.CumulativeRegistration</id>
     <title>PocketContainer Cumulative Registration</title>
-    <version>1.0.0-beta</version>
+    <version>1.0.0</version>
     <authors>jonsequitur</authors>
     <owners>jonsequitur</owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
@@ -12,7 +12,7 @@
     <tags>PocketContainer IoC DI container</tags>
     <developmentDependency>true</developmentDependency>
     <dependencies>
-      <dependency id="PocketContainer" version="[1.4.6,)" include="all" />
+      <dependency id="PocketContainer" version="[2.0.0,)" include="all" />
     </dependencies>
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
   </metadata>

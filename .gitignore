@@ -4,6 +4,7 @@ nCrunchTemp*
 *.donotcheckin
 *.suo
 *.user
+/.ionide
 .vscode/
 bin/
 csx/

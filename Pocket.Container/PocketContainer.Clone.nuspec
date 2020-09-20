@@ -3,7 +3,7 @@
   <metadata>
     <id>PocketContainer.Clone</id>
     <title>PocketContainer.Clone</title>
-    <version>1.0.6</version>
+    <version>2.0.0</version>
     <authors>jonsequitur</authors>
     <owners>jonsequitur</owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
@@ -13,7 +13,7 @@
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
     <developmentDependency>true</developmentDependency>
     <dependencies>
-      <dependency id="PocketContainer" version="[1.2.3,2)" include="all" />
+      <dependency id="PocketContainer" version="[1.2.3,3)" include="all" />
     </dependencies>
   </metadata>
   <files>

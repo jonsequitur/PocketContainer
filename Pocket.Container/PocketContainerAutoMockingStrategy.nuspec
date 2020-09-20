@@ -3,7 +3,7 @@
   <metadata>
     <id>PocketContainer.MoqAutoMockingStrategy</id>
     <title>PocketContainer Auto-Mocking Strategy for Moq</title>
-    <version>1.0.4</version>
+    <version>2.0.0</version>
     <authors>jonsequitur</authors>
     <owners>jonsequitur</owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
@@ -12,7 +12,7 @@
     <tags>PocketContainer IoC DI container convention strategy</tags>
     <developmentDependency>true</developmentDependency>
     <dependencies>
-      <dependency id="PocketContainer" version="[1.2.3,2)" />
+      <dependency id="PocketContainer" version="[1.2.3,3)" />
       <dependency id="Moq" version="[4.0.10827,5)" />
     </dependencies>
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
