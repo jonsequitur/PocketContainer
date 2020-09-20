@@ -3,7 +3,7 @@
   <metadata>
     <id>PocketContainer.DependencyResolverFallback</id>
     <title>Web API DependencyResolver Fallback for PocketContainer</title>
-    <version>1.0.3</version>
+    <version>2.0.0</version>
     <authors>jonsequitur</authors>
     <owners></owners>
     <projectUrl>https://github.com/jonsequitur/PocketContainer</projectUrl>
@@ -13,7 +13,7 @@
     <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
     <developmentDependency>true</developmentDependency>
     <dependencies>
-      <dependency id="PocketContainer" version="[1.2.3,2)" />
+      <dependency id="PocketContainer" version="[1.2.3,3)" />
       <dependency id="Microsoft.AspNet.WebApi.Core" version="[4.0.20710.0,)" />
     </dependencies>
   </metadata>
