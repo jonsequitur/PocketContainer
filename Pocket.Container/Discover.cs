@@ -57,7 +57,9 @@ namespace Pocket
             AppDomain.CurrentDomain
                      .GetAssemblies()
                      .Where(a => !a.IsDynamic)
+#if NETFRAMEWORK
                      .Where(a => !a.GlobalAssemblyCache)
+#endif
                      .Types();
 
         /// <summary>
