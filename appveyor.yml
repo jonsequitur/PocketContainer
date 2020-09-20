@@ -1,3 +1,5 @@
+image: Visual Studio 2019
+
 install:
 # install .NET CLI
   - ps: $urlCurrent = "https://dotnetcli.azureedge.net/dotnet/Sdk/3.1.402/dotnet-sdk-3.1.402-win-x64.zip"
