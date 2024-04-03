@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>PocketContainer</AssemblyName>
     <RootNamespace>PocketContainer</RootNamespace>
+	<LangVersion>12</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETCOREAPP3_1;SourceProject</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SourceProject</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="HttpConfigurationExtensions.cs" />
