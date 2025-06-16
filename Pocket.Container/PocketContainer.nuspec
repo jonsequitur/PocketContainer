@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>An embeddable IoC container in a single C# file, with support for extensibility and conventions.</description>
     <tags>IoC DI container PocketContainer</tags>
-    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <developmentDependency>true</developmentDependency>
   </metadata>
   <files>

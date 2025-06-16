@@ -14,7 +14,7 @@
     <dependencies>
       <dependency id="PocketContainer" version="[1.3.3,3)" include="all" />
     </dependencies>
-    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </metadata>
   <files>
     <file src="PocketContainerOpenGenericStrategy.cs" 
