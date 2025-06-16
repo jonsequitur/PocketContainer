@@ -30,3 +30,5 @@ Artifacts
 *.log
 *.nupkg
 \.vs/
+
+*.cache
