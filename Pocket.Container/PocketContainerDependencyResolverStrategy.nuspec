@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Enables PocketContainer to fall back to a Web API IDependencyResolver to resolve unknown types.</description>
     <tags>PocketContainer WebApi DependencyResolver IoC DI strategy</tags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <license type="expression">MIT</license>
     <developmentDependency>true</developmentDependency>
     <dependencies>
       <dependency id="PocketContainer" version="[1.2.3,3)" />

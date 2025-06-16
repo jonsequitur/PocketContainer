@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Use PocketContainer to resolve dependencies for ASP.NET Web API.</description>
     <tags>PocketContainer WebApi DependencyResolver IoC DI</tags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <license type="expression">MIT</license>
     <developmentDependency>true</developmentDependency>
     <dependencies>
       <dependency id="PocketContainer" version="[1.2.3,3)" />
