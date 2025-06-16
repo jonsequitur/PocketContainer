@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Provides a hook to receive a call each time an instance is created by PocketContainer.</description>
     <tags>IoC DI container</tags>
-    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <developmentDependency>true</developmentDependency>
     <dependencies>
       <dependency id="PocketContainer" version="[1.6.3-beta,3)" include="all" />

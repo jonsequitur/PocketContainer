@@ -18,7 +18,7 @@
       <dependency id="PocketContainer.OpenGenericStrategy" version="[1.1.1,)" include="all" />
       <dependency id="Pocket.Disposable" version="[1.0.3,)" include="all" />
     </dependencies>
-    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </metadata>
   <files>
     <file src="PocketContainer.For.MicrosoftExtensionsDependencyInjection.cs" 

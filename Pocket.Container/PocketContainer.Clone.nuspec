@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Adds a Clone method to PocketContainer.</description>
     <tags>IoC DI container</tags>
-    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <developmentDependency>true</developmentDependency>
     <dependencies>
       <dependency id="PocketContainer" version="[1.2.3,3)" include="all" />

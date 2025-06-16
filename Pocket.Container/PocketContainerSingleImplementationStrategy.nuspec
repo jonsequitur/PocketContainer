@@ -17,7 +17,7 @@
       <dependency id="Pocket.TypeDiscovery" version="[0.3.0,3)" include="all" />
     </dependencies>
    
-    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </metadata>
   <files>
     <file src="PocketContainerSingleImplementationStrategy.cs" 

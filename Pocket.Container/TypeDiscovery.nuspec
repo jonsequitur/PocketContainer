@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Utility methods for finding types at runtime.</description>
     <tags>type discovery reflection</tags>
-    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <developmentDependency>true</developmentDependency>
   </metadata>
   <files>

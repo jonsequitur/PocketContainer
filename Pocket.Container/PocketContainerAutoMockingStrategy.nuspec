@@ -15,7 +15,7 @@
       <dependency id="PocketContainer" version="[1.2.3,3)" />
       <dependency id="Moq" version="[4.0.10827,5)" />
     </dependencies>
-    <licenseUrl>https://github.com/jonsequitur/PocketContainer/blob/master/LICENSE</licenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </metadata>
   <files>
     <file src="PocketContainerMoqAutoMockingStrategy.cs" 
