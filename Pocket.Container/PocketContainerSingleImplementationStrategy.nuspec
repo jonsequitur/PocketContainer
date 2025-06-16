@@ -17,7 +17,7 @@
       <dependency id="Pocket.TypeDiscovery" version="[0.3.0,3)" include="all" />
     </dependencies>
    
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <license type="expression">MIT</license>
   </metadata>
   <files>
     <file src="PocketContainerSingleImplementationStrategy.cs" 

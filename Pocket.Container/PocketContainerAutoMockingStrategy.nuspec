@@ -15,7 +15,7 @@
       <dependency id="PocketContainer" version="[1.2.3,3)" />
       <dependency id="Moq" version="[4.0.10827,5)" />
     </dependencies>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <license type="expression">MIT</license>
   </metadata>
   <files>
     <file src="PocketContainerMoqAutoMockingStrategy.cs" 

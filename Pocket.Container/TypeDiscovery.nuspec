@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Utility methods for finding types at runtime.</description>
     <tags>type discovery reflection</tags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <license type="expression">MIT</license>
     <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
